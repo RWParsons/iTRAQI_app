@@ -11,6 +11,7 @@ library(tidyverse)
 library(sf)
 library(sp)
 library(raster)
+library(rgdal)
 
 
 layer_input <- c(
@@ -24,46 +25,6 @@ layer_input <- c(
 
 group_display <- "SA1 acute time"
 
-layers_dir <- "input/layers"
-SAs_sf <- readRDS(file.path(layers_dir, "acute_polygons_SA1_year2016.rds"))
-
-SA1_agg_data <- read.csv("input/download_data/SA1s_data.csv")
-SA2_agg_data <- read.csv("input/download_data/SA2s_data.csv")
-
-df_locations <- read.csv("input/QLD_locations_with_RSQ_times_20220210.csv") %>%
-  mutate(popup=paste0(
-  "<b>Location: </b>", location, "<br>",
-  "<b>Acute care destination: </b>", acute_care_centre, "<br>",
-  "<b>Time to acute care (minutes): </b>", acute_time, "<br>",
-  "<b>Rehab care destination: </b>", rehab_centre, "<br>",
-  "<b>Time to rehab care (minutes): </b>", rehab_time, "<br>"
-))
-
-rehab_centres <- c(
-  "Sunshine Coast University Hospital",
-  "Central West Sub-Acute Service",
-  "Gympie Hospital",
-  "Rockhampton Hospital",
-  "Roma Hospital"
-)
-acute_centres <- c(
-  "Brain Injury Rehabilitation Unit",
-  "Gold Coast University Hospital",
-  "Townsville University Hospital"
-)
-
-df_centres <- read.csv("input/centres.csv") %>% 
-  janitor::clean_names() %>%
-  mutate(centre_name = str_trim(centre_name))%>%
-  filter(centre_name %in% c(rehab_centres, acute_centres)) %>%
-  mutate(
-    care_type=ifelse(centre_name %in% acute_centres, "acute", "rehab"),
-    popup=paste0(
-      "<b>Centre name: </b>", centre_name, "<br>",
-      "<b>Care type: </b>", ifelse(care_type=="acute", "Acute care", "Rehabilitation care"), "<br>",
-      "<b>Address: </b>", address, "<br>"
-    )
-  )
 
 ui <- navbarPage(
   "iTRAQI",
@@ -94,6 +55,48 @@ ui <- navbarPage(
 )
 
 server <- function(input, output, session){
+  layers_dir <- "input/layers"
+  SAs_sf <- readRDS(file.path(layers_dir, "acute_polygons_SA1_year2016.rds"))
+  
+  SA1_agg_data <- read.csv("input/download_data/SA1s_data.csv")
+  SA2_agg_data <- read.csv("input/download_data/SA2s_data.csv")
+  
+  df_locations <- read.csv("input/QLD_locations_with_RSQ_times_20220210.csv") %>%
+    mutate(popup=paste0(
+      "<b>Location: </b>", location, "<br>",
+      "<b>Acute care destination: </b>", acute_care_centre, "<br>",
+      "<b>Time to acute care (minutes): </b>", acute_time, "<br>",
+      "<b>Rehab care destination: </b>", rehab_centre, "<br>",
+      "<b>Time to rehab care (minutes): </b>", rehab_time, "<br>"
+    ))
+  
+  rehab_centres <- c(
+    "Sunshine Coast University Hospital",
+    "Central West Sub-Acute Service",
+    "Gympie Hospital",
+    "Rockhampton Hospital",
+    "Roma Hospital"
+  )
+  acute_centres <- c(
+    "Brain Injury Rehabilitation Unit",
+    "Gold Coast University Hospital",
+    "Townsville University Hospital"
+  )
+  
+  df_centres <- read.csv("input/centres.csv") %>% 
+    janitor::clean_names() %>%
+    mutate(centre_name = str_trim(centre_name))%>%
+    filter(centre_name %in% c(rehab_centres, acute_centres)) %>%
+    mutate(
+      care_type=ifelse(centre_name %in% acute_centres, "acute", "rehab"),
+      popup=paste0(
+        "<b>Centre name: </b>", centre_name, "<br>",
+        "<b>Care type: </b>", ifelse(care_type=="acute", "Acute care", "Rehabilitation care"), "<br>",
+        "<b>Address: </b>", address, "<br>"
+      )
+    )
+  
+  
   # https://medium.com/ibm-data-ai/asynchronous-loading-of-leaflet-layer-groups-afc073999e77
   rvs <- reactiveValues(to_load=0, map=NULL)
   
@@ -201,8 +204,6 @@ server <- function(input, output, session){
             "<b>Time to ", care_type, " care (minutes): </b>", round(.[[2]]), "<br>"
           )
         ))
-      new_layer <<- new_layer
-      print('test')
       leafletProxy("map_async") %>%
         addPolygons(
           data=new_layer,
@@ -214,7 +215,6 @@ server <- function(input, output, session){
           popup=new_layer$popup,
           options=leafletOptions(pane="layers")
         )
-      print('test')
     }
     
     for(group_name in raster_layers){
