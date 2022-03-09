@@ -12,60 +12,28 @@ library(sf)
 library(sp)
 library(raster)
 library(rgdal)
+# https://susanna-cramb.shinyapps.io/itraqi_app/
 
+
+# layer_input <- c(
+#   "SA1 acute time" = "acute_polygons_SA1_year2016",
+#   "SA2 acute time" = "acute_polygons_SA2_year2016",
+#   "SA1 rehab time" = "rehab_polygons_SA1_year2016",
+#   "SA2 rehab time" = "rehab_polygons_SA2_year2016",
+#   "Acute time" = "acute_raster",
+#   "Rehab time" = "rehab_raster"
+# )
 
 layer_input <- c(
-  "SA1 acute time" = "acute_polygons_SA1_year2016",
-  "SA2 acute time" = "acute_polygons_SA2_year2016",
-  "SA1 rehab time" = "rehab_polygons_SA1_year2016",
-  "SA2 rehab time" = "rehab_polygons_SA2_year2016",
+  "SA1 acute time" = "acute_polygons_SA1_year2016_simplified",
+  "SA2 acute time" = "acute_polygons_SA2_year2016_simplified",
+  "SA1 rehab time" = "rehab_polygons_SA1_year2016_simplified",
+  "SA2 rehab time" = "rehab_polygons_SA2_year2016_simplified",
   "Acute time" = "acute_raster",
   "Rehab time" = "rehab_raster"
 )
 
 group_display <- "SA1 acute time"
-
-layers_dir <- "input/layers"
-SAs_sf <- readRDS(file.path(layers_dir, "acute_polygons_SA1_year2016.rds"))
-
-SA1_agg_data <- read.csv("input/download_data/SA1s_data.csv")
-SA2_agg_data <- read.csv("input/download_data/SA2s_data.csv")
-
-df_locations <- read.csv("input/QLD_locations_with_RSQ_times_20220210.csv") %>%
-  mutate(popup=paste0(
-  "<b>Location: </b>", location, "<br>",
-  "<b>Acute care destination: </b>", acute_care_centre, "<br>",
-  "<b>Time to acute care (minutes): </b>", acute_time, "<br>",
-  "<b>Rehab care destination: </b>", rehab_centre, "<br>",
-  "<b>Time to rehab care (minutes): </b>", rehab_time, "<br>"
-))
-
-rehab_centres <- c(
-  "Sunshine Coast University Hospital",
-  "Central West Sub-Acute Service",
-  "Gympie Hospital",
-  "Rockhampton Hospital",
-  "Roma Hospital"
-)
-acute_centres <- c(
-  "Brain Injury Rehabilitation Unit",
-  "Gold Coast University Hospital",
-  "Townsville University Hospital"
-)
-
-df_centres <- read.csv("input/centres.csv") 
-names(df_centres) <- c("centre_name", "address", "x", "y")
-df_centres <- df_centres %>%
-  mutate(centre_name = str_trim(centre_name))%>%
-  filter(centre_name %in% c(rehab_centres, acute_centres)) %>%
-  mutate(
-    care_type=ifelse(centre_name %in% acute_centres, "acute", "rehab"),
-    popup=paste0(
-      "<b>Centre name: </b>", centre_name, "<br>",
-      "<b>Care type: </b>", ifelse(care_type=="acute", "Acute care", "Rehabilitation care"), "<br>",
-      "<b>Address: </b>", address, "<br>"
-    )
-  )
 
 ui <- navbarPage(
   "iTRAQI",
@@ -124,8 +92,9 @@ server <- function(input, output, session){
     "Townsville University Hospital"
   )
   
-  df_centres <- read.csv("input/centres.csv") %>% 
-    janitor::clean_names() %>%
+  df_centres <- read.csv("input/centres.csv") 
+  names(df_centres) <- c("centre_name", "address", "x", "y")
+  df_centres <- df_centres %>%
     mutate(centre_name = str_trim(centre_name))%>%
     filter(centre_name %in% c(rehab_centres, acute_centres)) %>%
     mutate(
