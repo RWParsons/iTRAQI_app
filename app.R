@@ -52,8 +52,9 @@ acute_centres <- c(
   "Townsville University Hospital"
 )
 
-df_centres <- read.csv("input/centres.csv") %>% 
-  janitor::clean_names() %>%
+df_centres <- read.csv("input/centres.csv") 
+names(df_centres) <- c("centre_name", "address", "x", "y")
+df_centres <- df_centres %>%
   mutate(centre_name = str_trim(centre_name))%>%
   filter(centre_name %in% c(rehab_centres, acute_centres)) %>%
   mutate(
