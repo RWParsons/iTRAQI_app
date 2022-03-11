@@ -35,18 +35,31 @@ layer_input <- c(
 
 
 rehab_tiers <- list(
-  "Gold" = list(
+  "Platinum" = list(
     file = "acute_raster",
     centres = c("Brain Injury Rehabilitation Unit")
+  ),
+  "Gold" = list(
+    file = "rehab_raster",
+    centres = c(
+      "Sunshine Coast University Hospital",
+      "Gold Coast University Hospital",
+      "Townsville University Hospital",
+      "Brain Injury Rehabilitation Unit"
+    )
   ),
   "Silver" = list(
     file = "rehab_raster",
     centres = c(
+      "Brain Injury Rehabilitation Unit",
+      "Gold Coast University Hospital",
+      "Townsville University Hospital",
       "Sunshine Coast University Hospital",
       "Central West Sub-Acute Service",
       "Gympie Hospital",
       "Rockhampton Hospital",
-      "Roma Hospital"
+      "Roma Hospital",
+      "Cairns Hospital"
     )
   )
 )
@@ -125,7 +138,8 @@ server <- function(input, output, session){
     "Central West Sub-Acute Service",
     "Gympie Hospital",
     "Rockhampton Hospital",
-    "Roma Hospital"
+    "Roma Hospital",
+    "Cairns Hospital"
   )
   acute_centres <- c(
     "Brain Injury Rehabilitation Unit",
@@ -185,6 +199,7 @@ server <- function(input, output, session){
   )
   
   tier_icons <- iconList(
+    Platinum=makeIcon(iconUrl = "input/imgs/platinum.png", iconWidth = 549/18, iconHeight = 562/18),
     Gold=makeIcon(iconUrl = "input/imgs/gold_medal.png", iconWidth = 529/18, iconHeight = 625/18),
     Silver=makeIcon(iconUrl = "input/imgs/silver_medal.png", iconWidth = 303/18, iconHeight = 518/18)
   )
