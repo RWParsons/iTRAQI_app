@@ -58,17 +58,27 @@ ui <- navbarPage(
   tabPanel(
     title="Downloads",
     icon=icon("download-alt", lib="glyphicon"),
-    downloadBttn("download_SA1", "Download (SA1s)", style="pill", block=FALSE),
-    downloadBttn("download_SA2", "Download (SA2s)", style="pill", block=FALSE)
+    tags$h3("Download links for SA1 and SA2 aggregate time to care:"),
+    tags$h4("2011 SA regions:"),
+    downloadBttn("download_SA1_2011", "Download (2011 SA1s)", style="pill", block=FALSE),
+    downloadBttn("download_SA2_2011", "Download (2011 SA2s)", style="pill", block=FALSE),
+    tags$br(),
+    tags$br(),
+    tags$h4("2016 SA regions:"),
+    downloadBttn("download_SA1_2016", "Download (2016 SA1s)", style="pill", block=FALSE),
+    downloadBttn("download_SA2_2016", "Download (2016 SA2s)", style="pill", block=FALSE),
+    tags$br(),
+    tags$br(),
+    tags$h4("2021 SA regions:"),
+    downloadBttn("download_SA1_2021", "Download (2021 SA1s)", style="pill", block=FALSE),
+    downloadBttn("download_SA2_2021", "Download (2021 SA2s)", style="pill", block=FALSE)
+    
   )
 )
 
 server <- function(input, output, session){
   layers_dir <- "input/layers"
   SAs_sf <- readRDS(file.path(layers_dir, "acute_polygons_SA1_year2016.rds"))
-  
-  SA1_agg_data <- read.csv("input/download_data/SA1s_data.csv")
-  SA2_agg_data <- read.csv("input/download_data/SA2s_data.csv")
   
   df_locations <- read.csv("input/QLD_locations_with_RSQ_times_20220210.csv") %>%
     mutate(popup=paste0(
@@ -141,18 +151,6 @@ server <- function(input, output, session){
     rehab=makeIcon(iconUrl = "input/imgs/rehab_care.png", iconWidth = 783/18, iconHeight = 783/18)
   )
   
-  output$download_SA1 <- downloadHandler(
-    filename="SA1_aggregated_time_to_care.csv",
-    content=function(file){
-      write.csv(SA1_agg_data, file, row.names=FALSE)
-    }
-  )
-  output$download_SA2 <- downloadHandler(
-    filename="SA2_aggregated_time_to_care.csv",
-    content=function(file){
-      write.csv(SA2_agg_data, file, row.names=FALSE)
-    }
-  )
   
   # Use a separate observer to recreate the legend as needed.
   observe({
@@ -271,6 +269,45 @@ server <- function(input, output, session){
         )
     }
   })
+  
+  output$download_SA1_2011 <- downloadHandler(
+    filename="aggregated_time_to_care_SA1_year2011.csv",
+    content=function(file){
+      write.csv(read.csv("input/download_data/combined_data_SA1_year2011.csv"), file, row.names=FALSE)
+    }
+  )
+  output$download_SA2_2011 <- downloadHandler(
+    filename="aggregated_time_to_care_SA2_year2011.csv",
+    content=function(file){
+      write.csv(read.csv("input/download_data/combined_data_SA2_year2011.csv"), file, row.names=FALSE)
+    }
+  )
+  
+  output$download_SA1_2016 <- downloadHandler(
+    filename="aggregated_time_to_care_SA1_year2016.csv",
+    content=function(file){
+      write.csv(read.csv("input/download_data/combined_data_SA1_year2016.csv"), file, row.names=FALSE)
+    }
+  )
+  output$download_SA2_2016 <- downloadHandler(
+    filename="aggregated_time_to_care_SA2_year2016.csv",
+    content=function(file){
+      write.csv(read.csv("input/download_data/combined_data_SA2_year2016.csv"), file, row.names=FALSE)
+    }
+  )
+  
+  output$download_SA1_2021 <- downloadHandler(
+    filename="aggregated_time_to_care_SA1_year2021.csv",
+    content=function(file){
+      write.csv(read.csv("input/download_data/combined_data_SA1_year2021.csv"), file, row.names=FALSE)
+    }
+  )
+  output$download_SA2_2021 <- downloadHandler(
+    filename="aggregated_time_to_care_SA2_year2021.csv",
+    content=function(file){
+      write.csv(read.csv("input/download_data/combined_data_SA2_year2021.csv"), file, row.names=FALSE)
+    }
+  )
   
 }
 
