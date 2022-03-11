@@ -110,8 +110,32 @@ server <- function(input, output, session){
   # https://medium.com/ibm-data-ai/asynchronous-loading-of-leaflet-layer-groups-afc073999e77
   rvs <- reactiveValues(to_load=0, map=NULL)
   
-  bins <- c(0, 30, 60, 120, 180, 240, 300, 360, Inf)
-  pal <- colorBin("YlOrRd", domain = 0:900, bins=bins, na.color="transparent")
+  bins <- c(0, 30, 60, 120, 180, 240, 300, 360, 900)
+  palBin <- colorBin("YlOrRd", domain = 0:900, bins=bins, na.color="transparent")
+  
+  palNum1 <- colorNumeric(c("#FFFFCC", "#FFEDA0"), domain=0:30, na.color="transparent")
+  palNum2 <- colorNumeric(c("#FFEDA0", "#FED976"), domain=30:60, na.color="transparent")
+  palNum3 <- colorNumeric(c("#FED976", "#FEB24C"), domain=60:120, na.color="transparent")
+  palNum4 <- colorNumeric(c("#FEB24C", "#FD8D3C"), domain=120:180, na.color="transparent")
+  palNum5 <- colorNumeric(c("#FD8D3C", "#FC4E2A"), domain=180:240, na.color="transparent")
+  palNum6 <- colorNumeric(c("#FC4E2A", "#E31A1C"), domain=240:300, na.color="transparent")
+  palNum7 <- colorNumeric(c("#E31A1C", "#B10026"), domain=300:360, na.color="transparent")
+  palNum8 <- colorNumeric(c("#B10026", "#000000"), domain=360:900, na.color="transparent")
+  
+  palNum <- function(x){
+    case_when(
+      x < 30 ~ palNum1(x),
+      x < 60 ~ palNum2(x),
+      x < 120 ~ palNum3(x),
+      x < 180 ~ palNum4(x),
+      x < 240 ~ palNum5(x),
+      x < 300 ~ palNum6(x),
+      x < 360 ~ palNum7(x),
+      x < 900 ~ palNum8(x),
+      TRUE ~ "transparent"
+    )
+  }
+  
   centre_icons <- iconList(
     acute=makeIcon(iconUrl = "input/imgs/acute_care2.png", iconWidth = 783/18, iconHeight = 900/18),
     rehab=makeIcon(iconUrl = "input/imgs/rehab_care.png", iconWidth = 783/18, iconHeight = 783/18)
@@ -133,7 +157,6 @@ server <- function(input, output, session){
   # Use a separate observer to recreate the legend as needed.
   observe({
     proxy <- leafletProxy("map_async", data = SAs_sf)
-    # proxy <- leafletProxy("map_async", data = NULL)
 
     # Remove any existing legend, and only if the legend is
     # enabled, create a new one.
@@ -142,14 +165,16 @@ server <- function(input, output, session){
       proxy %>% addLegend(
         opacity=1,
         position = "bottomright",
-        pal = pal, values = ~mean,
+        pal = palBin, values = ~mean,
         title = "Time to care (minutes)"
       )
     }
   })
   
   output$map_async <- renderLeaflet({
+    print("preload")
     rvs$to_load <- isolate(rvs$to_load) + 1 # change the value to trigger observeEvent
+    print("postload")
     rvs$map <- 
       leaflet(options=leafletOptions(minZoom=5)) %>%
       setMaxBounds(lng1 = 115, lat1 = -45.00, lng2 = 170, lat2 = -5) %>%
@@ -178,17 +203,24 @@ server <- function(input, output, session){
         popup=df_centres$popup,
         options=leafletOptions(pane="markers")
       )
-
+    print("postbasemap")
     rvs$map
   })
   
+  # observeEvent(rvs$to_load, {
+  #   req(rvs$map)
+  #   Sys.sleep(5)
+  #   rvs$delayer <- TRUE
+  # })
+  
   observeEvent(rvs$to_load,{
-    req(rvs$map) # if it's not null or false
+    # req(rvs$map, rvs$delayer)
+    req(rvs$map)
+    print(class(rvs$map))
     SA2s_lookup <- read.csv("input/lookup_data/SA2s_names_lookup.csv")
-    SA2s_lookup$SA2_CODE16 <- as.character(SA2s_lookup$SA2_MAIN16)
+    SA2s_lookup$SA2_CODE16 <- as.character(SA2s_lookup$SA2_CODE16)
     SA1s_lookup <- read.csv("input/lookup_data/SA1s_names_lookup.csv")
-    SA1s_lookup$SA1_CODE16 <- as.character(SA1s_lookup$SA1_MAIN16)
-    
+    SA1s_lookup$SA1_CODE16 <- as.character(SA1s_lookup$SA1_CODE16)
     
     group_names_to_load <- names(layer_input)
     raster_layers <- grep("raster", layer_input)
@@ -217,7 +249,7 @@ server <- function(input, output, session){
       leafletProxy("map_async") %>%
         addPolygons(
           data=new_layer,
-          fillColor=~pal(value),
+          fillColor=~palBin(value),
           color="black",
           fillOpacity=1,
           weight=1,
@@ -235,7 +267,7 @@ server <- function(input, output, session){
           x=raster(new_layer, layer=1),
           group=group_name,
           options=leafletOptions(pane="layers"),
-          colors=pal
+          colors=palNum
         )
     }
   })
