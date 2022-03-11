@@ -33,6 +33,25 @@ layer_input <- c(
   "Rehab time" = "rehab_raster"
 )
 
+
+rehab_tiers <- list(
+  "Gold" = list(
+    file = "acute_raster",
+    centres = c("Brain Injury Rehabilitation Unit")
+  ),
+  "Silver" = list(
+    file = "rehab_raster",
+    centres = c(
+      "Sunshine Coast University Hospital",
+      "Central West Sub-Acute Service",
+      "Gympie Hospital",
+      "Rockhampton Hospital",
+      "Roma Hospital"
+    )
+  )
+)
+
+
 group_display <- "SA1 acute time"
 
 ui <- navbarPage(
@@ -46,6 +65,18 @@ ui <- navbarPage(
       absolutePanel(
         top = 0, right = 0,
         checkboxInput("legend", "Show legend", TRUE)
+      )
+    )
+  ),
+  tabPanel(
+    title="Custom Rehab Map",
+    div(
+      class="outer",
+      tags$style(type = "text/css", ".outer {position: fixed; top: 41px; left: 0; right: 0; bottom: 0; overflow: hidden; padding: 0}"),
+      leafletOutput("map_rehab", width = "100%", height = "100%"),
+      absolutePanel(
+        top = 0, right = 0,
+        checkboxInput("legend_rehab", "Show legend", TRUE)
       )
     )
   ),
@@ -120,7 +151,7 @@ server <- function(input, output, session){
   # https://medium.com/ibm-data-ai/asynchronous-loading-of-leaflet-layer-groups-afc073999e77
   # but improving it so that the trigger doesn't occur until after the basemap is up
   # https://stackoverflow.com/questions/66388965/understanding-sessiononflush-in-shiny
-  rvs <- reactiveValues(to_load=NULL, map=NULL)
+  rvs <- reactiveValues(to_load=NULL, map=NULL, to_load_rehab=NULL, map_rehab=NULL)
   
   bins <- c(0, 30, 60, 120, 180, 240, 300, 360, 900)
   palBin <- colorBin("YlOrRd", domain = 0:900, bins=bins, na.color="transparent")
@@ -151,6 +182,11 @@ server <- function(input, output, session){
   centre_icons <- iconList(
     acute=makeIcon(iconUrl = "input/imgs/acute_care2.png", iconWidth = 783/18, iconHeight = 900/18),
     rehab=makeIcon(iconUrl = "input/imgs/rehab_care.png", iconWidth = 783/18, iconHeight = 783/18)
+  )
+  
+  tier_icons <- iconList(
+    Gold=makeIcon(iconUrl = "input/imgs/gold_medal.png", iconWidth = 529/18, iconHeight = 625/18),
+    Silver=makeIcon(iconUrl = "input/imgs/silver_medal.png", iconWidth = 303/18, iconHeight = 518/18)
   )
   
   
@@ -202,6 +238,74 @@ server <- function(input, output, session){
       )
     rvs$map
   })
+  
+  output$map_rehab <- renderLeaflet({
+    rvs$to_load_rehab <- TRUE
+    rvs$map_rehab <- 
+      leaflet(options=leafletOptions(minZoom=5)) %>%
+      setMaxBounds(lng1 = 115, lat1 = -45.00, lng2 = 170, lat2 = -5) %>%
+      addSearchOSM(options=searchOptions(moveToLocation=FALSE, zoom=NULL)) %>%
+      addMapPane(name = "layers", zIndex = 200) %>%
+      addMapPane(name = "maplabels", zIndex = 400) %>%
+      addMapPane(name = "markers", zIndex = 205) %>%
+      addProviderTiles("CartoDB.VoyagerNoLabels") %>%
+      addProviderTiles("CartoDB.VoyagerOnlyLabels",
+                       options = leafletOptions(pane = "maplabels"),
+                       group = "map labels") %>%
+      addLayersControl(
+        position = "topright",
+        baseGroups = c("None", names(rehab_tiers)),
+        options = layersControlOptions(collapsed = TRUE)) %>%
+      hideGroup(names(rehab_tiers)) %>%
+      addCircleMarkers(
+        lng=df_locations$x, lat=df_locations$y, 
+        radius=2, fillOpacity=0,
+        popup=df_locations$popup,
+        options=leafletOptions(pane="markers")
+      ) 
+    rvs$map_rehab
+  })
+  
+  observeEvent(rvs$to_load_rehab, {
+    for(group_name in names(rehab_tiers)){
+      print(file.path(layers_dir, glue::glue("{rehab_tiers[[group_name]]$file}.rds")))
+      new_layer <- readRDS(file.path(layers_dir, glue::glue("{rehab_tiers[[group_name]]$file}.rds")))
+      centres_group <- df_centres[df_centres$centre_name %in% rehab_tiers[[group_name]]$centres, ]
+      leafletProxy("map_rehab") %>%
+        addRasterImage(
+          data=new_layer,
+          x=raster(new_layer, layer=1),
+          group=group_name,
+          options=leafletOptions(pane="layers"),
+          colors=palNum
+        ) %>%
+        addMarkers(
+          lng=centres_group$x, lat=centres_group$y, 
+          icon=tier_icons[group_name],
+          popup=centres_group$popup,
+          group=group_name,
+          options=leafletOptions(pane="markers")
+        )
+    }
+  })
+  
+  
+  observe({
+    proxy <- leafletProxy("map_rehab", data = SAs_sf)
+    
+    # Remove any existing legend, and only if the legend is
+    # enabled, create a new one.
+    proxy %>% clearControls()
+    if (input$legend) {
+      proxy %>% addLegend(
+        opacity=1,
+        position = "bottomright",
+        pal = palBin, values = ~mean,
+        title = "Time to care (minutes)"
+      )
+    }
+  })
+  
   
   session$onFlushed(function() rvs$to_load <- TRUE)
 
