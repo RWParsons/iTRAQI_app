@@ -116,8 +116,10 @@ server <- function(input, output, session){
       )
     )
   
-  
+  # based on asynchronous map loading here
   # https://medium.com/ibm-data-ai/asynchronous-loading-of-leaflet-layer-groups-afc073999e77
+  # but improving it so that the trigger doesn't occur until after the basemap is up
+  # https://stackoverflow.com/questions/66388965/understanding-sessiononflush-in-shiny
   rvs <- reactiveValues(to_load=NULL, map=NULL)
   
   bins <- c(0, 30, 60, 120, 180, 240, 300, 360, 900)
