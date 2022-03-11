@@ -118,7 +118,7 @@ server <- function(input, output, session){
   
   
   # https://medium.com/ibm-data-ai/asynchronous-loading-of-leaflet-layer-groups-afc073999e77
-  rvs <- reactiveValues(to_load=0, map=NULL)
+  rvs <- reactiveValues(to_load=NULL, map=NULL)
   
   bins <- c(0, 30, 60, 120, 180, 240, 300, 360, 900)
   palBin <- colorBin("YlOrRd", domain = 0:900, bins=bins, na.color="transparent")
@@ -170,9 +170,6 @@ server <- function(input, output, session){
   })
   
   output$map_async <- renderLeaflet({
-    print("preload")
-    rvs$to_load <- isolate(rvs$to_load) + 1 # change the value to trigger observeEvent
-    print("postload")
     rvs$map <- 
       leaflet(options=leafletOptions(minZoom=5)) %>%
       setMaxBounds(lng1 = 115, lat1 = -45.00, lng2 = 170, lat2 = -5) %>%
@@ -201,41 +198,34 @@ server <- function(input, output, session){
         popup=df_centres$popup,
         options=leafletOptions(pane="markers")
       )
-    print("postbasemap")
     rvs$map
   })
   
-  # observeEvent(rvs$to_load, {
-  #   req(rvs$map)
-  #   Sys.sleep(5)
-  #   rvs$delayer <- TRUE
-  # })
-  
+  session$onFlushed(function() rvs$to_load <- TRUE)
+
   observeEvent(rvs$to_load,{
-    # req(rvs$map, rvs$delayer)
     req(rvs$map)
-    print(class(rvs$map))
     SA2s_lookup <- read.csv("input/lookup_data/SA2s_names_lookup.csv")
     SA2s_lookup$SA2_CODE16 <- as.character(SA2s_lookup$SA2_CODE16)
     SA1s_lookup <- read.csv("input/lookup_data/SA1s_names_lookup.csv")
     SA1s_lookup$SA1_CODE16 <- as.character(SA1s_lookup$SA1_CODE16)
-    
+
     group_names_to_load <- names(layer_input)
     raster_layers <- grep("raster", layer_input)
     polygon_layers <- group_names_to_load[-raster_layers]
     raster_layers <- group_names_to_load[raster_layers]
-    
+
     for(group_name in polygon_layers){
       care_type <- ifelse(grepl("acute", tolower(group_name)), "acute", "rehab")
       SA_level <- as.numeric(str_extract(group_name, "(?<=SA)[0-9]"))
-      
+
       new_layer <- readRDS(file.path(layers_dir, glue::glue("{layer_input[group_name]}.rds")))
       if(SA_level==2){
         new_layer <- left_join(new_layer, SA2s_lookup)
       }else if(SA_level==1){
         new_layer <- left_join(new_layer, SA1s_lookup)
       }
-      
+
       new_layer <- new_layer %>%
         mutate(popup = paste0(
           paste0(
@@ -256,7 +246,7 @@ server <- function(input, output, session){
           options=leafletOptions(pane="layers")
         )
     }
-    
+
     for(group_name in raster_layers){
       new_layer <- readRDS(file.path(layers_dir, glue::glue("{layer_input[group_name]}.rds")))
       leafletProxy("map_async") %>%
