@@ -165,7 +165,7 @@ server <- function(input, output, session){
   # https://medium.com/ibm-data-ai/asynchronous-loading-of-leaflet-layer-groups-afc073999e77
   # but improving it so that the trigger doesn't occur until after the basemap is up
   # https://stackoverflow.com/questions/66388965/understanding-sessiononflush-in-shiny
-  rvs <- reactiveValues(to_load=NULL, map=NULL, to_load_rehab=NULL, map_rehab=NULL)
+  rvs <- reactiveValues(to_load=NULL, map=NULL, to_load_rehab=NULL, map_rehab=NULL, map_complete=FALSE, map_rehab_complete=FALSE)
   
   bins <- c(0, 30, 60, 120, 180, 240, 300, 360, 900)
   palBin <- colorBin("YlOrRd", domain = 0:900, bins=bins, na.color="transparent")
@@ -255,7 +255,6 @@ server <- function(input, output, session){
   })
   
   output$map_rehab <- renderLeaflet({
-    rvs$to_load_rehab <- TRUE
     rvs$map_rehab <- 
       leaflet(options=leafletOptions(minZoom=5)) %>%
       setMaxBounds(lng1 = 115, lat1 = -45.00, lng2 = 170, lat2 = -5) %>%
@@ -282,6 +281,8 @@ server <- function(input, output, session){
   })
   
   observeEvent(rvs$to_load_rehab, {
+    req(rvs$map_rehab)
+    if(is.null(isolate(rvs$map_rehab)) | isolate(rvs$map_rehab_complete))return()
     for(group_name in names(rehab_tiers)){
       print(file.path(layers_dir, glue::glue("{rehab_tiers[[group_name]]$file}.rds")))
       new_layer <- readRDS(file.path(layers_dir, glue::glue("{rehab_tiers[[group_name]]$file}.rds")))
@@ -302,6 +303,7 @@ server <- function(input, output, session){
           options=leafletOptions(pane="markers")
         )
     }
+    if(!isolate(rvs$map_rehab_complete)) rvs$map_rehab_complete <- TRUE
   })
   
   
@@ -320,12 +322,24 @@ server <- function(input, output, session){
       )
     }
   })
+  f <- function(){
+    if(is.null(isolate(rvs$to_load))) rvs$to_load <- 1
+    if(is.null(isolate(rvs$to_load_rehab))) rvs$to_load_rehab <- 1
+    
+    if(!is.null(isolate(rvs$to_load)) & !isolate(rvs$map_complete) & !is.null(isolate(rvs$map))){
+      rvs$to_load <- isolate(rvs$to_load) + 1
+    }
+    
+    if(!is.null(isolate(rvs$to_load_rehab)) & !isolate(rvs$map_rehab_complete) & !is.null(isolate(rvs$map_rehab))){
+      rvs$to_load_rehab <- isolate(rvs$to_load_rehab) + 1
+    }
+  }
+  session$onFlushed(f, once=FALSE)
   
-  
-  session$onFlushed(function() rvs$to_load <- TRUE)
+  # session$onFlushed(function() rvs$to_load <- TRUE)
 
   observeEvent(rvs$to_load,{
-    req(rvs$map)
+    if(is.null(isolate(rvs$map)) | isolate(rvs$map_complete))return()
     SA2s_lookup <- read.csv("input/lookup_data/SA2s_names_lookup.csv")
     SA2s_lookup$SA2_CODE16 <- as.character(SA2s_lookup$SA2_CODE16)
     SA1s_lookup <- read.csv("input/lookup_data/SA1s_names_lookup.csv")
@@ -379,6 +393,8 @@ server <- function(input, output, session){
           colors=palNum
         )
     }
+    
+    if(!isolate(rvs$map_complete)) rvs$map_complete <- TRUE
   })
   
   output$download_SA1_2011 <- downloadHandler(
