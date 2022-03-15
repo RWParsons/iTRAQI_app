@@ -91,22 +91,14 @@ ui <- navbarPage(
     title="Map",
     div(
       tags$style(type = "text/css", "#map_async {height: calc(100vh - 80px) !important;}"),
-      withSpinner(leafletOutput("map_async")),
-      absolutePanel(
-        top = 0, right = 0,
-        checkboxInput("legend", "Show legend", TRUE)
-      )
+      withSpinner(leafletOutput("map_async"))
     )
   ),
   tabPanel(
     title="Custom Rehab Map",
     div(
       tags$style(type = "text/css", "#map_rehab {height: calc(100vh - 80px) !important;}"),
-      withSpinner(leafletOutput("map_rehab")),
-      absolutePanel(
-        top = 0, right = 0,
-        checkboxInput("legend_rehab", "Show legend", TRUE)
-      )
+      withSpinner(leafletOutput("map_rehab"))
     )
   ),
   tabPanel(
@@ -209,24 +201,6 @@ server <- function(input, output, session){
     )
   }
   
-  # Use a separate observer to recreate the legend as needed.
-  observe({
-    proxy <- leafletProxy("map_async")
-
-    # Remove any existing legend, and only if the legend is
-    # enabled, create a new one.
-    proxy %>% clearControls()
-    if (input$legend) {
-      proxy %>% addLegend(
-        opacity=1,
-        position = "bottomright",
-        pal = palBin, 
-        values= 0:900,
-        title = "Time to care (minutes)"
-      )
-    }
-  })
-  
   output$map_async <- renderLeaflet({
     rvs$map <- 
       leaflet(options=leafletOptions(minZoom=5)) %>%
@@ -255,6 +229,13 @@ server <- function(input, output, session){
         icon=centre_icons[df_centres$care_type],
         popup=df_centres$popup,
         options=leafletOptions(pane="markers")
+      ) %>% 
+      addLegend(
+        opacity=1,
+        position = "bottomright",
+        pal = palBin,
+        values = 0:900,
+        title = "Time to care (minutes)"
       )
     rvs$map
   })
@@ -281,7 +262,14 @@ server <- function(input, output, session){
         radius=2, fillOpacity=0,
         popup=df_locations$popup,
         options=leafletOptions(pane="markers")
-      ) 
+      ) %>% 
+      addLegend(
+        opacity=1,
+        position = "bottomright",
+        pal = palBin, 
+        values = 0:900,
+        title = "Time to care (minutes)"
+      )
     rvs$map_rehab
   })
   
@@ -312,22 +300,6 @@ server <- function(input, output, session){
   })
   
   
-  observe({
-    proxy <- leafletProxy("map_rehab")
-    
-    # Remove any existing legend, and only if the legend is
-    # enabled, create a new one.
-    proxy %>% clearControls()
-    if (input$legend_rehab) {
-      proxy %>% addLegend(
-        opacity=1,
-        position = "bottomright",
-        pal = palBin, 
-        values = 0:900,
-        title = "Time to care (minutes)"
-      )
-    }
-  })
   f <- function(){
     if(is.null(isolate(rvs$to_load))) rvs$to_load <- 1
     if(is.null(isolate(rvs$to_load_rehab))) rvs$to_load_rehab <- 1
