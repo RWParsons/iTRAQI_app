@@ -25,12 +25,13 @@ library(rgdal)
 # )
 
 layer_input <- c(
+  "Acute time" = "acute_raster",
+  "Rehab time" = "rehab_raster",
   "SA1 acute time" = "acute_polygons_SA1_year2016_simplified",
   "SA2 acute time" = "acute_polygons_SA2_year2016_simplified",
   "SA1 rehab time" = "rehab_polygons_SA1_year2016_simplified",
-  "SA2 rehab time" = "rehab_polygons_SA2_year2016_simplified",
-  "Acute time" = "acute_raster",
-  "Rehab time" = "rehab_raster"
+  "SA2 rehab time" = "rehab_polygons_SA2_year2016_simplified"
+  
 )
 
 
@@ -347,6 +348,18 @@ server <- function(input, output, session){
     raster_layers <- grep("raster", layer_input)
     polygon_layers <- group_names_to_load[-raster_layers]
     raster_layers <- group_names_to_load[raster_layers]
+    
+    for(group_name in raster_layers){
+      new_layer <- readRDS(file.path(layers_dir, glue::glue("{layer_input[group_name]}.rds")))
+      leafletProxy("map_async") %>%
+        addRasterImage(
+          data=new_layer,
+          x=raster(new_layer, layer=1),
+          group=group_name,
+          options=leafletOptions(pane="layers"),
+          colors=palNum
+        )
+    }
 
     for(group_name in polygon_layers){
       care_type <- ifelse(grepl("acute", tolower(group_name)), "acute", "rehab")
@@ -377,18 +390,6 @@ server <- function(input, output, session){
           group=group_name,
           popup=new_layer$popup,
           options=leafletOptions(pane="layers")
-        )
-    }
-
-    for(group_name in raster_layers){
-      new_layer <- readRDS(file.path(layers_dir, glue::glue("{layer_input[group_name]}.rds")))
-      leafletProxy("map_async") %>%
-        addRasterImage(
-          data=new_layer,
-          x=raster(new_layer, layer=1),
-          group=group_name,
-          options=leafletOptions(pane="layers"),
-          colors=palNum
         )
     }
     
