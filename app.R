@@ -138,7 +138,6 @@ ui <- navbarPage(
 
 server <- function(input, output, session){
   layers_dir <- "input/layers"
-  SAs_sf <- readRDS(file.path(layers_dir, "acute_polygons_SA1_year2016.rds"))
   
   df_locations <- read.csv("input/QLD_locations_with_RSQ_times_20220210.csv") %>%
     mutate(popup=paste0(
@@ -212,7 +211,7 @@ server <- function(input, output, session){
   
   # Use a separate observer to recreate the legend as needed.
   observe({
-    proxy <- leafletProxy("map_async", data = SAs_sf)
+    proxy <- leafletProxy("map_async")
 
     # Remove any existing legend, and only if the legend is
     # enabled, create a new one.
@@ -221,7 +220,8 @@ server <- function(input, output, session){
       proxy %>% addLegend(
         opacity=1,
         position = "bottomright",
-        pal = palBin, values = ~mean,
+        pal = palBin, 
+        values= 0:900,
         title = "Time to care (minutes)"
       )
     }
@@ -313,16 +313,17 @@ server <- function(input, output, session){
   
   
   observe({
-    proxy <- leafletProxy("map_rehab", data = SAs_sf)
+    proxy <- leafletProxy("map_rehab")
     
     # Remove any existing legend, and only if the legend is
     # enabled, create a new one.
     proxy %>% clearControls()
-    if (input$legend) {
+    if (input$legend_rehab) {
       proxy %>% addLegend(
         opacity=1,
         position = "bottomright",
-        pal = palBin, values = ~mean,
+        pal = palBin, 
+        values = 0:900,
         title = "Time to care (minutes)"
       )
     }
