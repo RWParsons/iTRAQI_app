@@ -72,9 +72,8 @@ ui <- navbarPage(
   tabPanel(
     title="Map",
     div(
-      class="outer",
-      tags$style(type = "text/css", ".outer {position: fixed; top: 41px; left: 0; right: 0; bottom: 0; overflow: hidden; padding: 0}"),
-      leafletOutput("map_async", width = "100%", height = "100%"),
+      tags$style(type = "text/css", "#map_async {height: calc(100vh - 80px) !important;}"),
+      leafletOutput("map_async"),
       absolutePanel(
         top = 0, right = 0,
         checkboxInput("legend", "Show legend", TRUE)
@@ -84,9 +83,8 @@ ui <- navbarPage(
   tabPanel(
     title="Custom Rehab Map",
     div(
-      class="outer",
-      tags$style(type = "text/css", ".outer {position: fixed; top: 41px; left: 0; right: 0; bottom: 0; overflow: hidden; padding: 0}"),
-      leafletOutput("map_rehab", width = "100%", height = "100%"),
+      tags$style(type = "text/css", "#map_rehab {height: calc(100vh - 80px) !important;}"),
+      leafletOutput("map_rehab"),
       absolutePanel(
         top = 0, right = 0,
         checkboxInput("legend_rehab", "Show legend", TRUE)
@@ -116,7 +114,7 @@ ui <- navbarPage(
     tags$h4("2021 SA regions:"),
     downloadBttn("download_SA1_2021", "Download (2021 SA1s)", style="pill", block=FALSE),
     downloadBttn("download_SA2_2021", "Download (2021 SA2s)", style="pill", block=FALSE)
-    
+
   )
 )
 
