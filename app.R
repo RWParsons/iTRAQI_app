@@ -32,9 +32,7 @@ layer_input <- c(
   "SA2 acute time" = "acute_polygons_SA2_year2016_simplified",
   "SA1 rehab time" = "rehab_polygons_SA1_year2016_simplified",
   "SA2 rehab time" = "rehab_polygons_SA2_year2016_simplified"
-  
 )
-
 
 rehab_tiers <- list(
   "Platinum" = list(
@@ -42,6 +40,13 @@ rehab_tiers <- list(
     centres = c("Brain Injury Rehabilitation Unit")
   ),
   "Gold" = list(
+    file = "rehab_raster",
+    centres = c(
+      "Townsville University Hospital",
+      "Brain Injury Rehabilitation Unit"
+    )
+  ),
+  "Future Gold" = list(
     file = "rehab_raster",
     centres = c(
       "Sunshine Coast University Hospital",
@@ -66,6 +71,17 @@ rehab_tiers <- list(
   )
 )
 
+tier_icons <- iconList(
+  "Platinum"=makeIcon(iconUrl = "input/imgs/platinum.png", iconWidth = 549/18, iconHeight = 562/18),
+  "Gold"=makeIcon(iconUrl = "input/imgs/gold_medal.png", iconWidth = 529/18, iconHeight = 625/18),
+  "Future Gold"=makeIcon(iconUrl = "input/imgs/gold_medal.png", iconWidth = 529/18, iconHeight = 625/18),
+  "Silver"=makeIcon(iconUrl = "input/imgs/silver_medal.png", iconWidth = 303/18, iconHeight = 518/18)
+)
+
+centre_icons <- iconList(
+  acute=makeIcon(iconUrl = "input/imgs/acute_care2.png", iconWidth = 783/18, iconHeight = 900/18),
+  rehab=makeIcon(iconUrl = "input/imgs/rehab_care.png", iconWidth = 783/18, iconHeight = 783/18)
+)
 
 group_display <- "SA1 acute time"
 
@@ -192,18 +208,6 @@ server <- function(input, output, session){
       TRUE ~ "transparent"
     )
   }
-  
-  centre_icons <- iconList(
-    acute=makeIcon(iconUrl = "input/imgs/acute_care2.png", iconWidth = 783/18, iconHeight = 900/18),
-    rehab=makeIcon(iconUrl = "input/imgs/rehab_care.png", iconWidth = 783/18, iconHeight = 783/18)
-  )
-  
-  tier_icons <- iconList(
-    Platinum=makeIcon(iconUrl = "input/imgs/platinum.png", iconWidth = 549/18, iconHeight = 562/18),
-    Gold=makeIcon(iconUrl = "input/imgs/gold_medal.png", iconWidth = 529/18, iconHeight = 625/18),
-    Silver=makeIcon(iconUrl = "input/imgs/silver_medal.png", iconWidth = 303/18, iconHeight = 518/18)
-  )
-  
   
   # Use a separate observer to recreate the legend as needed.
   observe({
