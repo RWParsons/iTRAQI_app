@@ -381,9 +381,11 @@ server <- function(input, output, session){
       new_layer <- new_layer %>%
         mutate(popup = paste0(
           paste0(
-            "<b>SA2 Region: </b>", .[[3]], "<br>",
+            "<b>SA2 Region: </b>", .[["SA2_NAME16"]], "<br>",
             "<b>SA", SA_level, " ID: </b>", .[[1]], "<br>",
-            "<b>Time to ", care_type, " care (minutes): </b>", round(.[[2]]), "<br>"
+            "<b>Time to ", care_type, " care (minutes): </b>", "<br>", 
+            "&nbsp;&nbsp;&nbsp;&nbsp; Estimate = ", round(.[["value"]]), "<br>", 
+            "&nbsp;&nbsp;&nbsp;&nbsp; range(min - max) = [", round(.[["min"]]), " - ", round(.[["max"]]), "]<br>"
           )
         ))
       leafletProxy("map_async") %>%
