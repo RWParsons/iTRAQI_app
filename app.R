@@ -7,6 +7,7 @@ library(leaflet)
 # see associated PR here: https://github.com/rstudio/leaflet/pull/692
 # can install directly with `remotes::install_github("rstudio/leaflet", ref="joe/feature/raster-options")`
 library(leaflet.extras)
+library(leaflegend)
 library(RColorBrewer)
 library(tidyverse)
 library(sf)
@@ -196,7 +197,7 @@ server <- function(input, output, session){
       x < 300 ~ palNum6(x),
       x < 360 ~ palNum7(x),
       x < 900 ~ palNum8(x),
-      x > 900 ~ "#000000",
+      x >= 900 ~ "#000000",
       TRUE ~ "transparent"
     )
   }
@@ -263,12 +264,14 @@ server <- function(input, output, session){
         popup=df_locations$popup,
         options=leafletOptions(pane="markers")
       ) %>% 
-      addLegend(
-        opacity=1,
-        position = "bottomright",
-        pal = palBin, 
-        values = 0:900,
-        title = "Time to care (minutes)"
+      addLegendNumeric(
+        pal=palNum,
+        position="bottomright",
+        height=250,
+        width=24,
+        bins=10,
+        value=0:1200,
+        title="Time to care (minutes)"
       )
     rvs$map_rehab
   })
