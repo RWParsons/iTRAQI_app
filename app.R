@@ -1,5 +1,6 @@
 library(shiny)
 library(shinyWidgets)
+library(shinycssloaders)
 library(leaflet)
 # To get the pane options in raster layers to work, install leaflet from 
 # https://github.com/rstudio/leaflet/tree/joe/feature/raster-options
@@ -74,7 +75,7 @@ ui <- navbarPage(
     title="Map",
     div(
       tags$style(type = "text/css", "#map_async {height: calc(100vh - 80px) !important;}"),
-      leafletOutput("map_async"),
+      withSpinner(leafletOutput("map_async")),
       absolutePanel(
         top = 0, right = 0,
         checkboxInput("legend", "Show legend", TRUE)
@@ -85,7 +86,7 @@ ui <- navbarPage(
     title="Custom Rehab Map",
     div(
       tags$style(type = "text/css", "#map_rehab {height: calc(100vh - 80px) !important;}"),
-      leafletOutput("map_rehab"),
+      withSpinner(leafletOutput("map_rehab")),
       absolutePanel(
         top = 0, right = 0,
         checkboxInput("legend_rehab", "Show legend", TRUE)
