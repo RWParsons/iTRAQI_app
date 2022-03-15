@@ -36,18 +36,18 @@ layer_input <- c(
 
 rehab_tiers <- list(
   "Platinum" = list(
-    file = "acute_raster",
+    file = "rehab_raster_platinum",
     centres = c("Brain Injury Rehabilitation Unit")
   ),
   "Gold" = list(
-    file = "rehab_raster",
+    file = "rehab_raster_gold",
     centres = c(
       "Townsville University Hospital",
       "Brain Injury Rehabilitation Unit"
     )
   ),
   "Future Gold" = list(
-    file = "rehab_raster",
+    file = "rehab_raster_future_gold",
     centres = c(
       "Sunshine Coast University Hospital",
       "Gold Coast University Hospital",
@@ -205,6 +205,7 @@ server <- function(input, output, session){
       x < 300 ~ palNum6(x),
       x < 360 ~ palNum7(x),
       x < 900 ~ palNum8(x),
+      x > 900 ~ "#000000",
       TRUE ~ "transparent"
     )
   }
