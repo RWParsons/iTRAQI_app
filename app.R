@@ -364,6 +364,7 @@ server <- function(input, output, session){
             "<b>SA2 Region: </b>", .[["SA2_NAME16"]], "<br>",
             "<b>SA", SA_level, " ID: </b>", .[[1]], "<br>",
             "<b>Remoteness: </b>", .[["ra_name"]], "<br>",
+            "<b>SEIFA quintile: </b>", .[["seifa_quintile"]], "<br>",
             "<b>Time to ", care_type, " care in minutes (estimate [min - max]): </b>", "<br>", 
             "&nbsp;&nbsp;&nbsp;&nbsp; ", round(.[["value"]]), " [", round(.[["min"]]), " - ", round(.[["max"]]), "]<br>"
           )
