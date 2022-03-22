@@ -214,10 +214,6 @@ server <- function(input, output, session){
       addProviderTiles("CartoDB.VoyagerOnlyLabels",
                        options = leafletOptions(pane = "maplabels"),
                        group = "map labels") %>%
-      addLayersControl(
-        position = "topright",
-        baseGroups = c("None",names(layer_input)),
-        options = layersControlOptions(collapsed = TRUE)) %>%
       hideGroup(names(layer_input)) %>%
       addCircleMarkers(
         lng=df_locations$x, lat=df_locations$y, 
@@ -233,11 +229,15 @@ server <- function(input, output, session){
       ) %>% 
       addLegend(
         opacity=1,
-        position = "bottomright",
+        position = "topright",
         pal = palBin,
         values = 0:900,
         title = "Time to care (minutes)"
-      )
+      ) %>%
+      addLayersControl(
+        position = "topright",
+        baseGroups = c("None",names(layer_input)),
+        options = layersControlOptions(collapsed = TRUE))
     rvs$map
   })
   
@@ -253,10 +253,6 @@ server <- function(input, output, session){
       addProviderTiles("CartoDB.VoyagerOnlyLabels",
                        options = leafletOptions(pane = "maplabels"),
                        group = "map labels") %>%
-      addLayersControl(
-        position = "topright",
-        baseGroups = c("None", names(rehab_tiers)),
-        options = layersControlOptions(collapsed = TRUE)) %>%
       hideGroup(names(rehab_tiers)) %>%
       addCircleMarkers(
         lng=df_locations$x, lat=df_locations$y, 
@@ -266,13 +262,17 @@ server <- function(input, output, session){
       ) %>% 
       addLegendNumeric(
         pal=palNum,
-        position="bottomright",
+        position="topright",
         height=250,
         width=24,
         bins=10,
         value=0:1200,
         title="Time to care (minutes)"
-      )
+      ) %>%
+      addLayersControl(
+        position = "topright",
+        baseGroups = c("None", names(rehab_tiers)),
+        options = layersControlOptions(collapsed = TRUE))
     rvs$map_rehab
   })
   
