@@ -89,14 +89,14 @@ group_display <- "SA1 acute time"
 ui <- navbarPage(
   "iTRAQI",
   tabPanel(
-    title="Map",
+    title="Main Map",
     div(
       tags$style(type = "text/css", "#map_async {height: calc(100vh - 80px) !important;}"),
       withSpinner(leafletOutput("map_async"))
     )
   ),
   tabPanel(
-    title="Custom Rehab Map",
+    title="Rehab Map",
     div(
       tags$style(type = "text/css", "#map_rehab {height: calc(100vh - 80px) !important;}"),
       withSpinner(leafletOutput("map_rehab"))
