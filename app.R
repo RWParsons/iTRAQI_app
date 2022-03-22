@@ -202,6 +202,10 @@ server <- function(input, output, session){
     )
   }
   
+  palNum_hours <- function(x){
+    palNum(x*60)
+  }
+  
   output$map_async <- renderLeaflet({
     rvs$map <- 
       leaflet(options=leafletOptions(minZoom=5)) %>%
@@ -261,13 +265,13 @@ server <- function(input, output, session){
         options=leafletOptions(pane="markers")
       ) %>% 
       addLegendNumeric(
-        pal=palNum,
+        pal=palNum_hours,
         position="topright",
         height=250,
         width=24,
         bins=10,
-        value=0:1200,
-        title="Time to care (minutes)"
+        value=c(-0.01, 0:20, 20.1),
+        htmltools::tagList(tags$div("Time to care (hours)"), tags$br())
       ) %>%
       addLayersControl(
         position = "topright",
