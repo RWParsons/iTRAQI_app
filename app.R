@@ -231,12 +231,12 @@ server <- function(input, output, session){
         popup=df_centres$popup,
         options=leafletOptions(pane="markers")
       ) %>% 
-      addLegend(
+      addLegendBin(
         opacity=1,
-        position = "topright",
-        pal = palBin,
-        values = 0:900,
-        title = "Time to care (minutes)"
+        position="topright",
+        pal=palBin,
+        values=0:900,
+        title=htmltools::tagList(tags$div("Time to care (minutes)"), tags$br())
       ) %>%
       addLayersControl(
         position = "topright",
