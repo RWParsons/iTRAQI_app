@@ -155,13 +155,20 @@ server <- function(input, output, session){
   layers_dir <- "input/layers"
   
   df_locations <- read.csv("input/QLD_locations_with_RSQ_times_20220210.csv") %>%
-    mutate(popup=paste0(
-      "<b>Location: </b>", location, "<br>",
-      "<b>Acute care destination: </b>", acute_care_centre, "<br>",
-      "<b>Time to acute care (minutes): </b>", acute_time, "<br>",
-      "<b>Rehab care destination: </b>", rehab_centre, "<br>",
-      "<b>Time to rehab care (minutes): </b>", rehab_time, "<br>"
-    ))
+    mutate(
+      popup=paste0(
+        "<b>Location: </b>", location, "<br>",
+        "<b>Acute care destination: </b>", acute_care_centre, "<br>",
+        "<b>Time to acute care (minutes): </b>", acute_time, "<br>",
+        "<b>Rehab care destination: </b>", rehab_centre, "<br>",
+        "<b>Time to rehab care (minutes): </b>", rehab_time, "<br>"
+      ),
+      popup_rehab=paste0(
+        "<b>Location: </b>", location, "<br>",
+        "<b>Silver rehab care destination: </b>", rehab_centre, "<br>",
+        "<b>Time to silver rehab care (minutes): </b>", rehab_time, "<br>"
+      )
+    )
   
   rehab_centres <- c(
     "Sunshine Coast University Hospital",
@@ -283,7 +290,7 @@ server <- function(input, output, session){
       addCircleMarkers(
         lng=df_locations$x, lat=df_locations$y, 
         radius=2, fillOpacity=0,
-        popup=df_locations$popup,
+        popup=df_locations$popup_rehab,
         options=leafletOptions(pane="markers")
       ) %>% 
       addLegendNumeric(
