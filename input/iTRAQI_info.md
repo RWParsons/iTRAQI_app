@@ -4,7 +4,7 @@
 
 <style>
 details > summary {
-  font-size: 25px;
+  font-size: 2em;
 }
 </style>
 
