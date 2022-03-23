@@ -44,15 +44,15 @@ iTRAQI (injury Treatment and Rehabilitation Accessibility Queensland Index) is a
 
 <details>
   <summary>Methods</summary>
-  For 441 locations, travel time was calculated to acute care, and driving time to rehabilitation centres. These were interpolated using ordinary kriging to cover all of Queensland as a continuous measure. The commonly used geographic boundaries of statistical areas 1 and statistical areas 2 under the Australian Statistical Geography standard had values calculated (median and range) for ease of using with other data. The map shows ASGS 2016 boundaries, but downloads are available for 2011 and 2021 boundaries also.
-  
-  <h3>Transport to rehabilitation</h3>
-  Based on driving times, calculated using ArcGIS Online for speed limits, road networks and traffic conditions.
-  
-  <h3>Transport to acute care</h3>
-  This was a mix of air and road retrievals, as would be considered in practice.
-   
-  Road transport assumptions included: 
+For 441 locations, travel time was calculated to acute care, and driving time to rehabilitation centres. These were interpolated using ordinary kriging to cover all of Queensland as a continuous measure. The commonly used geographic boundaries of statistical areas 1 and statistical areas 2 under the Australian Statistical Geography standard had values calculated (median and range) for ease of using with other data. The map shows ASGS 2016 boundaries, but downloads are available for 2011 and 2021 boundaries also.
+
+<h3>Transport to rehabilitation</h3>
+Based on driving times, calculated using ArcGIS Online for speed limits, road networks and traffic conditions.
+
+<h3>Transport to acute care</h3>
+This was a mix of air and road retrievals, as would be considered in practice.
+ 
+Road transport assumptions included: 
   
   1. Patient assumed to have met the Queensland Ambulance Service, pre-hospital trauma by-pass guideline. 
   2. One hour road transport boundaries calculated using off-peak and non-emergency driving conditions. 
@@ -63,20 +63,20 @@ iTRAQI (injury Treatment and Rehabilitation Accessibility Queensland Index) is a
       c. If greater than 60 minutes road transport from a major or regional trauma service, transport to the closest hospital. In the event this occurs, immediately notify Retrieval Services Queensland. 
   4. Limited consideration given to pre-hospital and aeromedical expertise where the incident occurred at the one-hour road drive time boundary of a major or regional trauma service. 
   5. Road transport time was included only if the initial destination was a regional or major trauma service.
-
   
+<h3>Limitations</h3>
+Specific assumptions were made which may not be met in certain circumstances:
+  1.	Suitable aircraft are considered available for deployment and appropriately staffed at the nearest RSQ location.
+  2.	Ambulances are considered to drive at the posted speed limit. 
+  3.	Standard times for emergency response coordination and deployment were applied, but these may vary.
+  4.	Isochrones could have given better driving times than interpolating from specific points, but ArcGIS only allowed these to be calculated up to 5 hours driving time, which was too short for our needs.
 </details>
 
 
 
 
 
-### Limitations
-Specific assumptions were made which may not be met in certain circumstances:
-1.	Suitable aircraft are considered available for deployment and appropriately staffed at the nearest RSQ location.
-2.	Ambulances are considered to drive at the posted speed limit. 
-3.	Standard times for emergency response coordination and deployment were applied, but these may vary.
-4.	Isochrones could have given better driving times than interpolating from specific points, but ArcGIS only allowed these to be calculated up to 5 hours driving time, which was too short for our needs.
+
 
 ### Contact us
 If you have additional questions about iTRAQI, contact us through the webform at: https://healthequity.link/contact/ 
