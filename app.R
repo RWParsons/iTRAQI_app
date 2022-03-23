@@ -97,6 +97,17 @@ seifa_scale_to_text <- function(x){
   )
 }
 
+download_data_dir <- "input/download_data/"
+
+download_data_files <- list(
+  SA1_2011="iTRAQI front page - ASGS 2011 SA1.xlsx",
+  SA2_2011="iTRAQI front page - ASGS 2011 SA2.xlsx",
+  SA1_2016="iTRAQI front page - ASGS 2016 SA1.xlsx",
+  SA2_2016="iTRAQI front page - ASGS 2016 SA2.xlsx",
+  SA1_2021="iTRAQI front page - ASGS 2021 SA1.xlsx",
+  SA2_2021="iTRAQI front page - ASGS 2021 SA2.xlsx"
+)
+
 ui <- navbarPage(
   "iTRAQI",
   tabPanel(
@@ -397,43 +408,40 @@ server <- function(input, output, session){
   })
   
   output$download_SA1_2011 <- downloadHandler(
-    filename="aggregated_time_to_care_SA1_year2011.csv",
+    filename=download_data_files$SA1_2011,
     content=function(file){
-      write.csv(read.csv("input/download_data/combined_data_SA1_year2011.csv"), file, row.names=FALSE)
-    }
-  )
+      file.copy(file.path(download_data_dir, download_data_files$SA1_2011), file)
+    })
+  
   output$download_SA2_2011 <- downloadHandler(
-    filename="aggregated_time_to_care_SA2_year2011.csv",
+    filename=download_data_files$SA2_2011,
     content=function(file){
-      write.csv(read.csv("input/download_data/combined_data_SA2_year2011.csv"), file, row.names=FALSE)
-    }
-  )
+      file.copy(file.path(download_data_dir, download_data_files$SA2_2011), file)
+    })
   
   output$download_SA1_2016 <- downloadHandler(
-    filename="aggregated_time_to_care_SA1_year2016.csv",
+    filename=download_data_files$SA1_2016,
     content=function(file){
-      write.csv(read.csv("input/download_data/combined_data_SA1_year2016.csv"), file, row.names=FALSE)
-    }
-  )
+      file.copy(file.path(download_data_dir, download_data_files$SA1_2016), file)
+    })
+  
   output$download_SA2_2016 <- downloadHandler(
-    filename="aggregated_time_to_care_SA2_year2016.csv",
+    filename=download_data_files$SA2_2016,
     content=function(file){
-      write.csv(read.csv("input/download_data/combined_data_SA2_year2016.csv"), file, row.names=FALSE)
-    }
-  )
+      file.copy(file.path(download_data_dir, download_data_files$SA2_2016), file)
+    })
   
   output$download_SA1_2021 <- downloadHandler(
-    filename="aggregated_time_to_care_SA1_year2021.csv",
+    filename=download_data_files$SA1_2021,
     content=function(file){
-      write.csv(read.csv("input/download_data/combined_data_SA1_year2021.csv"), file, row.names=FALSE)
-    }
-  )
+      file.copy(file.path(download_data_dir, download_data_files$SA1_2021), file)
+    })
+  
   output$download_SA2_2021 <- downloadHandler(
-    filename="aggregated_time_to_care_SA2_year2021.csv",
+    filename=download_data_files$SA2_2021,
     content=function(file){
-      write.csv(read.csv("input/download_data/combined_data_SA2_year2021.csv"), file, row.names=FALSE)
-    }
-  )
+      file.copy(file.path(download_data_dir, download_data_files$SA2_2021), file)
+    })
   
 }
 
