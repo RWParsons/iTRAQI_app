@@ -86,6 +86,17 @@ centre_icons <- iconList(
 
 group_display <- "SA1 acute time"
 
+seifa_scale_to_text <- function(x){
+  case_when(
+    x==1 ~ "Most disadvantaged",
+    x==2 ~ "Disadvantaged",
+    x==3 ~ "Middle socio-economic status",
+    x==4 ~ "Advantaged",
+    x==5 ~ "Most advantaged",
+    TRUE ~ "NA"
+  )
+}
+
 ui <- navbarPage(
   "iTRAQI",
   tabPanel(
@@ -364,7 +375,7 @@ server <- function(input, output, session){
             "<b>SA2 Region: </b>", .[["SA2_NAME16"]], "<br>",
             "<b>SA", SA_level, " ID: </b>", .[[1]], "<br>",
             "<b>Remoteness: </b>", .[["ra_name"]], "<br>",
-            "<b>SEIFA quintile: </b>", .[["seifa_quintile"]], "<br>",
+            "<b>SEIFA: </b>", seifa_scale_to_text(.[["seifa_quintile"]]), "<br>",
             "<b>Time to ", care_type, " care in minutes (estimate [min - max]): </b>", "<br>", 
             "&nbsp;&nbsp;&nbsp;&nbsp; ", round(.[["value"]]), " [", round(.[["min"]]), " - ", round(.[["max"]]), "]<br>"
           )
