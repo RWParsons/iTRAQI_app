@@ -84,8 +84,6 @@ centre_icons <- iconList(
   rehab=makeIcon(iconUrl = "input/imgs/rehab_care.png", iconWidth = 783/18, iconHeight = 783/18)
 )
 
-group_display <- "SA1 acute time"
-
 seifa_scale_to_text <- function(x){
   case_when(
     x==1 ~ "Most disadvantaged",
@@ -150,6 +148,7 @@ ui <- navbarPage(
 
   )
 )
+
 
 server <- function(input, output, session){
   layers_dir <- "input/layers"
@@ -349,8 +348,6 @@ server <- function(input, output, session){
     }
   }
   session$onFlushed(f, once=FALSE)
-  
-  # session$onFlushed(function() rvs$to_load <- TRUE)
 
   observeEvent(rvs$to_load,{
     if(is.null(isolate(rvs$map)) | isolate(rvs$map_complete))return()
