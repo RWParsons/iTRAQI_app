@@ -251,14 +251,25 @@ server <- function(input, output, session){
         lng=df_locations$x, lat=df_locations$y, 
         radius=2, fillOpacity=0,
         popup=df_locations$popup,
+        group="Towns",
         options=leafletOptions(pane="markers")
       ) %>%
       addMarkers(
-        lng=df_centres$x, lat=df_centres$y, 
-        icon=centre_icons[df_centres$care_type],
-        popup=df_centres$popup,
+        lng=df_centres$x[df_centres$care_type=="acute"],
+        lat=df_centres$y[df_centres$care_type=="acute"],
+        icon=centre_icons["acute"],
+        popup=df_centres$popup[df_centres$care_type=="acute"],
+        group="Acute centres",
         options=leafletOptions(pane="markers")
       ) %>% 
+      addMarkers(
+        lng=df_centres$x[df_centres$care_type=="rehab"],
+        lat=df_centres$y[df_centres$care_type=="rehab"],
+        icon=centre_icons["rehab"],
+        popup=df_centres$popup[df_centres$care_type=="rehab"],
+        group="Rehab centres",
+        options=leafletOptions(pane="markers")
+      ) %>%  
       addLegendBin(
         opacity=1,
         position="topright",
@@ -269,6 +280,7 @@ server <- function(input, output, session){
       addLayersControl(
         position = "topright",
         baseGroups = c("None",names(layer_input)),
+        overlayGroups = c("Towns", "Acute centres", "Rehab centres"),
         options = layersControlOptions(collapsed = TRUE))
     rvs$map
   })
@@ -290,6 +302,7 @@ server <- function(input, output, session){
         lng=df_locations$x, lat=df_locations$y, 
         radius=2, fillOpacity=0,
         popup=df_locations$popup_rehab,
+        group="Towns",
         options=leafletOptions(pane="markers")
       ) %>% 
       addLegendNumeric(
@@ -304,6 +317,7 @@ server <- function(input, output, session){
       addLayersControl(
         position = "topright",
         baseGroups = c("None", names(rehab_tiers)),
+        overlayGroups = c("Towns"),
         options = layersControlOptions(collapsed = TRUE))
     rvs$map_rehab
   })
@@ -312,7 +326,6 @@ server <- function(input, output, session){
     req(rvs$map_rehab)
     if(is.null(isolate(rvs$map_rehab)) | isolate(rvs$map_rehab_complete))return()
     for(group_name in names(rehab_tiers)){
-      print(file.path(layers_dir, glue::glue("{rehab_tiers[[group_name]]$file}.rds")))
       new_layer <- readRDS(file.path(layers_dir, glue::glue("{rehab_tiers[[group_name]]$file}.rds")))
       centres_group <- df_centres[df_centres$centre_name %in% rehab_tiers[[group_name]]$centres, ]
       leafletProxy("map_rehab") %>%
