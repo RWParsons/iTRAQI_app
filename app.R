@@ -16,95 +16,10 @@ library(raster)
 library(rgdal)
 # https://susanna-cramb.shinyapps.io/itraqi_app/
 
+source("0_utils.R")
+source("1_functions.R")
+source("2_pallettes.R")
 
-# layer_input <- c(
-#   "SA1 acute time" = "acute_polygons_SA1_year2016",
-#   "SA2 acute time" = "acute_polygons_SA2_year2016",
-#   "SA1 rehab time" = "rehab_polygons_SA1_year2016",
-#   "SA2 rehab time" = "rehab_polygons_SA2_year2016",
-#   "Acute time" = "acute_raster",
-#   "Rehab time" = "rehab_raster"
-# )
-
-layer_input <- c(
-  "Acute time" = "acute_raster",
-  "Rehab time" = "rehab_raster",
-  "SA1 acute time" = "acute_polygons_SA1_year2016_simplified",
-  "SA2 acute time" = "acute_polygons_SA2_year2016_simplified",
-  "SA1 rehab time" = "rehab_polygons_SA1_year2016_simplified",
-  "SA2 rehab time" = "rehab_polygons_SA2_year2016_simplified"
-)
-
-rehab_tiers <- list(
-  "Platinum" = list(
-    file = "rehab_raster_platinum",
-    centres = c("Brain Injury Rehabilitation Unit")
-  ),
-  "Gold" = list(
-    file = "rehab_raster_gold",
-    centres = c(
-      "Townsville University Hospital",
-      "Brain Injury Rehabilitation Unit"
-    )
-  ),
-  "Future Gold" = list(
-    file = "rehab_raster_future_gold",
-    centres = c(
-      "Sunshine Coast University Hospital",
-      "Gold Coast University Hospital",
-      "Townsville University Hospital",
-      "Brain Injury Rehabilitation Unit"
-    )
-  ),
-  "Silver" = list(
-    file = "rehab_raster",
-    centres = c(
-      "Brain Injury Rehabilitation Unit",
-      "Gold Coast University Hospital",
-      "Townsville University Hospital",
-      "Sunshine Coast University Hospital",
-      "Central West Sub-Acute Service",
-      "Gympie Hospital",
-      "Rockhampton Hospital",
-      "Roma Hospital",
-      "Cairns Hospital"
-    )
-  )
-)
-
-tier_icons <- iconList(
-  "Platinum"=makeIcon(iconUrl = "input/imgs/platinum.png", iconWidth = 549/18, iconHeight = 562/18),
-  "Gold"=makeIcon(iconUrl = "input/imgs/gold_medal.png", iconWidth = 529/18, iconHeight = 625/18),
-  "Future Gold"=makeIcon(iconUrl = "input/imgs/gold_medal.png", iconWidth = 529/18, iconHeight = 625/18),
-  "Silver"=makeIcon(iconUrl = "input/imgs/silver_medal.png", iconWidth = 303/18, iconHeight = 518/18)
-)
-
-centre_icons <- iconList(
-  acute=makeIcon(iconUrl = "input/imgs/acute_care2.png", iconWidth = 783/18, iconHeight = 900/18),
-  rehab=makeIcon(iconUrl = "input/imgs/rehab_care.png", iconWidth = 783/18, iconHeight = 783/18)
-)
-
-seifa_scale_to_text <- function(x){
-  case_when(
-    x==1 ~ "Most disadvantaged",
-    x==2 ~ "Disadvantaged",
-    x==3 ~ "Middle socio-economic status",
-    x==4 ~ "Advantaged",
-    x==5 ~ "Most advantaged",
-    TRUE ~ "NA"
-  )
-}
-
-download_data_dir <- "input/download_data/"
-
-download_data_files <- list(
-  SA1_2011="iTRAQI front page - ASGS 2011 SA1.xlsx",
-  SA2_2011="iTRAQI front page - ASGS 2011 SA2.xlsx",
-  SA1_2016="iTRAQI front page - ASGS 2016 SA1.xlsx",
-  SA2_2016="iTRAQI front page - ASGS 2016 SA2.xlsx",
-  SA1_2021="iTRAQI front page - ASGS 2021 SA1.xlsx",
-  SA2_2021="iTRAQI front page - ASGS 2021 SA2.xlsx"
-)
 
 ui <- navbarPage(
   "iTRAQI",
@@ -149,9 +64,7 @@ ui <- navbarPage(
   )
 )
 
-
 server <- function(input, output, session){
-  layers_dir <- "input/layers"
   
   df_locations <- read.csv("input/QLD_locations_with_RSQ_times_20220210.csv") %>%
     mutate(
@@ -202,37 +115,6 @@ server <- function(input, output, session){
   # but improving it so that the trigger doesn't occur until after the basemap is up
   # https://stackoverflow.com/questions/66388965/understanding-sessiononflush-in-shiny
   rvs <- reactiveValues(to_load=NULL, map=NULL, to_load_rehab=NULL, map_rehab=NULL, map_complete=FALSE, map_rehab_complete=FALSE)
-  
-  bins <- c(0, 30, 60, 120, 180, 240, 300, 360, 900)
-  palBin <- colorBin("YlOrRd", domain = 0:900, bins=bins, na.color="transparent")
-  
-  palNum1 <- colorNumeric(c("#FFFFCC", "#FFEDA0"), domain=0:30, na.color="transparent")
-  palNum2 <- colorNumeric(c("#FFEDA0", "#FED976"), domain=30:60, na.color="transparent")
-  palNum3 <- colorNumeric(c("#FED976", "#FEB24C"), domain=60:120, na.color="transparent")
-  palNum4 <- colorNumeric(c("#FEB24C", "#FD8D3C"), domain=120:180, na.color="transparent")
-  palNum5 <- colorNumeric(c("#FD8D3C", "#FC4E2A"), domain=180:240, na.color="transparent")
-  palNum6 <- colorNumeric(c("#FC4E2A", "#E31A1C"), domain=240:300, na.color="transparent")
-  palNum7 <- colorNumeric(c("#E31A1C", "#B10026"), domain=300:360, na.color="transparent")
-  palNum8 <- colorNumeric(c("#B10026", "#000000"), domain=360:900, na.color="transparent")
-  
-  palNum <- function(x){
-    case_when(
-      x < 30 ~ palNum1(x),
-      x < 60 ~ palNum2(x),
-      x < 120 ~ palNum3(x),
-      x < 180 ~ palNum4(x),
-      x < 240 ~ palNum5(x),
-      x < 300 ~ palNum6(x),
-      x < 360 ~ palNum7(x),
-      x < 900 ~ palNum8(x),
-      x >= 900 ~ "#000000",
-      TRUE ~ "transparent"
-    )
-  }
-  
-  palNum_hours <- function(x){
-    palNum(x*60)
-  }
   
   output$map_async <- renderLeaflet({
     rvs$map <- 
