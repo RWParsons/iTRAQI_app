@@ -19,6 +19,7 @@ library(rgdal)
 source("0_utils.R")
 source("1_functions.R")
 source("2_pallettes.R")
+source("3_load_data.R")
 
 
 ui <- navbarPage(
@@ -27,7 +28,35 @@ ui <- navbarPage(
     title="Main Map",
     div(
       tags$style(type = "text/css", "#map_async {height: calc(100vh - 80px) !important;}"),
-      withSpinner(leafletOutput("map_async"))
+      withSpinner(leafletOutput("map_async")),
+      
+      absolutePanel(
+        id = "controls", class = "panel panel-default", fixed = TRUE,
+        draggable = TRUE, top = 60, left = "auto", right = 20, bottom = "auto",
+        width = 330, height = "auto",
+        radioButtons(
+          inputId="layer_selection", label="Layer", 
+          choices=c("None", "Acute time", "Rehab time", "SA1 Acute", "SA2 Acute", "SA1 Rehab", "SA2 Rehab"), 
+          selected="None"
+        ),
+        h4("Filters"),
+        dropdownButton(
+          label="Socioeconomic status", status="default", width=dropdown_width,
+          checkboxGroupInput(
+            inputId="seifa", label="SEIFA", width=dropdown_width,
+            choices=c(seifa_scale_to_text(1:5), NA),
+            selected=c(seifa_scale_to_text(1:5), NA)
+          )
+        ),
+        dropdownButton(
+          label="Remoteness index", status="default", width=dropdown_width,
+          checkboxGroupInput(
+            inputId="remoteness", label="Remoteness", width=dropdown_width,
+            choices=c(ra_scale_to_text(0:4)),
+            selected=c(ra_scale_to_text(0:4))
+          )
+        )
+      )
     )
   ),
   tabPanel(
@@ -66,49 +95,7 @@ ui <- navbarPage(
 
 server <- function(input, output, session){
   
-  df_locations <- read.csv("input/QLD_locations_with_RSQ_times_20220210.csv") %>%
-    mutate(
-      popup=paste0(
-        "<b>Location: </b>", location, "<br>",
-        "<b>Acute care destination: </b>", acute_care_centre, "<br>",
-        "<b>Time to acute care (minutes): </b>", acute_time, "<br>",
-        "<b>Rehab care destination: </b>", rehab_centre, "<br>",
-        "<b>Time to rehab care (minutes): </b>", rehab_time, "<br>"
-      ),
-      popup_rehab=paste0(
-        "<b>Location: </b>", location, "<br>",
-        "<b>Silver rehab care destination: </b>", rehab_centre, "<br>",
-        "<b>Time to silver rehab care (minutes): </b>", rehab_time, "<br>"
-      )
-    )
   
-  rehab_centres <- c(
-    "Sunshine Coast University Hospital",
-    "Central West Sub-Acute Service",
-    "Gympie Hospital",
-    "Rockhampton Hospital",
-    "Roma Hospital",
-    "Cairns Hospital"
-  )
-  acute_centres <- c(
-    "Brain Injury Rehabilitation Unit",
-    "Gold Coast University Hospital",
-    "Townsville University Hospital"
-  )
-  
-  df_centres <- read.csv("input/centres.csv") 
-  names(df_centres) <- c("centre_name", "address", "x", "y")
-  df_centres <- df_centres %>%
-    mutate(centre_name = str_trim(centre_name))%>%
-    filter(centre_name %in% c(rehab_centres, acute_centres)) %>%
-    mutate(
-      care_type=ifelse(centre_name %in% acute_centres, "acute", "rehab"),
-      popup=paste0(
-        "<b>Centre name: </b>", centre_name, "<br>",
-        "<b>Care type: </b>", ifelse(care_type=="acute", "Acute care", "Rehabilitation care"), "<br>",
-        "<b>Address: </b>", address, "<br>"
-      )
-    )
   
   # based on asynchronous map loading here
   # https://medium.com/ibm-data-ai/asynchronous-loading-of-leaflet-layer-groups-afc073999e77
@@ -129,6 +116,7 @@ server <- function(input, output, session){
                        options = leafletOptions(pane = "maplabels"),
                        group = "map labels") %>%
       hideGroup(names(layer_input)) %>%
+      hideGroup(groupings$group_id) %>%
       addCircleMarkers(
         lng=df_locations$x, lat=df_locations$y, 
         radius=2, fillOpacity=0,
@@ -158,13 +146,77 @@ server <- function(input, output, session){
         pal=palBin,
         values=0:900,
         title=htmltools::tagList(tags$div("Time to care (minutes)"), tags$br())
-      ) %>%
+      ) %>% 
       addLayersControl(
         position = "topright",
-        baseGroups = c("None",names(layer_input)),
+        # baseGroups = c("None", "Acute time", "Rehab time"),
         overlayGroups = c("Towns", "Acute centres", "Rehab centres"),
         options = layersControlOptions(collapsed = TRUE))
-    rvs$map
+  })
+  
+  observeEvent(rvs$to_load,{
+    if(is.null(isolate(rvs$map)) | isolate(rvs$map_complete))return()
+    
+    group_names_to_load <- names(layer_input)
+    raster_layers <- grep("raster", layer_input)
+    raster_layers <- group_names_to_load[raster_layers]
+    
+    for(group_name in raster_layers){
+      new_layer <- readRDS(file.path(layers_dir, glue::glue("{layer_input[group_name]}.rds")))
+      leafletProxy("map_async") %>%
+        addRasterImage(
+          data=new_layer,
+          x=raster(new_layer, layer=1),
+          group=group_name,
+          options=leafletOptions(pane="layers"),
+          colors=palNum
+        )
+    }
+    
+    for(i in groupings$group_id){
+      polygons_df <- polygons[polygons$group_id==i,]
+      leafletProxy("map_async") %>%
+        addPolygons(
+          data=polygons_df,
+          fillColor=~palBin(polygons_df$value),
+          color="black",
+          fillOpacity=1,
+          weight=1,
+          group=i,
+          popup=polygons_df$popup,
+          options=leafletOptions(pane="layers")
+        )
+    }
+    
+    if(!isolate(rvs$map_complete)) rvs$map_complete <- TRUE
+  })
+  
+  
+  observeEvent(list(input$seifa, input$remoteness, input$layer_selection), {
+    raster_ids <- c("Acute time", "Rehab time")
+    all_ids <- c(groupings$group_id, raster_ids)
+    sa_selected <- as.numeric(str_extract(input$layer_selection, "[0-9]{1}"))
+    care_type_selected <- str_extract(tolower(input$layer_selection), "[a-z]*$")
+    ra_selected <- ra_text_to_value(input$remoteness)
+    seifa_selected <- seifa_text_to_value(input$seifa)
+
+    if (input$layer_selection %in% c("None")) {
+      leafletProxy("map_async") %>% hideGroup(all_ids)
+    } else if (input$layer_selection %in% raster_ids){
+      leafletProxy("map_async") %>% hideGroup(all_ids) %>% showGroup(input$layer_selection)
+    }
+    else {
+      show_ids <- groupings %>%
+        filter(sa==sa_selected,
+               ra%in%ra_selected,
+               seifa%in%seifa_selected,
+               care_type==care_type_selected) %>%
+        pull(group_id)
+      hide_ids <- c(groupings$group_id[!groupings$group_id %in% show_ids], raster_ids)
+      leafletProxy("map_async") %>%
+        showGroup(show_ids) %>%
+        hideGroup(hide_ids)
+    }
   })
   
   output$map_rehab <- renderLeaflet({
@@ -229,83 +281,6 @@ server <- function(input, output, session){
     if(!isolate(rvs$map_rehab_complete)) rvs$map_rehab_complete <- TRUE
   })
   
-  
-  f <- function(){
-    if(is.null(isolate(rvs$to_load))) rvs$to_load <- 1
-    if(is.null(isolate(rvs$to_load_rehab))) rvs$to_load_rehab <- 1
-    
-    if(!is.null(isolate(rvs$to_load)) & !isolate(rvs$map_complete) & !is.null(isolate(rvs$map))){
-      rvs$to_load <- isolate(rvs$to_load) + 1
-    }
-    
-    if(!is.null(isolate(rvs$to_load_rehab)) & !isolate(rvs$map_rehab_complete) & !is.null(isolate(rvs$map_rehab))){
-      rvs$to_load_rehab <- isolate(rvs$to_load_rehab) + 1
-    }
-  }
-  session$onFlushed(f, once=FALSE)
-
-  observeEvent(rvs$to_load,{
-    if(is.null(isolate(rvs$map)) | isolate(rvs$map_complete))return()
-    SA2s_lookup <- read.csv("input/lookup_data/SA2s_names_lookup.csv")
-    SA2s_lookup$SA2_CODE16 <- as.character(SA2s_lookup$SA2_CODE16)
-    SA1s_lookup <- read.csv("input/lookup_data/SA1s_names_lookup.csv")
-    SA1s_lookup$SA1_CODE16 <- as.character(SA1s_lookup$SA1_CODE16)
-
-    group_names_to_load <- names(layer_input)
-    raster_layers <- grep("raster", layer_input)
-    polygon_layers <- group_names_to_load[-raster_layers]
-    raster_layers <- group_names_to_load[raster_layers]
-    
-    for(group_name in raster_layers){
-      new_layer <- readRDS(file.path(layers_dir, glue::glue("{layer_input[group_name]}.rds")))
-      leafletProxy("map_async") %>%
-        addRasterImage(
-          data=new_layer,
-          x=raster(new_layer, layer=1),
-          group=group_name,
-          options=leafletOptions(pane="layers"),
-          colors=palNum
-        )
-    }
-
-    for(group_name in polygon_layers){
-      care_type <- ifelse(grepl("acute", tolower(group_name)), "acute", "rehab")
-      SA_level <- as.numeric(str_extract(group_name, "(?<=SA)[0-9]"))
-
-      new_layer <- readRDS(file.path(layers_dir, glue::glue("{layer_input[group_name]}.rds")))
-      if(SA_level==2){
-        new_layer <- left_join(new_layer, SA2s_lookup)
-      }else if(SA_level==1){
-        new_layer <- left_join(new_layer, SA1s_lookup)
-      }
-
-      new_layer <- new_layer %>%
-        mutate(popup = paste0(
-          paste0(
-            "<b>SA2 Region: </b>", .[["SA2_NAME16"]], "<br>",
-            "<b>SA", SA_level, " ID: </b>", .[[1]], "<br>",
-            "<b>Remoteness: </b>", .[["ra_name"]], "<br>",
-            "<b>SEIFA: </b>", seifa_scale_to_text(.[["seifa_quintile"]]), "<br>",
-            "<b>Time to ", care_type, " care in minutes (estimate [min - max]): </b>", "<br>", 
-            "&nbsp;&nbsp;&nbsp;&nbsp; ", round(.[["value"]]), " [", round(.[["min"]]), " - ", round(.[["max"]]), "]<br>"
-          )
-        ))
-      leafletProxy("map_async") %>%
-        addPolygons(
-          data=new_layer,
-          fillColor=~palBin(value),
-          color="black",
-          fillOpacity=1,
-          weight=1,
-          group=group_name,
-          popup=new_layer$popup,
-          options=leafletOptions(pane="layers")
-        )
-    }
-    
-    if(!isolate(rvs$map_complete)) rvs$map_complete <- TRUE
-  })
-  
   output$download_SA1_2011 <- downloadHandler(
     filename=download_data_files$SA1_2011,
     content=function(file){
@@ -342,6 +317,20 @@ server <- function(input, output, session){
       file.copy(file.path(download_data_dir, download_data_files$SA2_2021), file)
     })
   
+  
+  f <- function(){
+    if(is.null(isolate(rvs$to_load))) rvs$to_load <- 1
+    if(is.null(isolate(rvs$to_load_rehab))) rvs$to_load_rehab <- 1
+    
+    if(!is.null(isolate(rvs$to_load)) & !isolate(rvs$map_complete) & !is.null(isolate(rvs$map))){
+      rvs$to_load <- isolate(rvs$to_load) + 1
+    }
+    
+    if(!is.null(isolate(rvs$to_load_rehab)) & !isolate(rvs$map_rehab_complete) & !is.null(isolate(rvs$map_rehab))){
+      rvs$to_load_rehab <- isolate(rvs$to_load_rehab) + 1
+    }
+  }
+  session$onFlushed(f, once=FALSE)
 }
 
 shinyApp(ui, server)

@@ -46,6 +46,20 @@ rehab_tiers <- list(
   )
 )
 
+rehab_centres <- c(
+  "Sunshine Coast University Hospital",
+  "Central West Sub-Acute Service",
+  "Gympie Hospital",
+  "Rockhampton Hospital",
+  "Roma Hospital",
+  "Cairns Hospital"
+)
+acute_centres <- c(
+  "Brain Injury Rehabilitation Unit",
+  "Gold Coast University Hospital",
+  "Townsville University Hospital"
+)
+
 tier_icons <- iconList(
   "Platinum"=makeIcon(iconUrl = "input/imgs/platinum.png", iconWidth = 549/18, iconHeight = 562/18),
   "Gold"=makeIcon(iconUrl = "input/imgs/gold_medal.png", iconWidth = 529/18, iconHeight = 625/18),
@@ -68,3 +82,6 @@ download_data_files <- list(
   SA1_2021="iTRAQI front page - ASGS 2021 SA1.xlsx",
   SA2_2021="iTRAQI front page - ASGS 2021 SA2.xlsx"
 )
+
+
+dropdown_width <- "100%"
