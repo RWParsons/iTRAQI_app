@@ -54,7 +54,7 @@ function(input, output, session) {
         options = layersControlOptions(collapsed = FALSE)) %>%
       htmlwidgets::onRender("
         function() {
-            $('.leaflet-control-layers-overlays').prepend('<label style=\"text-align:center\">Base layers</label>');
+            $('.leaflet-control-layers-overlays').prepend('<label style=\"text-align:center\">Markers</label>');
         }
     ")
   })
@@ -168,7 +168,7 @@ function(input, output, session) {
         options = layersControlOptions(collapsed = FALSE))%>% 
       htmlwidgets::onRender("
         function() {
-            $('.leaflet-control-layers-list').prepend('<label style=\"text-align:center\">Layers</label>');
+            $('.leaflet-control-layers-list').prepend('<label style=\"text-align:center\">Markers</label>');
         }
     ")
     rvs$map_rehab

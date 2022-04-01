@@ -30,15 +30,18 @@ navbarPage("iTRAQI", id="nav",
       leafletOutput("map", width="100%", height="100%"),
       absolutePanel(
         id = "controls", class = "panel panel-default", fixed = TRUE,
-        draggable = TRUE, top = 60, left = "auto", right = 20, bottom = "auto",
-        width = 330, height = "auto",
+        draggable = TRUE, top = 370, left = "auto", right = 10, bottom = "auto",
+        # draggable = TRUE, top = "auto", left = "auto", right = 20, bottom = 60,
+        width = 330, height = 600,
+        h4("Layer"),
         radioButtons(
-          inputId="layer_selection", label="Layer",
+          inputId="layer_selection", label=NULL,
           choices=c("None", "Acute time", "Rehab time", "SA1 Acute", "SA2 Acute", "SA1 Rehab", "SA2 Rehab"),
           selected="None"
         ),
+        h4("Markers"),
         checkboxGroupInput(
-          "base_layers", "Markers",
+          "base_layers",label=NULL,
           choices=all_base_layers,
           selected=all_base_layers
         ),
@@ -51,6 +54,7 @@ navbarPage("iTRAQI", id="nav",
             selected=c(seifa_scale_to_text(1:5), NA)
           )
         ),
+        tags$br(),
         dropdownButton(
           label="Remoteness index", status="default", width=dropdown_width,
           checkboxGroupInput(
@@ -59,6 +63,10 @@ navbarPage("iTRAQI", id="nav",
             selected=c(ra_scale_to_text(0:4))
           )
         )
+      ),
+      tags$div(
+        id="cite",
+        citation
       )
     )
   ),
