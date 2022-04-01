@@ -35,7 +35,7 @@ seifa_scale_to_text <- function(x){
     x==3 ~ "Middle socio-economic status",
     x==4 ~ "Advantaged",
     x==5 ~ "Most advantaged",
-    TRUE ~ "NA"
+    is.na(x) ~ "NA"
   )
 }
 

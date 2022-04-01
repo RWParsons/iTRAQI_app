@@ -50,10 +50,11 @@ navbarPage("iTRAQI", id="nav",
           label="Socioeconomic status", status="default", width=dropdown_width,
           checkboxGroupInput(
             inputId="seifa", label="SEIFA", width=dropdown_width,
-            choices=c(seifa_scale_to_text(1:5), NA),
-            selected=c(seifa_scale_to_text(1:5), NA)
+            choices=c(seifa_scale_to_text(1:5), 'NA'),
+            selected=c(seifa_scale_to_text(1:5), 'NA')
           )
         ),
+        htmlOutput("seifa_included"),
         tags$br(),
         dropdownButton(
           label="Remoteness index", status="default", width=dropdown_width,
@@ -62,7 +63,8 @@ navbarPage("iTRAQI", id="nav",
             choices=c(ra_scale_to_text(0:4)),
             selected=c(ra_scale_to_text(0:4))
           )
-        )
+        ),
+        htmlOutput("remoteness_included")
       ),
       tags$div(
         id="cite",

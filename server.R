@@ -105,6 +105,22 @@ function(input, output, session) {
       hideGroup(hide_base_layers)
   })
   
+  output$seifa_included <- renderText({
+    if(length(input$seifa) == 6) {
+      return("<b>All included</b>")
+    } else {
+      paste("<b>Including:</b>", paste0(input$seifa, collapse=", "))
+    }
+  })
+  
+  output$remoteness_included <- renderText({
+    if(length(input$remoteness) == 5) {
+      return("<b>All included</b>")
+    } else {
+      paste("<b>Including:</b>", paste0(input$remoteness, collapse=", "))
+    }
+  })
+  
   observeEvent(list(input$seifa, input$remoteness, input$layer_selection), {
     raster_ids <- c("Acute time", "Rehab time")
     all_ids <- c(groupings$group_id, raster_ids)
