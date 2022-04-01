@@ -165,7 +165,12 @@ function(input, output, session) {
         position = "topright",
         baseGroups = c("None", names(rehab_tiers)),
         overlayGroups = c("Towns"),
-        options = layersControlOptions(collapsed = TRUE))
+        options = layersControlOptions(collapsed = FALSE))%>% 
+      htmlwidgets::onRender("
+        function() {
+            $('.leaflet-control-layers-list').prepend('<label style=\"text-align:center\">Layers</label>');
+        }
+    ")
     rvs$map_rehab
   })
   
