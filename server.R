@@ -248,4 +248,11 @@ function(input, output, session) {
     content=function(file){
       file.copy(file.path(download_data_dir, download_data_files$SA2_2021), file)
     })
+  addResourcePath("input", "./input")
+  output$info_page <- renderUI({
+    tags$iframe(
+      seamless="seamless", src="input/iTRAQI_info.html", 
+      style='width:100vw;height:100vh;'
+    )
+  })
 }

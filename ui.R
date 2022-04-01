@@ -81,7 +81,7 @@ navbarPage("iTRAQI", id="nav",
   tabPanel(
     title="Information",
     icon=icon("info-sign",lib='glyphicon'),
-    includeMarkdown("input/iTRAQI_info.md"),
+    fillPage(htmlOutput("info_page")),
     tags$br()
   ),
   tabPanel(
