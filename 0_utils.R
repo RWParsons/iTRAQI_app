@@ -60,6 +60,8 @@ acute_centres <- c(
   "Townsville University Hospital"
 )
 
+all_base_layers <- c("Towns", "Acute centres", "Rehab centres")
+
 tier_icons <- iconList(
   "Platinum"=makeIcon(iconUrl = "input/imgs/platinum.png", iconWidth = 549/18, iconHeight = 562/18),
   "Gold"=makeIcon(iconUrl = "input/imgs/gold_medal.png", iconWidth = 529/18, iconHeight = 625/18),

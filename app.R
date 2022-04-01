@@ -29,7 +29,6 @@ ui <- navbarPage(
     div(
       tags$style(type = "text/css", "#map_async {height: calc(100vh - 80px) !important;}"),
       withSpinner(leafletOutput("map_async")),
-      
       absolutePanel(
         id = "controls", class = "panel panel-default", fixed = TRUE,
         draggable = TRUE, top = 60, left = "auto", right = 20, bottom = "auto",
@@ -38,6 +37,11 @@ ui <- navbarPage(
           inputId="layer_selection", label="Layer", 
           choices=c("None", "Acute time", "Rehab time", "SA1 Acute", "SA2 Acute", "SA1 Rehab", "SA2 Rehab"), 
           selected="None"
+        ),
+        checkboxGroupInput(
+          "base_layers", "Markers", 
+          choices=all_base_layers,
+          selected=all_base_layers
         ),
         h4("Filters"),
         dropdownButton(
@@ -149,9 +153,13 @@ server <- function(input, output, session){
       ) %>% 
       addLayersControl(
         position = "topright",
-        # baseGroups = c("None", "Acute time", "Rehab time"),
         overlayGroups = c("Towns", "Acute centres", "Rehab centres"),
-        options = layersControlOptions(collapsed = TRUE))
+        options = layersControlOptions(collapsed = FALSE)) %>%
+      htmlwidgets::onRender("
+        function() {
+            $('.leaflet-control-layers-overlays').prepend('<label style=\"text-align:center\">Base layers</label>');
+        }
+    ")
   })
   
   observeEvent(rvs$to_load,{
@@ -191,6 +199,14 @@ server <- function(input, output, session){
     if(!isolate(rvs$map_complete)) rvs$map_complete <- TRUE
   })
   
+  observe({
+    show_base_layers <- input$base_layers
+    hide_base_layers <- all_base_layers[!all_base_layers %in% show_base_layers]
+    
+    leafletProxy("map_async") %>%
+      showGroup(show_base_layers) %>%
+      hideGroup(hide_base_layers)
+  })
   
   observeEvent(list(input$seifa, input$remoteness, input$layer_selection), {
     raster_ids <- c("Acute time", "Rehab time")
