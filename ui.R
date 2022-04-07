@@ -83,8 +83,7 @@ navbarPage("iTRAQI", id="nav",
   tabPanel(
     title="Information",
     icon=icon("info-sign",lib='glyphicon'),
-    shinyfullscreen::fullscreen_this(htmlOutput("info_page")),
-    tags$br()
+    div(class="outer", htmlOutput("info_page"))
   ),
   tabPanel(
     title="Downloads",
