@@ -47,16 +47,7 @@ function(input, output, session) {
         pal=palBin,
         values=0:900,
         title=htmltools::tagList(tags$div("Time to care (minutes)"), tags$br())
-      ) %>% 
-      addLayersControl(
-        position = "topright",
-        overlayGroups = c("Towns", "Acute centres", "Rehab centres"),
-        options = layersControlOptions(collapsed = FALSE)) %>%
-      htmlwidgets::onRender("
-        function() {
-            $('.leaflet-control-layers-overlays').prepend('<label style=\"text-align:center\">Markers</label>');
-        }
-    ")
+      )
   })
   
   observeEvent(rvs$to_load,{

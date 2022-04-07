@@ -31,7 +31,6 @@ navbarPage("iTRAQI", id="nav",
       absolutePanel(
         id = "controls", class = "panel panel-default", fixed = TRUE,
         draggable = TRUE, top = 370, left = "auto", right = 10, bottom = "auto",
-        # draggable = TRUE, top = "auto", left = "auto", right = 20, bottom = 60,
         width = 330, height = 600,
         h4("Layer"),
         radioButtons(
