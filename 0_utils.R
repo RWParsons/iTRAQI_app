@@ -88,4 +88,4 @@ download_data_files <- list(
 
 dropdown_width <- "100%"
 
-citation <- "Jamieson Trauma Institute, Retrieval Services Queensland and Queensland University of Technology, 2022. iTRAQI: injury Treatment & Rehabilitation Accessibility Queensland Index"
+citation <- "iTRAQI: injury Treatment & Rehabilitation Accessibility Queensland Index version 1.2"

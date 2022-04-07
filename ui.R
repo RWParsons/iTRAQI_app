@@ -76,7 +76,11 @@ navbarPage("iTRAQI", id="nav",
         tags$head(
           includeCSS("styles.css")
         ),
-        leafletOutput("map_rehab", width="100%", height="100%")
+        leafletOutput("map_rehab", width="100%", height="100%"),
+        tags$div(
+          id="cite",
+          citation
+        )
     )
   ),
   tabPanel(
