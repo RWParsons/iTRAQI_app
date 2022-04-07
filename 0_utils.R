@@ -11,18 +11,18 @@ layer_input <- c(
 
 rehab_tiers <- list(
   "Platinum" = list(
-    file = "rehab_raster_platinum",
+    file = "platinum_rehab",
     centres = c("Brain Injury Rehabilitation Unit")
   ),
   "Gold" = list(
-    file = "rehab_raster_gold",
+    file = "gold_rehab",
     centres = c(
       "Townsville University Hospital",
       "Brain Injury Rehabilitation Unit"
     )
   ),
   "Future Gold" = list(
-    file = "rehab_raster_future_gold",
+    file = "future_gold_rehab",
     centres = c(
       "Sunshine Coast University Hospital",
       "Gold Coast University Hospital",
@@ -31,7 +31,7 @@ rehab_tiers <- list(
     )
   ),
   "Silver" = list(
-    file = "rehab_raster",
+    file = "silver_rehab",
     centres = c(
       "Brain Injury Rehabilitation Unit",
       "Gold Coast University Hospital",
@@ -77,12 +77,12 @@ centre_icons <- iconList(
 download_data_dir <- "input/download_data/"
 
 download_data_files <- list(
-  SA1_2011="iTRAQI front page - ASGS 2011 SA1.xlsx",
-  SA2_2011="iTRAQI front page - ASGS 2011 SA2.xlsx",
-  SA1_2016="iTRAQI front page - ASGS 2016 SA1.xlsx",
-  SA2_2016="iTRAQI front page - ASGS 2016 SA2.xlsx",
-  SA1_2021="iTRAQI front page - ASGS 2021 SA1.xlsx",
-  SA2_2021="iTRAQI front page - ASGS 2021 SA2.xlsx"
+  SA1_2011="iTRAQI - ASGS 2011 SA1.xlsx",
+  SA2_2011="iTRAQI - ASGS 2011 SA2.xlsx",
+  SA1_2016="iTRAQI - ASGS 2016 SA1.xlsx",
+  SA2_2016="iTRAQI - ASGS 2016 SA2.xlsx",
+  SA1_2021="iTRAQI - ASGS 2021 SA1.xlsx",
+  SA2_2021="iTRAQI - ASGS 2021 SA2.xlsx"
 )
 
 

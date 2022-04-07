@@ -1,4 +1,4 @@
-df_locations <- read.csv("input/QLD_locations_with_RSQ_times_20220210.csv") %>%
+df_locations <- read.csv("input/QLD_locations_with_RSQ_times_20220407.csv") %>%
   mutate(
     popup=paste0(
       "<b>Location: </b>", location, "<br>",
