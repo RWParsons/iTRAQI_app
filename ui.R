@@ -18,13 +18,36 @@ source("0_utils.R")
 source("1_functions.R")
 source("2_pallettes.R")
 source("3_load_data.R")
+source("4_tour.R")
+# styles.css from https://github.com/rstudio/shiny-examples/tree/main/063-superzip-example
 
-navbarPage("iTRAQI", id="nav",
-           
+navbarPage(
+  "iTRAQI", id="nav",
+  
+  tabPanel(
+    "tour",
+    div(class="outer",
+      tags$head(
+        includeCSS("styles.css")
+      ),
+      leafletOutput("map_tour", width="100%", height="100%"),
+      absolutePanel(
+        id = "tour_controls", class = "panel panel-default", fixed = TRUE,
+        draggable = TRUE, top=80, left = "auto", right = 10, bottom = "auto",
+        width = 330, height = 350,
+        splitLayout(
+          cellWidths = 270,
+          uiOutput("backButtonControl"),
+          uiOutput("nextButtonControl")
+        ),
+        uiOutput("tourText")
+      )
+    )
+  ),
+  
   tabPanel("Main map",
     div(class="outer",
       tags$head(
-        # styles.css from https://github.com/rstudio/shiny-examples/tree/main/063-superzip-example
         includeCSS("styles.css")
       ),
       leafletOutput("map", width="100%", height="100%"),

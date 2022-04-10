@@ -2,7 +2,42 @@ library(leaflet)
 library(dplyr)
 
 function(input, output, session) {
-  rvs <- reactiveValues(to_load=NULL, map=NULL, to_load_rehab=NULL, map_rehab=NULL, map_complete=FALSE, map_rehab_complete=FALSE)
+  rvs <- reactiveValues(to_load=NULL, map=NULL, to_load_rehab=NULL, map_rehab=NULL, map_complete=FALSE, map_rehab_complete=FALSE, map_tour=NULL, tour_tab=1)
+  
+  output$map_tour <- renderLeaflet({
+    rvs$map_tour <- 
+      leaflet(options=leafletOptions(minZoom=5)) %>%
+      setMaxBounds(lng1 = 115, lat1 = -45.00, lng2 = 170, lat2 = -5) %>%
+      addSearchOSM(options=searchOptions(moveToLocation=FALSE, zoom=NULL)) %>%
+      addMapPane(name = "layers", zIndex = 200) %>%
+      addMapPane(name = "maplabels", zIndex = 400) %>%
+      addMapPane(name = "markers", zIndex = 205) %>%
+      addProviderTiles("CartoDB.VoyagerNoLabels") %>%
+      addProviderTiles("CartoDB.VoyagerOnlyLabels",
+                       options = leafletOptions(pane = "maplabels"),
+                       group = "map labels")
+    rvs$map_tour
+  })
+  
+  output$nextButtonControl <- renderUI({
+    if(rvs$tour_tab != n_tour_windows) actionButton("nextButton", "Next") else NULL
+  })
+  
+  output$backButtonControl <- renderUI({
+    if(rvs$tour_tab != 1) actionButton("backButton", "Back") else NULL
+  })
+  
+  observeEvent(input$nextButton, {
+    rvs$tour_tab <- rvs$tour_tab + 1
+  })
+  
+  observeEvent(input$backButton, {
+    rvs$tour_tab <- rvs$tour_tab - 1
+  })
+  
+  output$tourText <- renderUI({
+    HTML(tour_text[[rvs$tour_tab]])
+  })
   
   output$map <- renderLeaflet({
     rvs$map <- 
