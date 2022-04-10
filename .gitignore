@@ -6,6 +6,9 @@
 .RData
 .RDataTmp
 
+# HTML files
+*.html
+
 # User-specific files
 .Ruserdata
 
