@@ -41,6 +41,10 @@ navbarPage(
           uiOutput("nextButtonControl")
         ),
         uiOutput("tourText")
+      ),
+      tags$div(
+        id="cite",
+        citation
       )
     )
   ),
