@@ -34,7 +34,7 @@ iTRAQI (injury Treatment and Rehabilitation Accessibility Queensland Index) is a
   <h3>Rehab map</h3>
   Different levels of rehabilitation are shown with driving times. These are:
   
-  * Platinum: The most serious cases will undergo rehabilitation at Princess Alexandra Hospital (PAH), Brisbane
+    * Platinum: The most serious cases will undergo rehabilitation at Princess Alexandra Hospital (PAH), Brisbane.
   * Gold: Usually, people will undergo initial rehabilitation at/near their initial acute treatment. Those transferred to Townsville will remain there, while those in Brisbane or Gold Coast will likely undergo it at PAH.
   * Future gold: Additional hubs are planned for the Sunshine Coast, Gold Coast and Royal Brisbane and Women’s Hospital, which would enable initial rehabilitation to occur at these sites.
   * Silver: In-patient rehabilitation facilities where patient may be transferred following completion of their initial rehabilitation, to be closer to home.
