@@ -34,9 +34,10 @@ navbarPage(
       absolutePanel(
         id = "tour_controls", class = "panel panel-default", fixed = TRUE,
         draggable = TRUE, top=80, left = "auto", right = 10, bottom = "auto",
-        width = 330, height = 350,
+        width = 330, height = 380,
+        tags$br(),
         splitLayout(
-          cellWidths = 270,
+          cellWidths = 230,
           uiOutput("backButtonControl"),
           uiOutput("nextButtonControl")
         ),
@@ -104,6 +105,24 @@ navbarPage(
           includeCSS("styles.css")
         ),
         leafletOutput("map_rehab", width="100%", height="100%"),
+        absolutePanel(
+          id = "rehab_controls", class = "panel panel-default", fixed = TRUE,
+          draggable = TRUE, top = 370, left = "auto", right = 10, bottom = "auto",
+          width = 150, height = 245,
+          h4("Layers"),
+          tags$hr(),
+          radioButtons(
+            inputId="rehab_layer_selection", label=NULL,
+            choices=c("None", names(rehab_tiers)),
+            selected="None"
+          ),
+          tags$hr(),
+          checkboxGroupInput(
+            "rehab_towns_checkbox",label=NULL,
+            choices="Towns",
+            selected="Towns"
+          )
+        ),
         tags$div(
           id="cite",
           citation

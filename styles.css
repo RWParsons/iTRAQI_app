@@ -35,6 +35,20 @@ h1, h2, h3, h4 { font-weight: 400; }
   transition-delay: 0;
 }
 
+#rehab_controls {
+  /* Appearance */
+  background-color: white;
+  opacity: 0.95;
+  padding: 0 20px 20px 20px;
+}
+
+#tour_controls {
+  /* Appearance */
+  background-color: white;
+  opacity: 0.95;
+  padding: 0 20px 20px 20px;
+}
+
 /* Position and style citation */
 #cite {
   position: absolute;
