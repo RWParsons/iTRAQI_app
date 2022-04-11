@@ -31,3 +31,5 @@ palNum <- function(x){
 palNum_hours <- function(x){
   palNum(x*60)
 }
+
+palFac <- colorFactor("Greens", levels=ra_scale_to_text(0:4), ordered = TRUE, reverse=TRUE)

@@ -25,7 +25,7 @@ navbarPage(
   "iTRAQI", id="nav",
   
   tabPanel(
-    "tour",
+    "Tour",
     div(class="outer",
       tags$head(
         includeCSS("styles.css")

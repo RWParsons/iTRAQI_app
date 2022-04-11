@@ -2,22 +2,11 @@ library(leaflet)
 library(dplyr)
 
 function(input, output, session) {
-  rvs <- reactiveValues(to_load=NULL, map=NULL, to_load_rehab=NULL, map_rehab=NULL, map_complete=FALSE, map_rehab_complete=FALSE, map_tour=NULL, tour_tab=1)
-  
-  output$map_tour <- renderLeaflet({
-    rvs$map_tour <- 
-      leaflet(options=leafletOptions(minZoom=5)) %>%
-      setMaxBounds(lng1 = 115, lat1 = -45.00, lng2 = 170, lat2 = -5) %>%
-      addSearchOSM(options=searchOptions(moveToLocation=FALSE, zoom=NULL)) %>%
-      addMapPane(name = "layers", zIndex = 200) %>%
-      addMapPane(name = "maplabels", zIndex = 400) %>%
-      addMapPane(name = "markers", zIndex = 205) %>%
-      addProviderTiles("CartoDB.VoyagerNoLabels") %>%
-      addProviderTiles("CartoDB.VoyagerOnlyLabels",
-                       options = leafletOptions(pane = "maplabels"),
-                       group = "map labels")
-    rvs$map_tour
-  })
+  rvs <- reactiveValues(
+    to_load=NULL, map=NULL, map_complete=FALSE,
+    to_load_rehab=NULL, map_rehab=NULL, map_rehab_complete=FALSE, 
+    to_load_tour=NULL, map_tour=NULL, map_tour_complete=FALSE, tour_tab=1
+  )
   
   output$nextButtonControl <- renderUI({
     if(rvs$tour_tab != n_tour_windows) actionButton("nextButton", "Next") else NULL
@@ -37,6 +26,89 @@ function(input, output, session) {
   
   output$tourText <- renderUI({
     HTML(tour_text[[rvs$tour_tab]])
+  })
+  
+  output$map_tour <- renderLeaflet({
+    rvs$map_tour <-
+      leaflet(options=leafletOptions(minZoom=5)) %>%
+      setMaxBounds(lng1 = 115, lat1 = -45.00, lng2 = 170, lat2 = -5) %>%
+      addSearchOSM(options=searchOptions(moveToLocation=FALSE, zoom=NULL)) %>%
+      addMapPane(name = "layers", zIndex = 200) %>%
+      addMapPane(name = "maplabels", zIndex = 400) %>%
+      addMapPane(name = "markers", zIndex = 205) %>%
+      addProviderTiles("CartoDB.VoyagerNoLabels") %>%
+      addProviderTiles("CartoDB.VoyagerOnlyLabels",
+                       options = leafletOptions(pane = "maplabels"),
+                       group = "map labels") 
+    rvs$map_tour
+  })
+  
+  observeEvent(rvs$to_load_tour,{
+    if(is.null(isolate(rvs$map_tour)) | isolate(rvs$map_tour_complete))return()
+    
+    leafletProxy("map_tour") %>%
+      hideGroup(unique_ids) %>%
+      addCircleMarkers(
+        lng=df_locations$x, lat=df_locations$y,
+        radius=2, fillOpacity=0,
+        popup=df_locations$popup,
+        group="Towns"
+      ) %>%
+      addPolygons(
+        data=aria,
+        fillColor=~palFac(aria$ra_label),
+        color="black",
+        fillOpacity=1,
+        weight=1,
+        group="aria",
+        options=leafletOptions(pane="layers")
+      )
+    
+    if(!isolate(rvs$map_tour_complete)) rvs$map_tour_complete <- TRUE
+  })
+  
+  observeEvent(rvs$tour_tab, {
+    hide_groups <- unique_ids
+    show_groups <- unique_ids
+    
+    tab_num <- paste0("tab", rvs$tour_tab)
+    desired_groups <- tab_ids[[tab_num]]
+    if(is.null(desired_groups)) desired_groups <- c()
+    hide_groups <- unique_ids[!unique_ids %in% desired_groups]
+    show_groups <- desired_groups
+    
+    desired_legend <- tab_legend_ids[[tab_num]]
+    hide_legend_id <- unique_legend_ids[!unique_legend_ids %in% desired_legend]
+    if(!is.null(desired_legend)){
+      show_legend_fx <- tab_legends[[desired_legend]]
+    } else{
+      show_legend_fx <- function(x) {x}
+    }
+    
+    show_hide_layers_and_legends <- function(map) {
+      map %>%
+        hideGroup(hide_groups) %>%
+        showGroup(show_groups) %>%
+        show_legend_fx %>%
+        removeControl(layerId=hide_legend_id)
+    }
+    
+    if(rvs$tour_tab == 1){
+      leafletProxy("map_tour") %>%
+        show_hide_layers_and_legends()
+    } else if(rvs$tour_tab == 2){
+      leafletProxy("map_tour") %>%
+        show_hide_layers_and_legends()
+    } else if(rvs$tour_tab == 3){
+      leafletProxy("map_tour") %>%
+        show_hide_layers_and_legends() %>%
+        setView(lng=152, lat=-27, zoom=7)
+    } else {
+      leafletProxy("map_tour") %>%
+        show_hide_layers_and_legends() 
+    }
+    
+    
   })
   
   output$map <- renderLeaflet({
@@ -244,6 +316,7 @@ function(input, output, session) {
   f <- function(){
     if(is.null(isolate(rvs$to_load))) rvs$to_load <- 1
     if(is.null(isolate(rvs$to_load_rehab))) rvs$to_load_rehab <- 1
+    if(is.null(isolate(rvs$to_load_tour))) rvs$to_load_tour <- 1
     
     if(!is.null(isolate(rvs$to_load)) & !isolate(rvs$map_complete) & !is.null(isolate(rvs$map))){
       rvs$to_load <- isolate(rvs$to_load) + 1
@@ -251,6 +324,10 @@ function(input, output, session) {
     
     if(!is.null(isolate(rvs$to_load_rehab)) & !isolate(rvs$map_rehab_complete) & !is.null(isolate(rvs$map_rehab))){
       rvs$to_load_rehab <- isolate(rvs$to_load_rehab) + 1
+    }
+    
+    if(!is.null(isolate(rvs$to_load_tour)) & !isolate(rvs$map_tour_complete) & !is.null(isolate(rvs$map_tour))){
+      rvs$to_load_tour <- isolate(rvs$to_load_tour) + 1
     }
   }
   session$onFlushed(f, once=FALSE)

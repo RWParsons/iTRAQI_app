@@ -42,3 +42,8 @@ polygons <-
   left_join(., groupings, by=c("ra", "seifa_quintile"="seifa", "SA_level"="sa", "care_type"))
 
 rmarkdown::render("input/iTRAQI_info.md")
+
+aria <- 
+  polygons %>%
+  filter(SA_level==1, care_type=="acute") %>%
+  mutate(ra_label=factor(ra_scale_to_text(ra), levels=ra_scale_to_text(0:4)))
