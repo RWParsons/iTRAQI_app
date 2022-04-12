@@ -280,9 +280,10 @@ function(input, output, session) {
     rvs$map_rehab
   })
   
-  observeEvent(list(input$rehab_layer_selection, input$rehab_towns_checkbox), {
+  observeEvent(list(input$rehab_layer_selection, input$rehab_markers_checkbox), {
     rehab_base_groups <- c("None", names(rehab_tiers))
     rehab_towns_groups <- paste0("towns_", rehab_base_groups)
+    rehab_centre_groups <- paste0("centres_", names(rehab_tiers))
     
     hide_base_groups <- rehab_base_groups[rehab_base_groups != input$rehab_layer_selection]
     show_base_group <- input$rehab_layer_selection
@@ -290,12 +291,24 @@ function(input, output, session) {
     hide_centre_groups <- paste0("centres_", hide_base_groups)
     show_centre_group <- paste0("centres_", show_base_group)
     
-    if(is.null(input$rehab_towns_checkbox)) {
+    if(!"Towns" %in% input$rehab_markers_checkbox) {
       show_towns_group <- c()
       hide_towns_groups <- rehab_towns_groups
     } else {
       show_towns_group <- rehab_towns_groups[which(rehab_base_groups == show_base_group)]
       hide_towns_groups <- rehab_towns_groups[rehab_towns_groups != show_towns_group]
+    }
+    
+    if(!"Centres" %in% input$rehab_markers_checkbox) {
+      show_centre_group <- c()
+      hide_centre_groups <- rehab_centre_groups
+    } else {
+      if(show_base_group=="None") {
+        show_centre_group <- c()
+      } else {
+        show_centre_group <- rehab_centre_groups[which(names(rehab_tiers) == show_base_group)]
+      }
+      hide_centre_groups <- rehab_centre_groups[!rehab_centre_groups %in% show_centre_group]
     }
     
     show_ids <- c(show_base_group, show_centre_group, show_towns_group)

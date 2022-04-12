@@ -118,9 +118,9 @@ navbarPage(
           ),
           tags$hr(),
           checkboxGroupInput(
-            "rehab_towns_checkbox",label=NULL,
-            choices="Towns",
-            selected="Towns"
+            "rehab_markers_checkbox",label=NULL,
+            choices=c("Towns", "Centres"),
+            selected=c("Towns", "Centres")
           )
         ),
         tags$div(
