@@ -259,11 +259,13 @@ function(input, output, session) {
                        options = leafletOptions(pane = "maplabels"),
                        group = "map labels") %>%
       hideGroup(names(rehab_tiers)) %>%
+      hideGroup(paste0("centres_", names(rehab_tiers))) %>%
+      hideGroup(paste0("towns_", names(rehab_tiers))) %>%
       addCircleMarkers(
-        lng=df_locations$x, lat=df_locations$y, 
+        lng=df_rehab_map_locations$x, lat=df_rehab_map_locations$y, 
         radius=2, fillOpacity=0,
-        popup=df_locations$popup_rehab,
-        group="Towns",
+        popup=df_rehab_map_locations$popup_none,
+        group="towns_None",
         options=leafletOptions(pane="markers")
       ) %>% 
       addLegendNumeric(
@@ -274,18 +276,34 @@ function(input, output, session) {
         bins=10,
         value=c(-0.01, 0:20, 20.1),
         htmltools::tagList(tags$div("Time to care (hours)"), tags$br())
-      ) %>%
-      addLayersControl(
-        position = "topright",
-        baseGroups = c("None", names(rehab_tiers)),
-        overlayGroups = c("Towns"),
-        options = layersControlOptions(collapsed = FALSE))%>% 
-      htmlwidgets::onRender("
-        function() {
-            $('.leaflet-control-layers-list').prepend('<label style=\"text-align:center\">Markers</label>');
-        }
-    ")
+      )
     rvs$map_rehab
+  })
+  
+  observeEvent(list(input$rehab_layer_selection, input$rehab_towns_checkbox), {
+    rehab_base_groups <- c("None", names(rehab_tiers))
+    rehab_towns_groups <- paste0("towns_", rehab_base_groups)
+    
+    hide_base_groups <- rehab_base_groups[rehab_base_groups != input$rehab_layer_selection]
+    show_base_group <- input$rehab_layer_selection
+    
+    hide_centre_groups <- paste0("centres_", hide_base_groups)
+    show_centre_group <- paste0("centres_", show_base_group)
+    
+    if(is.null(input$rehab_towns_checkbox)) {
+      show_towns_group <- c()
+      hide_towns_groups <- rehab_towns_groups
+    } else {
+      show_towns_group <- rehab_towns_groups[which(rehab_base_groups == show_base_group)]
+      hide_towns_groups <- rehab_towns_groups[rehab_towns_groups != show_towns_group]
+    }
+    
+    show_ids <- c(show_base_group, show_centre_group, show_towns_group)
+    hide_ids <- c(hide_base_groups, hide_centre_groups, hide_towns_groups)
+    
+    leafletProxy("map_rehab") %>%
+      showGroup(show_ids) %>%
+      hideGroup(hide_ids)
   })
   
   observeEvent(rvs$to_load_rehab, {
@@ -294,6 +312,11 @@ function(input, output, session) {
     for(group_name in names(rehab_tiers)){
       new_layer <- readRDS(file.path(layers_dir, glue::glue("{rehab_tiers[[group_name]]$file}.rds")))
       centres_group <- df_centres[df_centres$centre_name %in% rehab_tiers[[group_name]]$centres, ]
+      
+      popup_col <- paste0("popup_",tolower(group_name))
+      popup_col <- str_replace_all(popup_col, " ", "_")
+      town_popups <- df_rehab_map_locations %>% pull(!!{popup_col})
+      
       leafletProxy("map_rehab") %>%
         addRasterImage(
           data=new_layer,
@@ -306,7 +329,14 @@ function(input, output, session) {
           lng=centres_group$x, lat=centres_group$y, 
           icon=tier_icons[group_name],
           popup=centres_group$popup,
-          group=group_name,
+          group=paste0("centres_", group_name),
+          options=leafletOptions(pane="markers")
+        ) %>%
+        addCircleMarkers(
+          lng=df_rehab_map_locations$x, lat=df_rehab_map_locations$y, 
+          radius=2, fillOpacity=0,
+          popup=town_popups,
+          group=paste0("towns_", group_name),
           options=leafletOptions(pane="markers")
         )
     }
