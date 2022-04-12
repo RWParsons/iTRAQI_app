@@ -108,7 +108,7 @@ navbarPage(
         absolutePanel(
           id = "rehab_controls", class = "panel panel-default", fixed = TRUE,
           draggable = TRUE, top = 370, left = "auto", right = 10, bottom = "auto",
-          width = 150, height = 245,
+          width = 150, height = 280,
           h4("Layers"),
           tags$hr(),
           radioButtons(
