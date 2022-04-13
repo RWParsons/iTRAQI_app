@@ -171,7 +171,6 @@ function(input, output, session) {
           data=new_layer,
           x=raster::raster(new_layer, layer=1),
           group=group_name,
-          options=leafletOptions(pane="layers"),
           colors=palNum
         )
     }
@@ -335,7 +334,6 @@ function(input, output, session) {
           data=new_layer,
           x=raster::raster(new_layer, layer=1),
           group=group_name,
-          options=leafletOptions(pane="layers"),
           colors=palNum
         ) %>%
         addMarkers(
