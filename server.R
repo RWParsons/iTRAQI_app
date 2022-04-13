@@ -412,7 +412,7 @@ function(input, output, session) {
   output$info_page <- renderUI({
     tags$iframe(
       seamless="seamless", src="input/iTRAQI_info.html", 
-      style='width:100vw;height:100vh;'
+      style='width:100vw;height:calc(100vh - 41px);'
     )
   })
 }
