@@ -48,13 +48,11 @@ df_rehab_map_locations <- read.csv("input/all_rehab_time.csv") %>%
     )
   )
 
-df_centres <- read.csv("input/centres.csv") 
-names(df_centres) <- c("centre_name", "address", "x", "y")
+df_centres <- read.csv("input/centres2.csv") 
+names(df_centres) <- c("centre_name", "care_type", "address", "x", "y")
 df_centres <- df_centres %>%
-  mutate(centre_name = str_trim(centre_name))%>%
-  filter(centre_name %in% c(rehab_centres, acute_centres)) %>%
   mutate(
-    care_type=ifelse(centre_name %in% acute_centres, "acute", "rehab"),
+    centre_name = str_trim(centre_name),
     popup=paste0(
       "<b>Centre name: </b>", centre_name, "<br>",
       "<b>Care type: </b>", ifelse(care_type=="acute", "Acute care", "Rehabilitation care"), "<br>",

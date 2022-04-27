@@ -46,20 +46,6 @@ rehab_tiers <- list(
   )
 )
 
-rehab_centres <- c(
-  "Sunshine Coast University Hospital",
-  "Central West Sub-Acute Service",
-  "Gympie Hospital",
-  "Rockhampton Hospital",
-  "Roma Hospital",
-  "Cairns Hospital"
-)
-acute_centres <- c(
-  "Brain Injury Rehabilitation Unit",
-  "Gold Coast University Hospital",
-  "Townsville University Hospital"
-)
-
 all_base_layers <- c("Towns", "Acute centres", "Rehab centres")
 
 tier_icons <- iconList(
