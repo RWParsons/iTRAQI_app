@@ -9,43 +9,6 @@ layer_input <- c(
   "SA2 rehab time" = "rehab_polygons_SA2_year2016_simplified"
 )
 
-rehab_tiers <- list(
-  "Platinum" = list(
-    file = "platinum_rehab",
-    centres = c("Brain Injury Rehabilitation Unit")
-  ),
-  "Gold" = list(
-    file = "gold_rehab",
-    centres = c(
-      "Townsville University Hospital",
-      "Brain Injury Rehabilitation Unit"
-    )
-  ),
-  "Future Gold" = list(
-    file = "future_gold_rehab",
-    centres = c(
-      "Sunshine Coast University Hospital",
-      "Gold Coast University Hospital",
-      "Townsville University Hospital",
-      "Brain Injury Rehabilitation Unit"
-    )
-  ),
-  "Silver" = list(
-    file = "silver_rehab",
-    centres = c(
-      "Brain Injury Rehabilitation Unit",
-      "Gold Coast University Hospital",
-      "Townsville University Hospital",
-      "Sunshine Coast University Hospital",
-      "Central West Sub-Acute Service",
-      "Gympie Hospital",
-      "Rockhampton Hospital",
-      "Roma Hospital",
-      "Cairns Hospital"
-    )
-  )
-)
-
 all_base_layers <- c("Towns", "Acute centres", "Rehab centres")
 
 tier_icons <- iconList(

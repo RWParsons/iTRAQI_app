@@ -48,7 +48,26 @@ df_rehab_map_locations <- read.csv("input/all_rehab_time.csv") %>%
     )
   )
 
-df_centres <- read.csv("input/centres2.csv") 
+rehab_tiers <- list(
+  "Platinum" = list(
+    file = "platinum_rehab",
+    centres = unique(df_rehab_map_locations$platinum_rehab_centre)
+  ),
+  "Gold" = list(
+    file = "gold_rehab",
+    centres = unique(df_rehab_map_locations$gold_rehab_centre)
+  ),
+  "Future Gold" = list(
+    file = "future_gold_rehab",
+    centres = unique(df_rehab_map_locations$future_gold_rehab_centre)
+  ),
+  "Silver" = list(
+    file = "silver_rehab",
+    centres = unique(df_rehab_map_locations$silver_rehab_centre)
+  )
+)
+
+df_centres <- read.csv("input/centres.csv") 
 names(df_centres) <- c("centre_name", "care_type", "address", "x", "y")
 df_centres <- df_centres %>%
   mutate(
