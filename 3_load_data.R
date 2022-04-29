@@ -69,7 +69,7 @@ rehab_tiers <- list(
 
 df_centres <- read.csv("input/centres.csv") 
 names(df_centres) <- c("centre_name", "care_type", "address", "x", "y")
-
+acute_centre_names <- df_centres %>% filter(care_type=="acute") %>% pull(centre_name)
 df_centres <- df_centres %>% 
   filter(care_type=="acute") %>%
   mutate(care_type="rehab") %>%
@@ -78,7 +78,7 @@ df_centres <- df_centres %>%
     centre_name = str_trim(centre_name),
     popup=paste0(
       "<b>Centre name: </b>", centre_name, "<br>",
-      "<b>Care type: </b>", ifelse(care_type=="acute", "Acute care", "Rehabilitation care"), "<br>",
+      "<b>Care type: </b>", ifelse(centre_name %in% acute_centre_names, "Acute & Rehabilitation care", "Rehabilitation care"), "<br>",
       "<b>Address: </b>", address, "<br>"
     )
   )
