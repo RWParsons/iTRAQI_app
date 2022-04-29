@@ -76,6 +76,15 @@ Specific assumptions were made which may not be met in certain circumstances:
 
 
 
+### List of abbreviations
+|  |  |
+| :--- | :--- |
+| PAH | Princess Alexandra Hospital |
+| RBWH | Royal Brisbane and Women's Hospital |
+| SEIFA | Socio-Economic Indexes for Areas |
+| ASGS | Australian Statistical Geography Standard|
+| SA1 | Statistical Areas level 1 |
+| SA2 | Statistical Areas level 2 |
 
 
 
