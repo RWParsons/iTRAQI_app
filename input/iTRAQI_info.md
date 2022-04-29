@@ -26,10 +26,12 @@ iTRAQI (injury Treatment and Rehabilitation Accessibility Queensland Index) is a
   
   <h3>Main map</h3>
   
-  <img src="imgs/layers_icon.png" alt="drawing" width="50"/> Click on this icon in the top right to select a layer (includes acute travel times (based on air and road) and rehabilitation driving times, plus the index).
+  <img src="imgs/control_panel.png" alt="drawing" width="80"/> 
+  Select layers from the list on the movable control panel.
   
   
-  <img src="imgs/search_icon.png" alt="drawing" width="50"/>Click on this icon to search for locations through the search tool.
+  <img src="imgs/search_icon.png" alt="drawing" width="50"/>
+  Click on this icon to search for locations through the search tool.
   
   <h3>Rehab map</h3>
   Different levels of rehabilitation are shown with driving times. These are:
