@@ -69,3 +69,14 @@ ra_text_to_value <- function(x){
     x=="Very Remote Australia" ~ 4,
   )
 }
+
+get_nearest_pred <- function(lat, lng, r_points) {
+  r_points %>% 
+    as.data.frame() %>%
+    mutate(x_diff = abs(x-lng),
+           y_diff = abs(y-lat),
+           xy_diff = x_diff + y_diff) %>%
+    arrange(xy_diff) %>%
+    pull(var1.pred) %>%
+    first()
+}
