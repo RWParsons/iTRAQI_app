@@ -166,10 +166,8 @@ function(input, output, session) {
     raster_layers <- grep("raster", layer_input)
     raster_layers <- group_names_to_load[raster_layers]
     
-    rasters_keep <- list()
     for(group_name in raster_layers){
       new_layer <- readRDS(file.path(layers_dir, glue::glue("{layer_input[group_name]}.rds")))
-      rasters_keep <- c(rasters_keep, list(raster::rasterToPoints(new_layer)))
       leafletProxy("map") %>%
         addRasterImage(
           data=new_layer,
@@ -178,10 +176,6 @@ function(input, output, session) {
           colors=palNum
         )
     }
-    
-    # keep rasters in global environment so that they can be used to access predictions on input$map_click
-    names(rasters_keep) <- layer_input[raster_layers]
-    rasters_keep <<- rasters_keep
     
     for(i in groupings$group_id){
       polygons_df <- polygons[polygons$group_id==i,]
@@ -254,15 +248,14 @@ function(input, output, session) {
   })
   
   observe({
-    print(input$map_click)
     if(is.null(input$map_click)) return()
     
     lat <- input$map_click$lat
     lng <- input$map_click$lng
     
     digits <- 2
-    acute_pred <- get_nearest_pred(lat=lat, lng=lng, r_points=rasters_keep$acute_raster)
-    rehab_pred <- get_nearest_pred(lat=lat, lng=lng, r_points=rasters_keep$rehab_raster)
+    acute_pred <- get_nearest_pred(lat=lat, lng=lng, r_points=rasters_points$acute_raster)
+    rehab_pred <- get_nearest_pred(lat=lat, lng=lng, r_points=rasters_points$rehab_raster)
     content <- glue::glue(.sep="<br/>",
       "<b>New location</b>",
       "Longitude: {round(lng, digits)}",
@@ -271,8 +264,10 @@ function(input, output, session) {
       "Rehab time prediction: {round(rehab_pred, 0)} minutes"
     )
     leafletProxy("map") %>%
-      addPopups(lng=lng, lat=lat, content,
-                options = popupOptions(closeButton = FALSE)
+      addPopups(
+        lng=lng, lat=lat, 
+        popup=content,
+        options = popupOptions(closeButton = FALSE)
       )
   })
 
