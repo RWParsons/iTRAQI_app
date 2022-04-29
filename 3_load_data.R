@@ -69,7 +69,11 @@ rehab_tiers <- list(
 
 df_centres <- read.csv("input/centres.csv") 
 names(df_centres) <- c("centre_name", "care_type", "address", "x", "y")
-df_centres <- df_centres %>%
+
+df_centres <- df_centres %>% 
+  filter(care_type=="acute") %>%
+  mutate(care_type="rehab") %>%
+  rbind(., df_centres) %>%
   mutate(
     centre_name = str_trim(centre_name),
     popup=paste0(

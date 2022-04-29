@@ -19,8 +19,8 @@ tier_icons <- iconList(
 )
 
 centre_icons <- iconList(
-  acute=makeIcon(iconUrl = "input/imgs/acute_care2.png", iconWidth = 783/18, iconHeight = 900/18),
-  rehab=makeIcon(iconUrl = "input/imgs/rehab_care.png", iconWidth = 783/18, iconHeight = 783/18)
+  acute=makeIcon(iconUrl = "input/imgs/acute_care2.png", iconWidth = 50, iconHeight = 50),
+  rehab=makeIcon(iconUrl = "input/imgs/rehab_care.png", iconWidth = 40, iconHeight = 40)
 )
 
 download_data_dir <- "input/download_data/"

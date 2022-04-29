@@ -118,7 +118,9 @@ function(input, output, session) {
       addSearchOSM(options=searchOptions(moveToLocation=FALSE, zoom=NULL)) %>%
       addMapPane(name = "layers", zIndex = 200) %>%
       addMapPane(name = "maplabels", zIndex = 400) %>%
-      addMapPane(name = "markers", zIndex = 205) %>%
+      addMapPane(name = "markers", zIndex = 206) %>%
+      addMapPane(name = "acute_centres", zIndex = 205) %>%
+      addMapPane(name = "rehab_centres", zIndex = 204) %>%
       addProviderTiles("CartoDB.VoyagerNoLabels") %>%
       addProviderTiles("CartoDB.VoyagerOnlyLabels",
                        options = leafletOptions(pane = "maplabels"),
@@ -138,7 +140,7 @@ function(input, output, session) {
         icon=centre_icons["acute"],
         popup=df_centres$popup[df_centres$care_type=="acute"],
         group="Acute centres",
-        options=leafletOptions(pane="markers")
+        options=leafletOptions(pane="acute_centres")
       ) %>% 
       addMarkers(
         lng=df_centres$x[df_centres$care_type=="rehab"],
@@ -146,7 +148,7 @@ function(input, output, session) {
         icon=centre_icons["rehab"],
         popup=df_centres$popup[df_centres$care_type=="rehab"],
         group="Rehab centres",
-        options=leafletOptions(pane="markers")
+        options=leafletOptions(pane="rehab_centres")
       ) %>%  
       addLegendBin(
         opacity=1,
