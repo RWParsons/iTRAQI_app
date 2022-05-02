@@ -260,6 +260,7 @@ function(input, output, session) {
       "<b>New location</b>",
       "Longitude: {round(lng, digits)}",
       "Latitude: {round(lat, digits)}",
+      "iTRAQI index: {get_iTRAQI_index(acute_mins=acute_pred, rehab_mins=rehab_pred)}",
       "Acute time prediction: {round(acute_pred, 0)} minutes",
       "Rehab time prediction: {round(rehab_pred, 0)} minutes"
     )
@@ -267,7 +268,7 @@ function(input, output, session) {
       addPopups(
         lng=lng, lat=lat, 
         popup=content,
-        options = popupOptions(closeButton = FALSE)
+        options=popupOptions(closeButton=TRUE)
       )
   })
 

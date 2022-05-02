@@ -80,3 +80,24 @@ get_nearest_pred <- function(lat, lng, r_points) {
     pull(var1.pred) %>%
     first()
 }
+
+get_iTRAQI_index <- function(acute_mins, rehab_mins){
+  acute_cat <- cut(acute_mins/60, breaks=c(-Inf, 1, 2, 4, 6, Inf))
+  rehab_cat <- cut(rehab_mins/60, breaks=c(-Inf, 1, 2, 4, 6, Inf))
+  
+  clean_acute_label <- function(x) {
+    str_remove_all(x, "\\(|\\)|\\[|\\]") %>% 
+      str_split(",", simplify=T) %>%
+      str_replace("-Inf", "<") %>%
+      str_replace(" Inf", "+") %>%
+      paste0(collapse=",") %>%
+      str_replace(",\\+", "\\+") %>%
+      str_replace("<,", "<") %>%
+      str_replace(",", "-")
+  }
+  
+  acute_label <- map_chr(acute_cat, clean_acute_label)
+  rehab_label <- LETTERS[rehab_cat]
+  
+  paste0(acute_label, rehab_label)
+}
