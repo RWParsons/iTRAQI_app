@@ -33,3 +33,27 @@ palNum_hours <- function(x){
 }
 
 palFac <- colorFactor("Greens", levels=ra_scale_to_text(0:4), ordered = TRUE, reverse=TRUE)
+
+get_iTRAQI_bins <- function() {
+  unique_rehab_levels <- cut(0, breaks=iTRAQI_rehab_breaks) %>% levels()
+  unique_rehab_levels <- LETTERS[1:length(unique_rehab_levels)]
+  
+  
+  unique_acute_levels <- cut(0, breaks=iTRAQI_rehab_breaks) %>% levels()
+  unique_acute_levels <- map_chr(unique_acute_levels, clean_acute_label)
+  
+  grid <- expand.grid(acute=unique_acute_levels, rehab=unique_rehab_levels)
+  grid$iTRAQI_index <- paste0(grid$acute, grid$rehab)
+  grid <- grid[grid$iTRAQI_index %in% unique(df_locations$iTRAQI_index),]
+  as.factor(grid$iTRAQI_index)
+}
+
+iTRAQI_bins <- get_iTRAQI_bins()
+
+paliTRAQI <- colorFactor(
+  # https://stackoverflow.com/questions/44269655/ggplot-rcolorbrewer-extend-and-apply-to-factor-data
+  colorRampPalette(c("blue", "yellow", "red"))(length(iTRAQI_bins)), 
+  levels=iTRAQI_bins,
+  ordered=TRUE
+)
+

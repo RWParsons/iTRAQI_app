@@ -1,8 +1,9 @@
 df_locations <- read.csv("input/QLD_locations_with_RSQ_times_20220427.csv") %>%
   mutate(
+    iTRAQI_index=get_iTRAQI_index(acute_mins=acute_time, rehab_mins=rehab_time),
     popup=paste0(
       "<b>Location: </b>", location, "<br>",
-      "<b>iTRAQI index: </b>", get_iTRAQI_index(acute_mins=acute_time, rehab_mins=rehab_time), "<br>",
+      "<b>iTRAQI index: </b>", iTRAQI_index, "<br>",
       "<b>Acute care destination: </b>", acute_care_centre, "<br>",
       "<b>Time to acute care (minutes): </b>", acute_time, "<br>",
       "<b>Initial rehab care destination: </b>", gold_rehab_centre, "<br>",
