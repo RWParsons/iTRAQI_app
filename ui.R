@@ -12,7 +12,7 @@ library(rgdal)
 
 source("0_utils.R")
 source("1_functions.R")
-source("2_pallettes.R")
+source("2_palettes.R")
 source("3_load_data.R")
 source("4_tour.R")
 # styles.css from https://github.com/rstudio/shiny-examples/tree/main/063-superzip-example
