@@ -149,14 +149,14 @@ function(input, output, session) {
         popup=df_centres$popup[df_centres$care_type=="rehab"],
         group="Rehab centres",
         options=leafletOptions(pane="rehab_centres")
-      ) %>%  
-      addLegendBin(
-        opacity=1,
-        position="topright",
-        pal=palBin,
-        values=0:900,
-        title=htmltools::tagList(tags$div("Time to care (minutes)"), tags$br())
-      )
+      ) #%>%  
+      # addLegendBin(
+      #   opacity=1,
+      #   position="topright",
+      #   pal=palBin,
+      #   values=0:900,
+      #   title=htmltools::tagList(tags$div("Time to care (minutes)"), tags$br())
+      # )
   })
   
   observeEvent(rvs$to_load,{
@@ -182,7 +182,7 @@ function(input, output, session) {
       leafletProxy("map") %>%
         addPolygons(
           data=polygons_df,
-          fillColor=~palBin(polygons_df$value),
+          fillColor=~palBin(as.numeric(polygons_df$value)),
           color="black",
           fillOpacity=1,
           weight=1,
@@ -218,6 +218,41 @@ function(input, output, session) {
     } else {
       paste("<b>Including:</b>", paste0(input$remoteness, collapse=", "))
     }
+  })
+  
+  observeEvent(input$layer_selection, {
+    legend_type <- 
+      case_when(
+        input$layer_selection=="None" ~ "none",
+        str_detect(tolower(input$layer_selection), "index") ~ "index",
+        TRUE ~ "time"
+      )
+    
+    if(legend_type=="index") {
+      leafletProxy("map") %>% 
+        clearControls() %>%
+        addLegendFactor(
+          opacity=1,
+          position="topright",
+          pal=paliTRAQI,
+          values=iTRAQI_bins,
+          title=htmltools::tagList(tags$div("iTRAQI index"), tags$br())
+        )
+    } else if(legend_type=="time") {
+      leafletProxy("map") %>%
+        clearControls() %>%
+        addLegendBin(
+          opacity=1,
+          position="topright",
+          pal=palBin,
+          values=0:900,
+          title=htmltools::tagList(tags$div("Time to care (minutes)"), tags$br())
+        )
+    } else {
+      leafletProxy("map") %>%
+        clearControls()
+    }
+    
   })
   
   observeEvent(list(input$seifa, input$remoteness, input$layer_selection), {

@@ -92,10 +92,10 @@ clean_acute_label <- function(x) {
     str_replace(",", "-")
 }
 
+iTRAQI_acute_breaks <- c(-Inf, 1, 2, 4, 6, Inf)
+iTRAQI_rehab_breaks <- c(-Inf, 1, 2, 4, 6, Inf)
+
 get_iTRAQI_index <- function(acute_mins, rehab_mins){
-  iTRAQI_acute_breaks <<- c(-Inf, 1, 2, 4, 6, Inf)
-  iTRAQI_rehab_breaks <<- c(-Inf, 1, 2, 4, 6, Inf)
-  
   acute_cat <- cut(acute_mins/60, breaks=iTRAQI_acute_breaks)
   rehab_cat <- cut(rehab_mins/60, breaks=iTRAQI_rehab_breaks)
   

@@ -12,8 +12,8 @@ library(rgdal)
 
 source("0_utils.R")
 source("1_functions.R")
-source("2_palettes.R")
-source("3_load_data.R")
+source("2_load_data.R")
+source("3_palettes.R")
 source("4_tour.R")
 # styles.css from https://github.com/rstudio/shiny-examples/tree/main/063-superzip-example
 
@@ -33,7 +33,7 @@ navbarPage(
         h4("Layer"),
         radioButtons(
           inputId="layer_selection", label=NULL,
-          choices=c("None", "Acute time", "Rehab time", "SA1 Acute", "SA2 Acute", "SA1 Rehab", "SA2 Rehab"),
+          choices=c("None", "Acute time", "Rehab time", "SA1 Index", "SA2 Index", "SA1 Acute", "SA2 Acute", "SA1 Rehab", "SA2 Rehab"),
           selected="None"
         ),
         h4("Markers"),

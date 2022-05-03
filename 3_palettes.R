@@ -52,8 +52,8 @@ iTRAQI_bins <- get_iTRAQI_bins()
 
 paliTRAQI <- colorFactor(
   # https://stackoverflow.com/questions/44269655/ggplot-rcolorbrewer-extend-and-apply-to-factor-data
-  colorRampPalette(c("blue", "yellow", "red"))(length(iTRAQI_bins)), 
-  levels=iTRAQI_bins,
-  ordered=TRUE
+  colorRampPalette(c("pink", "purple", "red", "black"))(length(iTRAQI_bins)), 
+  levels=levels(iTRAQI_bins),
+  ordered=FALSE
 )
 

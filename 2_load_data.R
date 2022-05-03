@@ -95,7 +95,8 @@ groupings$group_id <- as.character(1:nrow(groupings))
 
 polygons <- 
   readRDS("input/layers/vertical_stacked_SA1_and_SA2_polygons_year2016_simplified.rds") %>% 
-  left_join(., groupings, by=c("ra", "seifa_quintile"="seifa", "SA_level"="sa", "care_type"))
+  left_join(., groupings, by=c("ra", "seifa_quintile"="seifa", "SA_level"="sa", "care_type")) %>%
+  mutate(value=as.character(value))
 
 rmarkdown::render("input/iTRAQI_info.md")
 
