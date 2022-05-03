@@ -89,7 +89,7 @@ groupings <- expand.grid(
   seifa=c(1:5, NA),
   ra=0:4,
   sa=1:2,
-  care_type=c("acute", "rehab")
+  care_type=c("acute", "rehab", "index")
 )
 groupings$group_id <- as.character(1:nrow(groupings))
 

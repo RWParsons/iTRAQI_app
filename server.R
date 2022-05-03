@@ -149,14 +149,7 @@ function(input, output, session) {
         popup=df_centres$popup[df_centres$care_type=="rehab"],
         group="Rehab centres",
         options=leafletOptions(pane="rehab_centres")
-      ) #%>%  
-      # addLegendBin(
-      #   opacity=1,
-      #   position="topright",
-      #   pal=palBin,
-      #   values=0:900,
-      #   title=htmltools::tagList(tags$div("Time to care (minutes)"), tags$br())
-      # )
+      )
   })
   
   observeEvent(rvs$to_load,{
@@ -179,10 +172,17 @@ function(input, output, session) {
     
     for(i in groupings$group_id){
       polygons_df <- polygons[polygons$group_id==i,]
+      
+      if(all(polygons_df$care_type=="index")){
+        fill <- ~paliTRAQI(polygons_df$value)
+      } else {
+        fill <- ~palBin(as.numeric(polygons_df$value))
+      }
+      
       leafletProxy("map") %>%
         addPolygons(
           data=polygons_df,
-          fillColor=~palBin(as.numeric(polygons_df$value)),
+          fillColor=fill,
           color="black",
           fillOpacity=1,
           weight=1,
