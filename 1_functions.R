@@ -104,3 +104,10 @@ get_iTRAQI_index <- function(acute_mins, rehab_mins){
   
   paste0(acute_label, rehab_label)
 }
+
+
+check_point_in_qld <- function(lat, lng) {
+  point <- st_point(c(lng, lat))
+  intersects <- st_intersects(point, qld_boarder)
+  nrow(as.data.frame(intersects)) > 0
+}

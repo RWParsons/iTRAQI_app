@@ -253,6 +253,8 @@ function(input, output, session) {
     lat <- input$map_click$lat
     lng <- input$map_click$lng
     
+    if(!check_point_in_qld(lat=lat, lng=lng)) return()
+    
     digits <- 2
     acute_pred <- get_nearest_pred(lat=lat, lng=lng, r_points=rasters_points$acute_raster)
     rehab_pred <- get_nearest_pred(lat=lat, lng=lng, r_points=rasters_points$rehab_raster)
