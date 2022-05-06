@@ -92,7 +92,6 @@ function(input, output, session) {
     
     for(group_name in raster_layers){
       new_layer <- readRDS(file.path(layers_dir, glue::glue("{layer_input[group_name]}.rds")))
-      print(group_name)
       leafletProxy("map_tour") %>%
         addRasterImage(
           data=new_layer,

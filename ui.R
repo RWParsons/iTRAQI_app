@@ -20,32 +20,6 @@ source("4_tour.R")
 
 navbarPage(
   "iTRAQI", id="nav",
-  tabPanel(
-    "Tour",
-    useShinyjs(),
-    div(class="outer",
-        tags$head(
-          includeCSS("styles.css")
-        ),
-        leafletOutput("map_tour", width="100%", height="100%"),
-        absolutePanel(
-          id = "tour_controls", class = "panel panel-default", fixed = TRUE,
-          draggable = TRUE, top=80, left = "auto", right = 10, bottom = "auto",
-          width = tours_panel_dims$width, height = tours_panel_dims$height,
-          tags$br(),
-          splitLayout(
-            cellWidths = 230,
-            uiOutput("backButtonControl"),
-            uiOutput("nextButtonControl")
-          ),
-          uiOutput("tourText")
-        ),
-        tags$div(
-          id="cite",
-          citation
-        )
-    )
-  ),
   tabPanel("Main map",
     div(class="outer",
       tags$head(
@@ -135,7 +109,32 @@ navbarPage(
         )
     )
   ),
-  
+  tabPanel(
+    "Tour",
+    useShinyjs(),
+    div(class="outer",
+        tags$head(
+          includeCSS("styles.css")
+        ),
+        leafletOutput("map_tour", width="100%", height="100%"),
+        absolutePanel(
+          id = "tour_controls", class = "panel panel-default", fixed = TRUE,
+          draggable = TRUE, top=80, left = "auto", right = 10, bottom = "auto",
+          width = tours_panel_dims$width, height = tours_panel_dims$height,
+          tags$br(),
+          splitLayout(
+            cellWidths = 230,
+            uiOutput("backButtonControl"),
+            uiOutput("nextButtonControl")
+          ),
+          uiOutput("tourText")
+        ),
+        tags$div(
+          id="cite",
+          citation
+        )
+    )
+  ),
   tabPanel(
     title="Information",
     icon=icon("info-sign",lib='glyphicon'),
