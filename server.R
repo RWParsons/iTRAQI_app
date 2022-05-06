@@ -9,7 +9,7 @@ function(input, output, session) {
   )
   
   output$nextButtonControl <- renderUI({
-    if(rvs$tour_tab != n_tour_windows) actionButton("nextButton", "Next") else NULL
+    if(rvs$tour_tab != n_tour_windows) actionButton("nextButton", "Loading") else NULL
   })
   
   output$backButtonControl <- renderUI({
@@ -63,8 +63,10 @@ function(input, output, session) {
         group="aria",
         options=leafletOptions(pane="layers")
       )
-    
     if(!isolate(rvs$map_tour_complete)) rvs$map_tour_complete <- TRUE
+    output$nextButtonControl <- renderUI({
+      if(rvs$tour_tab != n_tour_windows) actionButton("nextButton", "Next") else NULL
+    })
   })
   
   observeEvent(rvs$tour_tab, {
