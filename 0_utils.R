@@ -1,5 +1,9 @@
 layers_dir <- "input/layers"
 
+tours_panel_dims <- list(
+  width = 330, height = 600
+)
+
 layer_input <- c(
   "Acute time" = "acute_raster",
   "Rehab time" = "rehab_raster",

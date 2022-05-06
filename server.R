@@ -104,7 +104,7 @@ function(input, output, session) {
     } else if(rvs$tour_tab == 3){
       leafletProxy("map_tour") %>%
         show_hide_layers_and_legends() %>%
-        setView(lng=152, lat=-27, zoom=7)
+        flyTo(lng=142.93, lat=-11.15, zoom=8)
     } else {
       leafletProxy("map_tour") %>%
         show_hide_layers_and_legends() 
