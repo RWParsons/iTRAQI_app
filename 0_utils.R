@@ -4,6 +4,20 @@ tours_panel_dims <- list(
   width = 330, height = 600
 )
 
+map_bounds <- list(
+  lng1 = 115, 
+  lat1 = -45.00, 
+  lng2 = 170, 
+  lat2 = -5
+)
+
+qld_bounds <- list(
+  lng1 = 137.725724, 
+  lat1 = -28.903687, 
+  lng2 = 151.677076, 
+  lat2 = -10.772608
+)
+
 layer_input <- c(
   "Acute time" = "acute_raster",
   "Rehab time" = "rehab_raster",

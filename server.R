@@ -32,10 +32,16 @@ function(input, output, session) {
     rvs$map_tour <-
       leaflet(options=leafletOptions(minZoom=5)) %>%
       setMaxBounds(lng1 = 115, lat1 = -45.00, lng2 = 170, lat2 = -5) %>%
+      fitBounds(
+        lng1=qld_bounds$lng1, lng2=qld_bounds$lng2, 
+        lat1=qld_bounds$lat1, lat2=qld_bounds$lat2
+      ) %>%
       addSearchOSM(options=searchOptions(moveToLocation=FALSE, zoom=NULL)) %>%
       addMapPane(name = "layers", zIndex = 200) %>%
       addMapPane(name = "maplabels", zIndex = 400) %>%
-      addMapPane(name = "markers", zIndex = 205) %>%
+      addMapPane(name = "markers", zIndex = 206) %>%
+      addMapPane(name = "acute_centres", zIndex = 205) %>%
+      addMapPane(name = "rehab_centres", zIndex = 204) %>%
       addProviderTiles("CartoDB.VoyagerNoLabels") %>%
       addProviderTiles("CartoDB.VoyagerOnlyLabels",
                        options = leafletOptions(pane = "maplabels"),
@@ -62,6 +68,14 @@ function(input, output, session) {
         weight=1,
         group="aria",
         options=leafletOptions(pane="layers")
+      ) %>%
+      addMarkers(
+        lng=df_centres$x[df_centres$care_type=="acute"],
+        lat=df_centres$y[df_centres$care_type=="acute"],
+        icon=centre_icons["acute"],
+        popup=df_centres$popup[df_centres$care_type=="acute"],
+        group="Acute centres",
+        options=leafletOptions(pane="acute_centres")
       )
     if(!isolate(rvs$map_tour_complete)) rvs$map_tour_complete <- TRUE
     output$nextButtonControl <- renderUI({
@@ -105,6 +119,18 @@ function(input, output, session) {
       leafletProxy("map_tour") %>%
         show_hide_layers_and_legends() %>%
         flyTo(lng=142.93, lat=-11.15, zoom=8)
+    } else if(rvs$tour_tab == 4){
+      leafletProxy("map_tour") %>%
+        show_hide_layers_and_legends() 
+      
+      # fit bounds of map to include GC and Brisbane acute care centres
+      leafletProxy("map_tour") %>% 
+        flyToBounds(lng1=152.78, lat1=-27.12, lng2=153.7, lat2=-28.15)
+      
+      # After a delay, move view to TSV hospital
+      delay(6000, {
+        leafletProxy("map_tour") %>% flyTo(lng=146.76, lat=-19.32, zoom=8)
+      })
     } else {
       leafletProxy("map_tour") %>%
         show_hide_layers_and_legends() 
@@ -116,7 +142,9 @@ function(input, output, session) {
   output$map <- renderLeaflet({
     rvs$map <- 
       leaflet(options=leafletOptions(minZoom=5)) %>%
-      setMaxBounds(lng1 = 115, lat1 = -45.00, lng2 = 170, lat2 = -5) %>%
+      setMaxBounds(
+        lng1 = map_bounds$lng1, lat1 = map_bounds$lat1, 
+        lng2 = map_bounds$lng2, lat2 = map_bounds$lat2) %>%
       addSearchOSM(options=searchOptions(moveToLocation=FALSE, zoom=NULL)) %>%
       addMapPane(name = "layers", zIndex = 200) %>%
       addMapPane(name = "maplabels", zIndex = 400) %>%

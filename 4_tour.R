@@ -153,7 +153,7 @@ tab_ids <- list(
   "tab1" = c(),
   "tab2" = c("aria", "ariaLegend"),
   "tab3" = c("Towns"),
-  "tab4" = c(),
+  "tab4" = c("Acute centres"),
   "tab5" = c(),
   "tab6" = c()
 )

@@ -8,6 +8,7 @@ library(tidyverse)
 library(sf)
 library(sp)
 library(rgdal)
+library(shinyjs)
 # https://susanna-cramb.shinyapps.io/itraqi_app/
 
 source("0_utils.R")
@@ -19,9 +20,9 @@ source("4_tour.R")
 
 navbarPage(
   "iTRAQI", id="nav",
-  
   tabPanel(
     "Tour",
+    useShinyjs(),
     div(class="outer",
         tags$head(
           includeCSS("styles.css")
