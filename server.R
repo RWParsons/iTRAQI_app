@@ -76,6 +76,14 @@ function(input, output, session) {
         popup=df_centres$popup[df_centres$care_type=="acute"],
         group="Acute centres",
         options=leafletOptions(pane="acute_centres")
+      )%>% 
+      addMarkers(
+        lng=df_centres$x[df_centres$care_type=="rehab"],
+        lat=df_centres$y[df_centres$care_type=="rehab"],
+        icon=centre_icons["rehab"],
+        popup=df_centres$popup[df_centres$care_type=="rehab"],
+        group="Rehab centres",
+        options=leafletOptions(pane="rehab_centres")
       )
     if(!isolate(rvs$map_tour_complete)) rvs$map_tour_complete <- TRUE
     output$nextButtonControl <- renderUI({
@@ -131,6 +139,13 @@ function(input, output, session) {
       delay(6000, {
         leafletProxy("map_tour") %>% flyTo(lng=146.76, lat=-19.32, zoom=8)
       })
+    } else if(rvs$tour_tab == 5){
+      leafletProxy("map_tour") %>%
+        show_hide_layers_and_legends() %>% 
+        flyToBounds(
+          lng1=qld_bounds$lng1, lat1=qld_bounds$lat1,
+          lng2=qld_bounds$lng2, lat2=qld_bounds$lat2
+        )
     } else {
       leafletProxy("map_tour") %>%
         show_hide_layers_and_legends() 
