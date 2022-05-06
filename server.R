@@ -85,6 +85,24 @@ function(input, output, session) {
         group="Rehab centres",
         options=leafletOptions(pane="rehab_centres")
       )
+    
+    group_names_to_load <- names(layer_input)
+    raster_layers <- grep("raster", layer_input)
+    raster_layers <- group_names_to_load[raster_layers]
+    
+    for(group_name in raster_layers){
+      new_layer <- readRDS(file.path(layers_dir, glue::glue("{layer_input[group_name]}.rds")))
+      print(group_name)
+      leafletProxy("map_tour") %>%
+        addRasterImage(
+          data=new_layer,
+          x=raster::raster(new_layer, layer=1),
+          group=group_name,
+          colors=palNum
+        )
+    }
+    
+    
     if(!isolate(rvs$map_tour_complete)) rvs$map_tour_complete <- TRUE
     output$nextButtonControl <- renderUI({
       if(rvs$tour_tab != n_tour_windows) actionButton("nextButton", "Next") else NULL
@@ -102,7 +120,6 @@ function(input, output, session) {
     show_groups <- desired_groups
     
     desired_legend <- tab_legend_ids[[tab_num]]
-    hide_legend_id <- unique_legend_ids[!unique_legend_ids %in% desired_legend]
     if(!is.null(desired_legend)){
       show_legend_fx <- tab_legends[[desired_legend]]
     } else{
@@ -113,8 +130,8 @@ function(input, output, session) {
       map %>%
         hideGroup(hide_groups) %>%
         showGroup(show_groups) %>%
-        show_legend_fx %>%
-        removeControl(layerId=hide_legend_id)
+        clearControls() %>%
+        show_legend_fx()
     }
     
     if(rvs$tour_tab == 1){
@@ -146,11 +163,16 @@ function(input, output, session) {
           lng1=qld_bounds$lng1, lat1=qld_bounds$lat1,
           lng2=qld_bounds$lng2, lat2=qld_bounds$lat2
         )
+    } else if(rvs$tour_tab == 6){
+      leafletProxy("map_tour") %>%
+        show_hide_layers_and_legends()
+    } else if(rvs$tour_tab == 7){
+      leafletProxy("map_tour") %>%
+        show_hide_layers_and_legends()
     } else {
       leafletProxy("map_tour") %>%
         show_hide_layers_and_legends() 
     }
-    
     
   })
   

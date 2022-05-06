@@ -155,7 +155,9 @@ tab_ids <- list(
   "tab3" = c("Towns"),
   "tab4" = c("Acute centres"),
   "tab5" = c("Rehab centres"),
-  "tab6" = c()
+  "tab6" = c("Acute centres", "Towns"),
+  "tab7" = c("Acute centres", "Towns", "Acute time"),
+  "tab8" = c("Rehab centres", "Towns", "Rehab time")
 )
 
 tab_legend_ids <- list(
@@ -164,17 +166,43 @@ tab_legend_ids <- list(
   "tab3" = c(),
   "tab4" = c(),
   "tab5" = c(),
-  "tab6" = c()
+  "tab6" = c(),
+  "tab7" = c("timeLegend"),
+  "tab8" = c("timeLegend")
 )
 
 tab_legends <- list(
-  "ariaLegend" = function(x) {addLegendFactor(
-    x,
-    pal=palFac,
-    values=unique(aria$ra_label),
-    layerId="ariaLegend"
-  )}
+  "ariaLegend" = function(x) {
+    addLegendFactor(
+      x,
+      pal=palFac,
+      values=unique(aria$ra_label),
+      layerId="ariaLegend"
+    )},
+  "indexLegend" = function(x) {
+    addLegendFactor(
+      x,
+      opacity=1,
+      position="topright",
+      pal=paliTRAQI,
+      values=iTRAQI_bins,
+      layerId="indexLegend",
+      title=htmltools::tagList(tags$div("iTRAQI index"), tags$br())
+    )
+  },
+  "timeLegend" = function(x) {
+    addLegendBin(
+      x,
+      opacity=1,
+      position="topright",
+      pal=palBin,
+      values=0:900,
+      layerId="timeLegend",
+      title=htmltools::tagList(tags$div("Time to care (minutes)"), tags$br())
+    )
+  }
 )
+
 
 unique_legend_ids <- unique(unlist(tab_legend_ids))
 unique_ids <- unique(unlist(tab_ids))
