@@ -34,9 +34,12 @@ palNum_hours <- function(x){
 
 palFac <- colorFactor("Greens", levels=ra_scale_to_text(0:4), ordered = TRUE, reverse=TRUE)
 
+# select colours from http://derekogle.com/NCGraphing/resources/colors
+iTRAQI_colour_ramp <- c("lightblue","mediumpurple1", "pink","red","maroon")
+
 paliTRAQI <- colorFactor(
   # https://stackoverflow.com/questions/44269655/ggplot-rcolorbrewer-extend-and-apply-to-factor-data
-  colorRampPalette(c("pink", "purple", "red", "black"))(length(iTRAQI_bins)), 
+  colorRampPalette(iTRAQI_colour_ramp)(length(iTRAQI_bins)), 
   levels=levels(iTRAQI_bins),
   ordered=FALSE
 )
