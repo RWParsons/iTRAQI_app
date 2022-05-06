@@ -61,7 +61,17 @@ navbarPage(
             selected=c(ra_scale_to_text(0:4))
           )
         ),
-        htmlOutput("remoteness_included")
+        htmlOutput("remoteness_included"),
+        tags$br(),
+        dropdownButton(
+          label="iTRAQI index", status="default", width=dropdown_width,
+          checkboxGroupInput(
+            inputId="itraqi_index", label="iTRAQI Index", width=dropdown_width,
+            choices=levels(iTRAQI_bins),
+            selected=levels(iTRAQI_bins)
+          )
+        ),
+        htmlOutput("itraqi_index_included")
       ),
       tags$div(
         id="cite",

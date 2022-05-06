@@ -18,6 +18,22 @@ df_locations <- read.csv("input/QLD_locations_with_RSQ_times_20220427.csv") %>%
     )
   )
 
+get_iTRAQI_bins <- function() {
+  unique_rehab_levels <- cut(0, breaks=iTRAQI_rehab_breaks) %>% levels()
+  unique_rehab_levels <- LETTERS[1:length(unique_rehab_levels)]
+  
+  
+  unique_acute_levels <- cut(0, breaks=iTRAQI_rehab_breaks) %>% levels()
+  unique_acute_levels <- map_chr(unique_acute_levels, clean_acute_label)
+  
+  grid <- expand.grid(acute=unique_acute_levels, rehab=unique_rehab_levels)
+  grid$iTRAQI_index <- paste0(grid$acute, grid$rehab)
+  grid <- grid[grid$iTRAQI_index %in% unique(df_locations$iTRAQI_index),]
+  as.factor(grid$iTRAQI_index)
+}
+
+iTRAQI_bins <- get_iTRAQI_bins()
+
 
 df_rehab_map_locations <- read.csv("input/all_rehab_time.csv") %>%
   mutate(across(ends_with("time"), round)) %>%
@@ -89,13 +105,18 @@ groupings <- expand.grid(
   seifa=c(1:5, NA),
   ra=0:4,
   sa=1:2,
-  care_type=c("acute", "rehab", "index")
+  care_type=c("acute", "rehab", "index"),
+  index=levels(iTRAQI_bins)
+  
 )
 groupings$group_id <- as.character(1:nrow(groupings))
 
 polygons <- 
   readRDS("input/layers/vertical_stacked_SA1_and_SA2_polygons_year2016_simplified.rds") %>% 
-  left_join(., groupings, by=c("ra", "seifa_quintile"="seifa", "SA_level"="sa", "care_type")) %>%
+  left_join(
+    ., groupings,
+    by=c("ra", "seifa_quintile"="seifa", "SA_level"="sa", "care_type", "index")
+  ) %>%
   mutate(value=as.character(value))
 
 rmarkdown::render("input/iTRAQI_info.md")

@@ -170,9 +170,8 @@ function(input, output, session) {
         )
     }
     
-    for(i in groupings$group_id){
-      polygons_df <- polygons[polygons$group_id==i,]
-      
+    for(i in unique(polygons$group_id)){
+      polygons_df <- filter(polygons, group_id==i)
       if(all(polygons_df$care_type=="index")){
         fill <- ~paliTRAQI(polygons_df$value)
       } else {
@@ -220,6 +219,14 @@ function(input, output, session) {
     }
   })
   
+  output$itraqi_index_included <- renderText({
+    if(length(input$itraqi_index) == length(levels(iTRAQI_bins))) {
+      return("<b>All included</b>")
+    } else {
+      paste("<b>Including:</b>", paste0(input$itraqi_index, collapse=", "))
+    }
+  })
+  
   observeEvent(input$layer_selection, {
     legend_type <- 
       case_when(
@@ -255,13 +262,14 @@ function(input, output, session) {
     
   })
   
-  observeEvent(list(input$seifa, input$remoteness, input$layer_selection), {
+  observeEvent(list(input$seifa, input$remoteness, input$itraqi_index, input$layer_selection), {
     raster_ids <- c("Acute time", "Rehab time")
     all_ids <- c(groupings$group_id, raster_ids)
     sa_selected <- as.numeric(str_extract(input$layer_selection, "[0-9]{1}"))
     care_type_selected <- str_extract(tolower(input$layer_selection), "[a-z]*$")
     ra_selected <- ra_text_to_value(input$remoteness)
     seifa_selected <- seifa_text_to_value(input$seifa)
+    itraqi_index_selected <- input$itraqi_index
     
     if (input$layer_selection %in% c("None")) {
       leafletProxy("map") %>% hideGroup(all_ids)
@@ -273,7 +281,9 @@ function(input, output, session) {
         filter(sa==sa_selected,
                ra%in%ra_selected,
                seifa%in%seifa_selected,
-               care_type==care_type_selected) %>%
+               care_type==care_type_selected
+               , index%in%itraqi_index_selected
+               ) %>%
         pull(group_id)
       hide_ids <- c(groupings$group_id[!groupings$group_id %in% show_ids], raster_ids)
       leafletProxy("map") %>%
