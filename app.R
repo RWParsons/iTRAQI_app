@@ -232,6 +232,15 @@ server <- function(input, output, session) {
         group="aria",
         options=leafletOptions(pane="layers")
       ) %>%
+      addPolygons(
+        data=index_poly,
+        fillColor=~paliTRAQI(index_poly$value),
+        color="black",
+        fillOpacity=1,
+        weight=1,
+        group="index",
+        options=leafletOptions(pane="layers")
+      ) %>%
       addMarkers(
         lng=df_centres$x[df_centres$care_type=="acute"],
         lat=df_centres$y[df_centres$care_type=="acute"],

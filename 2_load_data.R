@@ -126,6 +126,10 @@ aria <-
   filter(SA_level==1, care_type=="acute") %>%
   mutate(ra_label=factor(ra_scale_to_text(ra), levels=ra_scale_to_text(0:4)))
 
+index_poly <- 
+  polygons %>%
+  filter(SA_level==2, care_type=="index")
+
 qld_boarder <-
   # https://data.gov.au/dataset/ds-dga-2dbbec1a-99a2-4ee5-8806-53bc41d038a7/distribution/dist-dga-4c9bcadb-0361-4d79-a6f9-17b470ef9641/details?q=
   st_read("input/qld_state_polygon_shp/QLD_STATE_POLYGON_shp.shp")

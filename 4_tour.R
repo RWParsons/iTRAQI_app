@@ -157,7 +157,8 @@ tab_ids <- list(
   "tab5" = c("Rehab centres"),
   "tab6" = c("Acute centres", "Towns"),
   "tab7" = c("Acute centres", "Towns", "Acute time"),
-  "tab8" = c("Rehab centres", "Towns", "Rehab time")
+  "tab8" = c("Rehab centres", "Towns", "Rehab time"),
+  "tab9" = c("Towns", "index")
 )
 
 tab_legend_ids <- list(
@@ -168,7 +169,8 @@ tab_legend_ids <- list(
   "tab5" = c(),
   "tab6" = c(),
   "tab7" = c("timeLegend"),
-  "tab8" = c("timeLegend")
+  "tab8" = c("timeLegend"),
+  "tab9" = c("indexLegend")
 )
 
 legend_position <- "topleft"
