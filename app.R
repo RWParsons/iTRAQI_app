@@ -316,7 +316,9 @@ server <- function(input, output, session) {
       
       # After a delay, move view to TSV hospital
       delay(6000, {
-        leafletProxy("map_tour") %>% flyTo(lng=146.76, lat=-19.32, zoom=8)
+        if(rvs$tour_tab==4){ # ensure that user is still on tab 4 before executing fly to TSV
+          leafletProxy("map_tour") %>% flyTo(lng=146.76, lat=-19.32, zoom=8)
+        }
       })
     } else if(rvs$tour_tab == 5){
       leafletProxy("map_tour") %>%
