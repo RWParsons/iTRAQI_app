@@ -171,10 +171,12 @@ tab_legend_ids <- list(
   "tab8" = c("timeLegend")
 )
 
+legend_position <- "topleft"
 tab_legends <- list(
   "ariaLegend" = function(x) {
     addLegendFactor(
       x,
+      position=legend_position,
       pal=palFac,
       values=unique(aria$ra_label),
       layerId="ariaLegend"
@@ -183,7 +185,7 @@ tab_legends <- list(
     addLegendFactor(
       x,
       opacity=1,
-      position="topright",
+      position=legend_position,
       pal=paliTRAQI,
       values=iTRAQI_bins,
       layerId="indexLegend",
@@ -194,7 +196,7 @@ tab_legends <- list(
     addLegendBin(
       x,
       opacity=1,
-      position="topright",
+      position=legend_position,
       pal=palBin,
       values=0:900,
       layerId="timeLegend",
