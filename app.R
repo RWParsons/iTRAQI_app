@@ -35,7 +35,12 @@ ui <-
                    h4("Layer"),
                    radioButtons(
                      inputId="layer_selection", label=NULL,
-                     choices=c("None", "Acute time", "Rehab time", "SA1 Index", "SA2 Index", "SA1 Acute", "SA2 Acute", "SA1 Rehab", "SA2 Rehab"),
+                     choices=c(
+                       "None", 
+                       "SA1 Index", "SA2 Index", 
+                       "Acute time", "SA1 Acute", "SA2 Acute",
+                       "Rehab time", "SA1 Rehab", "SA2 Rehab"
+                     ),
                      selected="None"
                    ),
                    h4("Markers"),
