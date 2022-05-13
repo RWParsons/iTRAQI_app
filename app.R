@@ -18,15 +18,42 @@ source("3_palettes.R")
 source("4_tour.R")
 # styles.css from https://github.com/rstudio/shiny-examples/tree/main/063-superzip-example
 
+js_save_map_instance <- HTML(
+  # https://stackoverflow.com/questions/66240941/r-leaflet-add-a-new-marker-on-the-map-with-the-popup-already-opened
+  paste(
+    "var mapsPlaceholder = [];",
+    "L.Map.addInitHook(function () {",
+    "   mapsPlaceholder.push(this); // Use whatever global scope variable you like.",
+    "});", sep = "\n"
+  )
+)
+
+js_open_popup <- HTML(
+  paste("function open_popup(id) {",
+        "   console.log('open popup for ' + id);",
+        "   mapsPlaceholder[0].eachLayer(function(l) {",
+        "      if (l.options && l.options.layerId == id) {",
+        "         l.openPopup();",
+        "      }",
+        "   });",
+        "}", sep = "\n"
+  )
+)
 
 ui <- 
   navbarPage(
     "iTRAQI", id="nav",
     tabPanel("Main map",
+             useShinyjs(),
              div(class="outer",
                  tags$head(
                    includeCSS("styles.css")
                  ),
+                 tags$script(
+                   type = "text/javascript",
+                   js_save_map_instance,
+                   js_open_popup
+                  ),
                  leafletOutput("map", width="100%", height="100%"),
                  absolutePanel(
                    id = "controls", class = "panel panel-default", fixed = TRUE,
@@ -430,7 +457,7 @@ server <- function(input, output, session) {
       } else {
         fill <- ~palBin(as.numeric(polygons_df$value))
       }
-      
+
       leafletProxy("map") %>%
         addPolygons(
           data=polygons_df,
@@ -568,11 +595,12 @@ server <- function(input, output, session) {
                           "Rehab time prediction: {round(rehab_pred, 0)} minutes"
     )
     leafletProxy("map") %>%
-      addPopups(
+      addMarkers(
         lng=lng, lat=lat, 
-        popup=content,
-        options=popupOptions(closeButton=TRUE)
-      )
+        layerId="map_click_marker",
+        popup=content
+      ) 
+    runjs(sprintf("setTimeout(() => open_popup('%s'), 10)", "map_click_marker"))
   })
   
   output$map_rehab <- renderLeaflet({
