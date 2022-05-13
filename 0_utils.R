@@ -77,3 +77,65 @@ download_data_files <- list(
 dropdown_width <- "100%"
 
 citation <- "iTRAQI: injury Treatment & Rehabilitation Accessibility Queensland Index version 1.2"
+
+itraqi_categories_table <- paste(
+  sep="<br>",
+  "<h4>Acute care travel time</h4><table style='width:100%'>
+      <tr>
+          <th style='width:30%'>Cat</th>
+          <th style='width:50%'>Travel-time</th>
+      </tr>
+      <tr>
+          <td>0</td>
+          <td><1hr</td>
+      </tr>
+      <tr>
+          <td>1</td>
+          <td>1-2</td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td>2-3</td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td>3-4</td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td>4-6</td>
+      </tr>
+      <tr>
+          <td>5</td>
+          <td>6+</td>
+      </tr>
+      
+  </table>",
+  "<h4>Averaged Rehabilitation driving time (gold + silver)</h4><table style='width:100%'>
+      <tr>
+          <th style='width:30%'>Cat</th>
+          <th style='width:50%'>Travel-time</th>
+      </tr>
+      <tr>
+          <td>A</td>
+          <td><1hr</td>
+      </tr>
+      <tr>
+          <td>B</td>
+          <td>1-2</td>
+      </tr>
+      <tr>
+          <td>C</td>
+          <td>2-4</td>
+      </tr>
+      <tr>
+          <td>D</td>
+          <td>4-6</td>
+      </tr>
+      <tr>
+          <td>E</td>
+          <td>6+</td>
+      </tr>
+      
+  </table>"
+)

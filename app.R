@@ -80,6 +80,14 @@ ui <-
                    ),
                    htmlOutput("itraqi_index_included")
                  ),
+                 hidden(absolutePanel(
+                   id = "itraqi_box", class = "panel panel-default", 
+                   fixed = TRUE,
+                   draggable = TRUE, top = 158, left = 10, right = "auto", bottom = "auto",
+                   width = 330, height = 450,
+                   h3("iTRAQI Index categorisation:"),
+                   HTML(itraqi_categories_table)
+                 )),
                  tags$div(
                    id="cite",
                    citation
@@ -175,7 +183,7 @@ server <- function(input, output, session) {
     to_load_rehab=NULL, map_rehab=NULL, map_rehab_complete=FALSE, 
     to_load_tour=NULL, map_tour=NULL, map_tour_complete=FALSE, tour_tab=1
   )
-  
+
   output$nextButtonControl <- renderUI({
     if(rvs$tour_tab != n_tour_windows) actionButton("nextButton", "Loading") else NULL
   })
@@ -490,6 +498,7 @@ server <- function(input, output, session) {
           values=iTRAQI_bins,
           title=htmltools::tagList(tags$div("iTRAQI index"), tags$br())
         )
+      show(id="itraqi_box")
     } else if(legend_type=="time") {
       leafletProxy("map") %>%
         clearControls() %>%
@@ -500,9 +509,11 @@ server <- function(input, output, session) {
           values=0:900,
           title=htmltools::tagList(tags$div("Time to care (minutes)"), tags$br())
         )
+      hide(id="itraqi_box")
     } else {
       leafletProxy("map") %>%
         clearControls()
+      hide(id="itraqi_box")
     }
     
   })
