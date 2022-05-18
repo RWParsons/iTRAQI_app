@@ -475,22 +475,19 @@ server <- function(input, output, session) {
         )
     }
     
-    for(i in unique(polygons$group_id)){
-      polygons_df <- filter(polygons, group_id==i)
-      
-      leafletProxy("map") %>%
-        addPolygons(
-          data=polygons_df,
-          fillColor="white",
-          color="black",
-          fillOpacity=1,
-          weight=1,
-          group=i,
-          layerId=polygons_df$CODE,
-          popup=polygons_df$popup,
-          options=leafletOptions(pane="layers")
-        )
-    }
+    
+    leafletProxy("map") %>%
+      addPolygons(
+        data=polygons,
+        fillColor="white",
+        color="black",
+        fillOpacity=1,
+        weight=1,
+        group=polygons$group_id,
+        layerId=polygons$CODE,
+        popup=polygons$popup,
+        options=leafletOptions(pane="layers")
+      )
     
     if(!isolate(rvs$map_complete)) rvs$map_complete <- TRUE
   })
