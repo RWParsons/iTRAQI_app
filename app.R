@@ -657,7 +657,7 @@ server <- function(input, output, session) {
   observe({
     click <- input$map_marker_click
     if(is.null(click)) return()
-    print(click)
+    
     if("map_click_marker" %in% click$id){
       leafletProxy("map") %>% removeMarker(layerId="map_click_marker")
     }
