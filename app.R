@@ -648,10 +648,21 @@ server <- function(input, output, session) {
       addMarkers(
         lng=lng, lat=lat, 
         layerId="map_click_marker",
-        popup=content
+        popup=content,
+        popupOptions = popupOptions(closeButton = FALSE)
       ) 
     runjs(sprintf("setTimeout(() => open_popup('%s'), 10)", "map_click_marker"))
   })
+  
+  observe({
+    click <- input$map_marker_click
+    if(is.null(click)) return()
+    print(click)
+    if("map_click_marker" %in% click$id){
+      leafletProxy("map") %>% removeMarker(layerId="map_click_marker")
+    }
+  })
+  
   
   output$map_rehab <- renderLeaflet({
     rvs$map_rehab <- 
