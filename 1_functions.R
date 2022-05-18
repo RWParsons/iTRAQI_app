@@ -127,3 +127,24 @@ setShapeStyle <- function(map, data = getMapData(map), layerId,
   #print(list(style=style))
   leaflet::invokeMethod(map, data, "setStyle", "shape", layerId, style);
 }
+
+setShapeLabel <- function( map, data = getMapData(map), layerId,
+                           label = NULL,
+                           options = NULL
+){
+  cat("in setShapeLabel","\n")
+  options <- c(list(layerId = layerId),
+               options,
+               filterNULL(list(label = label
+               )))
+  # evaluate all options
+  options <- evalFormula(options, data = data)
+  # make them the same length (by building a data.frame)
+  options <- do.call(data.frame, c(options, list(stringsAsFactors=FALSE)))
+  
+  layerId <- options[[1]]
+  label <- options[-1] # drop layer column
+  
+  # typo fixed in this line
+  leaflet::invokeMethod(map, data, "setLabel", "shape", layerId, label);
+}

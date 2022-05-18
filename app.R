@@ -61,6 +61,23 @@ js_setStyle <- HTML(
         }
       });
     };
+    window.LeafletWidget.methods.setLabel = function(category, layerId, label){
+      var map = this;
+      if (!layerId){
+        return;
+      } else if (!(typeof(layerId) === 'object' && layerId.length)){ // in case a single layerid is given
+        layerId = [layerId];
+      }
+    
+      layerId.forEach(function(d,i){
+        var layer = map.layerManager.getLayer(category, d);
+        if (layer){ // or should this raise an error?
+          layer.unbindTooltip();
+          // the object subsetting to get the integer array and casting to string is what I added
+          layer.bindTooltip(label.label[i].toString());
+        }
+      });
+    };
   ")
 )
 
@@ -485,7 +502,6 @@ server <- function(input, output, session) {
         weight=1,
         group=polygons$group_id,
         layerId=polygons$CODE,
-        popup=polygons$popup,
         options=leafletOptions(pane="layers")
       )
     
@@ -566,26 +582,6 @@ server <- function(input, output, session) {
     
   })
   
-  observeEvent(input$layer_selection, {
-    if(!str_detect(input$layer_selection, "^SA")) {
-      # if a non-polygon layer is selected, there's no need to update fillColor
-      return()
-    }
-    
-    care_type_selected <- str_extract(tolower(input$layer_selection), "[a-z]*$")
-    
-    if(care_type_selected == "rehab") {
-      fill <- palNum(polygons$value_rehab)
-    } else if(care_type_selected == "acute") {
-      fill <- palNum(polygons$value_acute)
-    } else {
-      fill <- paliTRAQI(polygons$index)
-    }
-    
-    leafletProxy("map") %>%
-      setShapeStyle(layerId = polygons$CODE, fillColor=fill)
-  })
-  
   observeEvent(list(input$seifa, input$remoteness, input$itraqi_index, input$layer_selection), {
     raster_ids <- c("Acute time", "Rehab time")
     all_ids <- c(groupings$group_id, raster_ids)
@@ -609,7 +605,21 @@ server <- function(input, output, session) {
         ) %>%
         pull(group_id)
       hide_ids <- c(groupings$group_id[!groupings$group_id %in% show_ids], raster_ids)
+      
+      if(care_type_selected == "rehab") {
+        fill <- palNum(polygons$value_rehab)
+        label <- polygons$popup_rehab
+      } else if(care_type_selected == "acute") {
+        fill <- palNum(polygons$value_acute)
+        label <- polygons$popup_acute
+      } else {
+        fill <- paliTRAQI(polygons$index)
+        label <- polygons$popup_index
+      }
+      
       leafletProxy("map") %>%
+        setShapeStyle(layerId = polygons$CODE, fillColor=fill) %>%
+        setShapeLabel(layerId = polygons$CODE, label=label) %>%
         showGroup(show_ids) %>%
         hideGroup(hide_ids)
     }
