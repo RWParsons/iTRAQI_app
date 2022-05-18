@@ -40,6 +40,30 @@ js_open_popup <- HTML(
   )
 )
 
+js_setStyle <- HTML(
+  paste(
+    "window.LeafletWidget.methods.setStyle = function(category, layerId, style){
+      var map = this;
+      if (!layerId){
+        return;
+      } else if (!(typeof(layerId) === 'object' && layerId.length)){ // in case a single layerid is given
+        layerId = [layerId];
+      }
+    
+      //convert columnstore to row store
+      style = HTMLWidgets.dataframeToD3(style);
+      //console.log(style);
+    
+      layerId.forEach(function(d,i){
+        var layer = map.layerManager.getLayer(category, d);
+        if (layer){ // or should this raise an error?
+          layer.setStyle(style[i]);
+        }
+      });
+    };
+  ")
+)
+
 ui <- 
   navbarPage(
     "iTRAQI", id="nav",
@@ -52,7 +76,8 @@ ui <-
                  tags$script(
                    type = "text/javascript",
                    js_save_map_instance,
-                   js_open_popup
+                   js_open_popup,
+                   js_setStyle
                   ),
                  leafletOutput("map", width="100%", height="100%"),
                  absolutePanel(

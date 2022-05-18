@@ -1,4 +1,4 @@
-df_locations <- read.csv("input/QLD_locations_with_RSQ_times_20220427.csv") %>%
+df_locations <- read.csv("input/QLD_locations_with_RSQ_times_20220518.csv") %>%
   mutate(
     iTRAQI_index=get_iTRAQI_index(acute_mins=acute_time, rehab_mins=rehab_time),
     popup=paste0(
@@ -17,23 +17,6 @@ df_locations <- read.csv("input/QLD_locations_with_RSQ_times_20220427.csv") %>%
       "<b>Average time to rehab care (minutes): </b>", round(rehab_time), "<br>"
     )
   )
-
-get_iTRAQI_bins <- function() {
-  unique_rehab_levels <- cut(0, breaks=iTRAQI_rehab_breaks) %>% levels()
-  unique_rehab_levels <- LETTERS[1:length(unique_rehab_levels)]
-  
-  
-  unique_acute_levels <- cut(0, breaks=iTRAQI_rehab_breaks) %>% levels()
-  unique_acute_levels <- map_chr(unique_acute_levels, clean_acute_label)
-  
-  grid <- expand.grid(acute=unique_acute_levels, rehab=unique_rehab_levels)
-  grid$iTRAQI_index <- paste0(grid$acute, grid$rehab)
-  grid <- grid[grid$iTRAQI_index %in% unique(df_locations$iTRAQI_index),]
-  as.factor(grid$iTRAQI_index)
-}
-
-iTRAQI_bins <- get_iTRAQI_bins()
-
 
 df_rehab_map_locations <- read.csv("input/all_rehab_time.csv") %>%
   mutate(across(ends_with("time"), round)) %>%
@@ -101,34 +84,63 @@ df_centres <- df_centres %>%
     )
   )
 
+polygons <- 
+  readRDS("input/layers/stacked_SA1_and_SA2_polygons_year2016_simplified.rds") %>%
+  mutate(
+    index=get_iTRAQI_index(acute_mins=value_acute, rehab_mins=value_rehab),
+    rehab_time_str=str_extract(popup_rehab, "<b>Time to.*$"),
+    popup_index =
+      paste0(popup_acute, rehab_time_str, "<b>iTRAQI Index: </b>", index, "<br>")
+  )
+
+get_iTRAQI_bins <- function() {
+  unique_rehab_levels <- cut(0, breaks=iTRAQI_rehab_breaks) %>% levels()
+  unique_rehab_levels <- LETTERS[1:length(unique_rehab_levels)]
+  
+  unique_acute_levels <- cut(0, breaks=iTRAQI_acute_breaks) %>% levels()
+  unique_acute_levels <- 1:length(unique_acute_levels)
+  
+  grid <- expand.grid(acute=unique_acute_levels, rehab=unique_rehab_levels)
+  grid$iTRAQI_index <- paste0(grid$acute, grid$rehab)
+  grid <- grid[grid$iTRAQI_index %in% unique(polygons$index),]
+  as.factor(grid$iTRAQI_index)
+}
+
+iTRAQI_bins <- get_iTRAQI_bins()
+
 groupings <- expand.grid(
   seifa=c(1:5, NA),
   ra=0:4,
   sa=1:2,
-  care_type=c("acute", "rehab", "index"),
+  # care_type=c("acute", "rehab", "index"),
   index=levels(iTRAQI_bins)
-  
 )
+
 groupings$group_id <- as.character(1:nrow(groupings))
 
-polygons <- 
-  readRDS("input/layers/vertical_stacked_SA1_and_SA2_polygons_year2016_simplified.rds") %>% 
+polygons <-
   left_join(
-    ., groupings,
-    by=c("ra", "seifa_quintile"="seifa", "SA_level"="sa", "care_type", "index")
-  ) %>%
-  mutate(value=as.character(value))
+    polygons, groupings,
+    by=c(
+      "ra", "seifa_quintile"="seifa", "SA_level"="sa", "index"#, "care_type", 
+    )
+  )# %>% mutate(value=as.character(value))
 
 rmarkdown::render("input/iTRAQI_info.md")
 
 aria <- 
   polygons %>%
-  filter(SA_level==1, care_type=="acute") %>%
+  filter(SA_level==1
+         # , care_type=="acute"
+         ) %>%
   mutate(ra_label=factor(ra_scale_to_text(ra), levels=ra_scale_to_text(0:4)))
 
+# TODO only use the one polygon layer for the tours tab - use only SA1 and update the colour for index
 index_poly <- 
   polygons %>%
-  filter(SA_level==2, care_type=="index")
+  filter(SA_level==2
+         # , care_type=="index"
+         )
 
 qld_boarder <-
   # https://data.gov.au/dataset/ds-dga-2dbbec1a-99a2-4ee5-8806-53bc41d038a7/distribution/dist-dga-4c9bcadb-0361-4d79-a6f9-17b470ef9641/details?q=

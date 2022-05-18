@@ -81,17 +81,6 @@ get_nearest_pred <- function(lat, lng, r_points) {
     first()
 }
 
-clean_acute_label <- function(x) {
-  str_remove_all(x, "\\(|\\)|\\[|\\]") %>% 
-    str_split(",", simplify=T) %>%
-    str_replace("-Inf", "<") %>%
-    str_replace(" Inf", "+") %>%
-    paste0(collapse=",") %>%
-    str_replace(",\\+", "\\+") %>%
-    str_replace("<,", "<") %>%
-    str_replace(",", "-")
-}
-
 iTRAQI_acute_breaks <- c(-Inf, 1, 2, 4, 6, Inf)
 iTRAQI_rehab_breaks <- c(-Inf, 1, 2, 4, 6, Inf)
 
@@ -99,7 +88,7 @@ get_iTRAQI_index <- function(acute_mins, rehab_mins){
   acute_cat <- cut(acute_mins/60, breaks=iTRAQI_acute_breaks)
   rehab_cat <- cut(rehab_mins/60, breaks=iTRAQI_rehab_breaks)
   
-  acute_label <- map_chr(acute_cat, clean_acute_label)
+  acute_label <- as.numeric(acute_cat)
   rehab_label <- LETTERS[rehab_cat]
   
   paste0(acute_label, rehab_label)
@@ -110,4 +99,31 @@ check_point_in_qld <- function(lat, lng) {
   point <- st_point(c(lng, lat))
   intersects <- st_intersects(point, qld_boarder)
   nrow(as.data.frame(intersects)) > 0
+}
+
+setShapeStyle <- function(map, data = getMapData(map), layerId,
+                          stroke = NULL, color = NULL,
+                          weight = NULL, opacity = NULL,
+                          fill = NULL, fillColor = NULL,
+                          fillOpacity = NULL, dashArray = NULL,
+                          smoothFactor = NULL, noClip = NULL,
+                          options = NULL){
+  options <- c(list(layerId = layerId),
+               options,
+               filterNULL(list(stroke = stroke, color = color,
+                               weight = weight, opacity = opacity,
+                               fill = fill, fillColor = fillColor,
+                               fillOpacity = fillOpacity, dashArray = dashArray,
+                               smoothFactor = smoothFactor, noClip = noClip
+               )))
+  # evaluate all options
+  options <- evalFormula(options, data = data)
+  # make them the same length (by building a data.frame)
+  options <- do.call(data.frame, c(options, list(stringsAsFactors=FALSE)))
+  
+  layerId <- options[[1]]
+  style <- options[-1] # drop layer column
+  
+  #print(list(style=style))
+  leaflet::invokeMethod(map, data, "setStyle", "shape", layerId, style);
 }
