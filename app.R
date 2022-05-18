@@ -84,6 +84,32 @@ js_setStyle <- HTML(
 ui <- 
   navbarPage(
     "iTRAQI", id="nav",
+    tabPanel(
+      "Tour",
+      useShinyjs(),
+      div(class="outer",
+          tags$head(
+            includeCSS("styles.css")
+          ),
+          leafletOutput("map_tour", width="100%", height="100%"),
+          absolutePanel(
+            id = "tour_controls", class = "panel panel-default", fixed = TRUE,
+            draggable = TRUE, top=80, left = "auto", right = 10, bottom = "auto",
+            width = tours_panel_dims$width, height = tours_panel_dims$height,
+            tags$br(),
+            splitLayout(
+              cellWidths = 230,
+              uiOutput("backButtonControl"),
+              uiOutput("nextButtonControl")
+            ),
+            uiOutput("tourText")
+          ),
+          tags$div(
+            id="cite",
+            citation
+          )
+      )
+    ),
     tabPanel("Main map",
              useShinyjs(),
              div(class="outer",
@@ -194,32 +220,6 @@ ui <-
              )
     ),
     tabPanel(
-      "Tour",
-      useShinyjs(),
-      div(class="outer",
-          tags$head(
-            includeCSS("styles.css")
-          ),
-          leafletOutput("map_tour", width="100%", height="100%"),
-          absolutePanel(
-            id = "tour_controls", class = "panel panel-default", fixed = TRUE,
-            draggable = TRUE, top=80, left = "auto", right = 10, bottom = "auto",
-            width = tours_panel_dims$width, height = tours_panel_dims$height,
-            tags$br(),
-            splitLayout(
-              cellWidths = 230,
-              uiOutput("backButtonControl"),
-              uiOutput("nextButtonControl")
-            ),
-            uiOutput("tourText")
-          ),
-          tags$div(
-            id="cite",
-            citation
-          )
-      )
-    ),
-    tabPanel(
       title="Information",
       icon=icon("info-sign",lib='glyphicon'),
       div(class="outer", htmlOutput("info_page"))
@@ -306,21 +306,13 @@ server <- function(input, output, session) {
         group="Towns"
       ) %>%
       addPolygons(
-        data=aria,
+        data=tours_polygons,
         fillColor=~palFac(aria$ra_label),
         color="black",
         fillOpacity=1,
         weight=1,
-        group="aria",
-        options=leafletOptions(pane="layers")
-      ) %>%
-      addPolygons(
-        data=index_poly,
-        fillColor=~paliTRAQI(index_poly$value),
-        color="black",
-        fillOpacity=1,
-        weight=1,
-        group="index",
+        group="tours_polygons",
+        layerId=tours_polygons$CODE,
         options=leafletOptions(pane="layers")
       ) %>%
       addMarkers(
@@ -380,6 +372,25 @@ server <- function(input, output, session) {
     }
     
     show_hide_layers_and_legends <- function(map) {
+      
+      if(any(c("aria", "index") %in% show_groups)) {
+        show_groups <- c(show_groups, "tours_polygons")
+        if("aria" %in% show_groups){
+          fill <- palFac(tours_polygons$ra_label)
+        } else if("index" %in% show_groups) {
+          fill <- paliTRAQI(tours_polygons$index)
+        }
+        
+        map <- setShapeStyle(
+          map = map, 
+          layerId = tours_polygons$CODE, 
+          fillColor = fill
+        )
+        
+      } else {
+        hide_groups <- c(hide_groups, "tours_polygons")
+      }
+      
       map %>%
         hideGroup(hide_groups) %>%
         showGroup(show_groups) %>%
