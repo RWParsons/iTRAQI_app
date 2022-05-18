@@ -86,20 +86,16 @@ itraqi_categories_table <- paste(
           <th style='width:50%'>Travel-time</th>
       </tr>
       <tr>
-          <td>0</td>
+          <td>1</td>
           <td><1hr</td>
       </tr>
       <tr>
-          <td>1</td>
+          <td>2</td>
           <td>1-2</td>
       </tr>
       <tr>
-          <td>2</td>
-          <td>2-3</td>
-      </tr>
-      <tr>
           <td>3</td>
-          <td>3-4</td>
+          <td>2-4</td>
       </tr>
       <tr>
           <td>4</td>
