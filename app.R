@@ -477,20 +477,16 @@ server <- function(input, output, session) {
     
     for(i in unique(polygons$group_id)){
       polygons_df <- filter(polygons, group_id==i)
-      if(all(polygons_df$care_type=="index")){
-        fill <- ~paliTRAQI(polygons_df$value)
-      } else {
-        fill <- ~palBin(as.numeric(polygons_df$value))
-      }
-
+      
       leafletProxy("map") %>%
         addPolygons(
           data=polygons_df,
-          fillColor=fill,
+          fillColor="white",
           color="black",
           fillOpacity=1,
           weight=1,
           group=i,
+          layerId=polygons_df$CODE,
           popup=polygons_df$popup,
           options=leafletOptions(pane="layers")
         )
@@ -541,6 +537,12 @@ server <- function(input, output, session) {
       )
     
     if(legend_type=="index") {
+      show(id="itraqi_box")
+    } else {
+      hide(id="itraqi_box")
+    }
+    
+    if(legend_type=="index") {
       leafletProxy("map") %>% 
         clearControls() %>%
         addLegendFactor(
@@ -550,7 +552,6 @@ server <- function(input, output, session) {
           values=iTRAQI_bins,
           title=htmltools::tagList(tags$div("iTRAQI index"), tags$br())
         )
-      show(id="itraqi_box")
     } else if(legend_type=="time") {
       leafletProxy("map") %>%
         clearControls() %>%
@@ -561,13 +562,31 @@ server <- function(input, output, session) {
           values=0:900,
           title=htmltools::tagList(tags$div("Time to care (minutes)"), tags$br())
         )
-      hide(id="itraqi_box")
     } else {
       leafletProxy("map") %>%
         clearControls()
-      hide(id="itraqi_box")
     }
     
+  })
+  
+  observeEvent(input$layer_selection, {
+    if(!str_detect(input$layer_selection, "^SA")) {
+      # if a non-polygon layer is selected, there's no need to update fillColor
+      return()
+    }
+    
+    care_type_selected <- str_extract(tolower(input$layer_selection), "[a-z]*$")
+    
+    if(care_type_selected == "rehab") {
+      fill <- palNum(polygons$value_rehab)
+    } else if(care_type_selected == "acute") {
+      fill <- palNum(polygons$value_acute)
+    } else {
+      fill <- paliTRAQI(polygons$index)
+    }
+    
+    leafletProxy("map") %>%
+      setShapeStyle(layerId = polygons$CODE, fillColor=fill)
   })
   
   observeEvent(list(input$seifa, input$remoteness, input$itraqi_index, input$layer_selection), {
@@ -589,8 +608,7 @@ server <- function(input, output, session) {
         filter(sa==sa_selected,
                ra%in%ra_selected,
                seifa%in%seifa_selected,
-               care_type==care_type_selected
-               , index%in%itraqi_index_selected
+               index%in%itraqi_index_selected
         ) %>%
         pull(group_id)
       hide_ids <- c(groupings$group_id[!groupings$group_id %in% show_ids], raster_ids)
