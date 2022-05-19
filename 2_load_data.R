@@ -91,7 +91,8 @@ polygons <-
     rehab_time_str=str_extract(popup_rehab, "<b>Time to.*$"),
     popup_index =
       paste0(popup_acute, rehab_time_str, "<b>iTRAQI Index: </b>", index, "<br>")
-  )
+  ) %>%
+  filter(!is.na(value_acute))
 
 get_iTRAQI_bins <- function() {
   unique_rehab_levels <- cut(0, breaks=iTRAQI_rehab_breaks) %>% levels()
@@ -112,7 +113,6 @@ groupings <- expand.grid(
   seifa=c(1:5, NA),
   ra=0:4,
   sa=1:2,
-  # care_type=c("acute", "rehab", "index"),
   index=levels(iTRAQI_bins)
 )
 
@@ -122,25 +122,20 @@ polygons <-
   left_join(
     polygons, groupings,
     by=c(
-      "ra", "seifa_quintile"="seifa", "SA_level"="sa", "index"#, "care_type", 
+      "ra", "seifa_quintile"="seifa", "SA_level"="sa", "index"
     )
-  )# %>% mutate(value=as.character(value))
+  )
 
 rmarkdown::render("input/iTRAQI_info.md")
 
 aria <- 
   polygons %>%
-  filter(SA_level==1
-         # , care_type=="acute"
-         ) %>%
+  filter(SA_level==1) %>%
   mutate(ra_label=factor(ra_scale_to_text(ra), levels=ra_scale_to_text(0:4)))
 
-# TODO only use the one polygon layer for the tours tab - use only SA1 and update the colour for index
 index_poly <- 
   polygons %>%
-  filter(SA_level==2
-         # , care_type=="index"
-         )
+  filter(SA_level==2)
 
 tours_polygons <-
   polygons %>%
