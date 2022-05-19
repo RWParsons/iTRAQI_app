@@ -17,6 +17,7 @@ source("1_functions.R")
 source("2_load_data.R")
 source("3_palettes.R")
 source("4_tour.R")
+source("5_loading_displays.R")
 # styles.css from https://github.com/rstudio/shiny-examples/tree/main/063-superzip-example
 
 js_save_map_instance <- HTML(
@@ -129,16 +130,14 @@ ui <-
                    fixed = TRUE, draggable = TRUE, 
                    top = 0, left = 0, right = 0, bottom = 0,
                    width = 500, height = 200,
-                   h1("We're just loading the map for you!"),
-                   h2("Humans are the Only Animals That Enjoy Spicy Foods"),
-                   img(src="input/imgs/tour_images/tour-1-tbi-image.jpg", align="center")
+                   HTML(loading_panel_displays[(sample(1:length(loading_panel_displays), size=1))])
                  ),
-                 absolutePanel(
+                 hidden(absolutePanel(
                    id = "plot_panel", class = "panel panel-default", fixed = TRUE,
                    draggable = TRUE, top = 'auto', left = 10, right = 'auto', bottom = 10,
                    width = 330, height = 330,
                    plotOutput("selected_SAs_plot", width = 330, height = 330)
-                 ),
+                 )),
                  absolutePanel(
                    id = "controls", class = "panel panel-default", fixed = TRUE,
                    draggable = TRUE, top = 370, left = "auto", right = 10, bottom = "auto",
