@@ -133,6 +133,12 @@ ui <-
                    img(src="input/imgs/tour_images/tour-1-tbi-image.jpg", align="center")
                  ),
                  absolutePanel(
+                   id = "plot_panel", class = "panel panel-default", fixed = TRUE,
+                   draggable = TRUE, top = 'auto', left = 10, right = 'auto', bottom = 10,
+                   width = 330, height = 330,
+                   plotOutput("selected_SAs_plot", width = 330, height = 330)
+                 ),
+                 absolutePanel(
                    id = "controls", class = "panel panel-default", fixed = TRUE,
                    draggable = TRUE, top = 370, left = "auto", right = 10, bottom = "auto",
                    width = 330, height = 600,
@@ -601,6 +607,46 @@ server <- function(input, output, session) {
         clearControls()
     }
     
+  })
+  
+  filtered_df <- reactive({
+    sa_selected <- as.numeric(str_extract(input$layer_selection, "[0-9]{1}"))
+    polygons %>%
+      filter(SA_level==sa_selected) %>%
+      mutate(selected = ifelse(
+        (
+            ra %in% ra_text_to_value(input$remoteness) &
+            seifa_quintile %in% seifa_text_to_value(input$seifa) &
+            index %in% input$itraqi_index
+        ),
+        "selected",
+        "unselected"
+      ),
+      selected=factor(selected, levels=c( "unselected", "selected")))
+  })
+  
+  observeEvent(filtered_df(), {
+    if(nrow(filtered_df())==0) {
+      hide(id="plot_panel")
+    } else {
+      show(id="plot_panel")
+    }
+  })
+  
+  output$selected_SAs_plot <- renderPlot({
+    filtered_df() %>%
+      ggplot(aes(value_rehab, value_acute, col=selected), alpha=0.5) + 
+      geom_point() +
+      theme_bw() +
+      labs(
+        y="Acute time (minutes)",
+        x="Rehab time (minutes)",
+        col=""
+      ) +
+      scale_colour_manual(
+        values = c("grey", "orangered4"),
+        limits=c("unselected", "selected")
+      )
   })
   
   observeEvent(list(input$seifa, input$remoteness, input$itraqi_index, input$layer_selection), {
