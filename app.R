@@ -5,6 +5,7 @@ library(leaflet.extras)
 library(leaflegend)
 library(RColorBrewer)
 library(tidyverse)
+library(ggside)
 library(sf)
 library(sp)
 library(rgdal)
@@ -635,8 +636,18 @@ server <- function(input, output, session) {
   
   output$selected_SAs_plot <- renderPlot({
     filtered_df() %>%
-      ggplot(aes(value_rehab, value_acute, col=selected), alpha=0.5) + 
-      geom_point() +
+      as.data.frame()  %>%
+      mutate(selected=as.character(selected)) %>%
+      ggplot(aes(value_rehab, value_acute, col=selected)) + 
+      geom_point(alpha=0.3) +
+      geom_xsidedensity(aes(y=after_stat(count), 
+                            xfill=selected), position="fill", alpha=0.5) +
+      scale_xfill_manual(values = c("grey", "orangered4"),
+                         limits=c("unselected", "selected")) +
+      geom_ysidedensity(aes(x=after_stat(count),
+                            yfill=selected), position="fill", alpha=0.5) +
+      scale_yfill_manual(values = c("grey", "orangered4"),
+                         limits=c("unselected", "selected")) +
       theme_bw() +
       labs(
         y="Acute time (minutes)",
@@ -646,7 +657,10 @@ server <- function(input, output, session) {
       scale_colour_manual(
         values = c("grey", "orangered4"),
         limits=c("unselected", "selected")
-      )
+      ) + 
+      scale_ysidex_continuous(breaks=NULL) +
+      scale_xsidey_continuous(breaks=NULL) +
+      guides(xfill="none", yfill="none")
   })
   
   observeEvent(list(input$seifa, input$remoteness, input$itraqi_index, input$layer_selection), {
