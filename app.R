@@ -5,7 +5,6 @@ library(leaflet.extras)
 library(leaflegend)
 library(RColorBrewer)
 library(tidyverse)
-library(ggside)
 library(sf)
 library(sp)
 library(rgdal)
@@ -125,18 +124,11 @@ ui <-
                    js_setStyle
                   ),
                  leafletOutput("map", width="100%", height="100%"),
-                 absolutePanel(
-                   id = "loadingScreen", class = "panel panel-default", 
-                   fixed = TRUE, draggable = TRUE, 
-                   top = 0, left = 0, right = 0, bottom = 0,
-                   width = 500, height = 200,
-                   HTML(loading_panel_displays[sample_display()])
-                 ),
                  hidden(absolutePanel(
                    id = "plot_panel", class = "panel panel-default", fixed = TRUE,
                    draggable = TRUE, top = 'auto', left = 10, right = 'auto', bottom = 10,
-                   width = 330, height = 330,
-                   plotOutput("selected_SAs_plot", width = 330, height = 330)
+                   width = 500, height = 500,
+                   plotOutput("selected_SAs_plot", width = "100%", height = '100%')
                  )),
                  absolutePanel(
                    id = "controls", class = "panel panel-default", fixed = TRUE,
@@ -189,6 +181,13 @@ ui <-
                      )
                    ),
                    htmlOutput("itraqi_index_included")
+                 ),
+                 absolutePanel(
+                   id = "loadingScreen", class = "panel panel-default", 
+                   fixed = TRUE, draggable = TRUE, 
+                   top = 0, left = 0, right = 0, bottom = 0,
+                   width = 500, height = 200,
+                   HTML(loading_panel_displays[sample_display()])
                  ),
                  hidden(absolutePanel(
                    id = "itraqi_box", class = "panel panel-default", 
@@ -639,14 +638,6 @@ server <- function(input, output, session) {
       mutate(selected=as.character(selected)) %>%
       ggplot(aes(value_rehab, value_acute, col=selected)) + 
       geom_point(alpha=0.3) +
-      geom_xsidedensity(aes(y=after_stat(count), 
-                            xfill=selected), position="fill", alpha=0.5) +
-      scale_xfill_manual(values = c("grey", "orangered4"),
-                         limits=c("unselected", "selected")) +
-      geom_ysidedensity(aes(x=after_stat(count),
-                            yfill=selected), position="fill", alpha=0.5) +
-      scale_yfill_manual(values = c("grey", "orangered4"),
-                         limits=c("unselected", "selected")) +
       theme_bw() +
       labs(
         y="Acute time (minutes)",
@@ -656,10 +647,8 @@ server <- function(input, output, session) {
       scale_colour_manual(
         values = c("grey", "orangered4"),
         limits=c("unselected", "selected")
-      ) + 
-      scale_ysidex_continuous(breaks=NULL) +
-      scale_xsidey_continuous(breaks=NULL) +
-      guides(xfill="none", yfill="none")
+      ) +
+      guides(col="none")
   })
   
   observeEvent(list(input$seifa, input$remoteness, input$itraqi_index, input$layer_selection), {
