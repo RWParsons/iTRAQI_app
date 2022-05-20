@@ -85,32 +85,32 @@ js_setStyle <- HTML(
 ui <- 
   navbarPage(
     "iTRAQI", id="nav",
-    tabPanel(
-      "Tour",
-      useShinyjs(),
-      div(class="outer",
-          tags$head(
-            includeCSS("styles.css")
-          ),
-          leafletOutput("map_tour", width="100%", height="100%"),
-          absolutePanel(
-            id = "tour_controls", class = "panel panel-default", fixed = TRUE,
-            draggable = TRUE, top=80, left = "auto", right = 10, bottom = "auto",
-            width = tours_panel_dims$width, height = tours_panel_dims$height,
-            tags$br(),
-            splitLayout(
-              cellWidths = 230,
-              uiOutput("backButtonControl"),
-              uiOutput("nextButtonControl")
-            ),
-            uiOutput("tourText")
-          ),
-          tags$div(
-            id="cite",
-            citation
-          )
-      )
-    ),
+    # tabPanel(
+    #   "Tour",
+    #   useShinyjs(),
+    #   div(class="outer",
+    #       tags$head(
+    #         includeCSS("styles.css")
+    #       ),
+    #       leafletOutput("map_tour", width="100%", height="100%"),
+    #       absolutePanel(
+    #         id = "tour_controls", class = "panel panel-default", fixed = TRUE,
+    #         draggable = TRUE, top=80, left = "auto", right = 10, bottom = "auto",
+    #         width = tours_panel_dims$width, height = tours_panel_dims$height,
+    #         tags$br(),
+    #         splitLayout(
+    #           cellWidths = 230,
+    #           uiOutput("backButtonControl"),
+    #           uiOutput("nextButtonControl")
+    #         ),
+    #         uiOutput("tourText")
+    #       ),
+    #       tags$div(
+    #         id="cite",
+    #         citation
+    #       )
+    #   )
+    # ),
     tabPanel("Main map",
              useShinyjs(),
              div(class="outer",
@@ -126,9 +126,13 @@ ui <-
                  leafletOutput("map", width="100%", height="100%"),
                  hidden(absolutePanel(
                    id = "plot_panel", class = "panel panel-default", fixed = TRUE,
-                   draggable = TRUE, top = 'auto', left = 10, right = 'auto', bottom = 10,
+                   draggable = FALSE, top = 'auto', left = 10, right = 'auto', bottom = 10,
                    width = 500, height = 500,
-                   plotOutput("selected_SAs_plot", width = "100%", height = '100%')
+                   plotOutput(
+                     "selected_SAs_plot", width = "100%", height = '100%',
+                     click = "plot_click",
+                     brush = brushOpts("plot_brush")
+                   )
                  )),
                  absolutePanel(
                    id = "controls", class = "panel panel-default", fixed = TRUE,
@@ -610,18 +614,31 @@ server <- function(input, output, session) {
   
   filtered_df <- reactive({
     sa_selected <- as.numeric(str_extract(input$layer_selection, "[0-9]{1}"))
-    polygons %>%
+    care_type_selected <- str_extract(tolower(input$layer_selection), "[a-z]*$")
+    
+    data <- as.data.frame(polygons)
+    if(care_type_selected == "acute"){
+      data <- mutate(polygons, selected_col=value_acute)
+    } else if(care_type_selected == "rehab"){
+      data <- mutate(polygons, selected_col=value_rehab)
+    } else if(care_type_selected == "index"){
+      data <- mutate(polygons, selected_col=index)
+    }
+    
+    data %>%
       filter(SA_level==sa_selected) %>%
-      mutate(selected = ifelse(
-        (
+      mutate(
+        selected = ifelse(
+          (
             ra %in% ra_text_to_value(input$remoteness) &
             seifa_quintile %in% seifa_text_to_value(input$seifa) &
             index %in% input$itraqi_index
-        ),
-        "selected",
-        "unselected"
-      ),
-      selected=factor(selected, levels=c( "unselected", "selected")))
+          ),
+          TRUE, 
+          FALSE
+        )) %>%
+      mutate(selected_col=ifelse(selected, selected_col, NA))
+      
   })
   
   observeEvent(filtered_df(), {
@@ -632,22 +649,31 @@ server <- function(input, output, session) {
     }
   })
   
+  plot_colour_scale <- reactive({
+    care_type_selected <- str_extract(tolower(input$layer_selection), "[a-z]*$")
+    if(care_type_selected=="index"){
+      scale_colour_manual(
+        values=paliTRAQI(iTRAQI_bins),
+        limits=iTRAQI_bins
+      )
+    } else {
+      scale_colour_gradientn(
+        colours=palNum(bins),
+        values=scales::rescale(bins)
+      )
+    }
+  })
+  
   output$selected_SAs_plot <- renderPlot({
     filtered_df() %>%
-      as.data.frame()  %>%
-      mutate(selected=as.character(selected)) %>%
-      ggplot(aes(value_rehab, value_acute, col=selected)) + 
-      geom_point(alpha=0.3) +
+      ggplot(aes(value_rehab, value_acute, col=selected_col)) + 
+      geom_point(alpha=0.3, size=2) +
       theme_bw() +
       labs(
         y="Acute time (minutes)",
-        x="Rehab time (minutes)",
-        col=""
+        x="Rehab time (minutes)"
       ) +
-      scale_colour_manual(
-        values = c("grey", "orangered4"),
-        limits=c("unselected", "selected")
-      ) +
+      plot_colour_scale() +
       guides(col="none")
   })
   
