@@ -667,23 +667,32 @@ server <- function(input, output, session) {
   })
   
   observeEvent(list(input$plot_click, input$plot_brush,input$layer_selection), {
-    clicked_point <- nearPoints(filtered_df(), input$plot_click)
+    clicked_point <- st_centroid(nearPoints(filtered_df(), input$plot_click)[1, ])
     brushed_points <- brushedPoints(filtered_df(), input$plot_brush)
-    points <- st_centroid(rbind(clicked_point[1, ], brushed_points))
+    
+    points <- st_centroid(rbind(clicked_point, brushed_points))
     
     care_type_selected <- str_extract(tolower(input$layer_selection), "[a-z]*$")
     
     if(care_type_selected=="acute") {
-      popup <- points$popup_acute
+      popup <- clicked_point$popup_acute
     } else if(care_type_selected=="rehab") {
-      popup <- points$popup_rehab
+      popup <- clicked_point$popup_rehab
     } else {
-      popup <- points$popup_index
+      popup <- clicked_point$popup_index
     }
+    
+    revert_codes <- polygons %>%
+      filter(!CODE %in% points$CODE) %>%
+      pull(CODE)
+    
+    leafletProxy("map") %>%
+      setShapeStyle(layerId = points$CODE, color="Green", weight=5) %>%
+      setShapeStyle(layerId = revert_codes, color="black", weight=1)
     
     leafletProxy("map") %>%
       clearGroup(group="popup_selection") %>%
-      addPopups(data=points, popup=popup, group="popup_selection")
+      addPopups(data=clicked_point, popup=popup, group="popup_selection")
   })
   
   output$selected_SAs_plot <- renderPlot({
