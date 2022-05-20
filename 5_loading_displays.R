@@ -14,6 +14,10 @@ loading_panel_displays <- c(
   paste(
     sep=seperator,
     '<h2>"kriging - it\'s a dance move right?!?" (Someone, 2022)</h2>',
-    glue::glue('<img src="input/imgs/kriging.gif" alt="kriging-gif" style="width:{loader_img_width}px;">')
+    glue::glue('<img src="kriging.gif" alt="kriging-gif" style="width:{loader_img_width}px;">')
   )
 )
+
+sample_display <- function() {
+  sample(1:length(loading_panel_displays), size=1)
+}

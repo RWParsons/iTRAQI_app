@@ -130,7 +130,7 @@ ui <-
                    fixed = TRUE, draggable = TRUE, 
                    top = 0, left = 0, right = 0, bottom = 0,
                    width = 500, height = 200,
-                   HTML(loading_panel_displays[(sample(1:length(loading_panel_displays), size=1))])
+                   HTML(loading_panel_displays[sample_display()])
                  ),
                  hidden(absolutePanel(
                    id = "plot_panel", class = "panel panel-default", fixed = TRUE,
