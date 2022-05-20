@@ -51,15 +51,15 @@ if(!"raster_points.rds" %in% list.files(layers_dir)){
 all_base_layers <- c("Towns", "Acute centres", "Rehab centres")
 
 tier_icons <- iconList(
-  "Platinum"=makeIcon(iconUrl = "input/imgs/platinum.png", iconWidth = 549/18, iconHeight = 562/18),
-  "Gold"=makeIcon(iconUrl = "input/imgs/gold_medal.png", iconWidth = 529/18, iconHeight = 625/18),
-  "Future Gold"=makeIcon(iconUrl = "input/imgs/gold_medal.png", iconWidth = 529/18, iconHeight = 625/18),
-  "Silver"=makeIcon(iconUrl = "input/imgs/silver_medal.png", iconWidth = 303/18, iconHeight = 518/18)
+  "Platinum"=makeIcon(iconUrl = "platinum.png", iconWidth = 549/18, iconHeight = 562/18),
+  "Gold"=makeIcon(iconUrl = "gold_medal.png", iconWidth = 529/18, iconHeight = 625/18),
+  "Future Gold"=makeIcon(iconUrl = "gold_medal.png", iconWidth = 529/18, iconHeight = 625/18),
+  "Silver"=makeIcon(iconUrl = "silver_medal.png", iconWidth = 303/18, iconHeight = 518/18)
 )
 
 centre_icons <- iconList(
-  acute=makeIcon(iconUrl = "input/imgs/acute_care2.png", iconWidth = 50, iconHeight = 50),
-  rehab=makeIcon(iconUrl = "input/imgs/rehab_care.png", iconWidth = 40, iconHeight = 40)
+  acute=makeIcon(iconUrl = "acute_care.png", iconWidth = 50, iconHeight = 50),
+  rehab=makeIcon(iconUrl = "rehab_care.png", iconWidth = 40, iconHeight = 40)
 )
 
 download_data_dir <- "input/download_data/"

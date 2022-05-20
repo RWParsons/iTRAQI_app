@@ -6,7 +6,7 @@ tour_01 <- paste(
   "<h3>Welcome to iTRAQI: injury Treatment & Rehabilitation Accessibility Queensland Index</h3>",
   "This pilot study uses moderate-to-severe traumatic brain injury (TBI) to map and rank access to acute treatment and rehabilitation centres.",
   "Take this self-paced tour to explore and understand iTRAQI.",
-  glue::glue('<br><img src="input/imgs/tour_images/tour-1-tbi-image.jpg" alt="tbi-image" style="width:{img_width}px;">')
+  glue::glue('<br><img src="tour-1-tbi-image.jpg" alt="tbi-image" style="width:{img_width}px;">')
 )
 
 
@@ -21,8 +21,8 @@ tour_03 <- paste(
   sep=separator,
   "<h3>Queensland</h3>",
   "Since emergency and hospitals are State-based, our focus is on Queensland. Covering 1.7 million square kilometres, including very remote Torres Strait islands, moving patients efficiently for time-sensitive emergency care is a challenge.",
-  glue::glue('<br><img src="input/imgs/tour_images/tour-3-plane.jfif" alt="plane-image" style="width:{img_width}px;">'),
-  glue::glue('<br><img src="input/imgs/tour_images/tour-3-ambulance.webp" alt="ambulance-image" style="width:{img_width}px;">')
+  glue::glue('<br><img src="tour-3-plane.jfif" alt="plane-image" style="width:{img_width}px;">'),
+  glue::glue('<br><img src="tour-3-ambulance.webp" alt="ambulance-image" style="width:{img_width}px;">')
 )
 
 tour_04 <- paste(

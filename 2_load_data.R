@@ -126,7 +126,7 @@ polygons <-
     )
   )
 
-rmarkdown::render("input/iTRAQI_info.md")
+rmarkdown::render(input="input/iTRAQI_info.md", output_file="../www/iTRAQI_info.html")
 
 aria <- 
   polygons %>%
