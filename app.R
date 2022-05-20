@@ -616,13 +616,15 @@ server <- function(input, output, session) {
     sa_selected <- as.numeric(str_extract(input$layer_selection, "[0-9]{1}"))
     care_type_selected <- str_extract(tolower(input$layer_selection), "[a-z]*$")
     
-    data <- as.data.frame(polygons)
+    
     if(care_type_selected == "acute"){
       data <- mutate(polygons, selected_col=value_acute)
     } else if(care_type_selected == "rehab"){
       data <- mutate(polygons, selected_col=value_rehab)
     } else if(care_type_selected == "index"){
       data <- mutate(polygons, selected_col=index)
+    } else {
+      data <- polygons
     }
     
     data %>%
@@ -664,8 +666,29 @@ server <- function(input, output, session) {
     }
   })
   
+  observeEvent(list(input$plot_click, input$plot_brush,input$layer_selection), {
+    clicked_point <- nearPoints(filtered_df(), input$plot_click)
+    brushed_points <- brushedPoints(filtered_df(), input$plot_brush)
+    points <- st_centroid(rbind(clicked_point[1, ], brushed_points))
+    
+    care_type_selected <- str_extract(tolower(input$layer_selection), "[a-z]*$")
+    
+    if(care_type_selected=="acute") {
+      popup <- points$popup_acute
+    } else if(care_type_selected=="rehab") {
+      popup <- points$popup_rehab
+    } else {
+      popup <- points$popup_index
+    }
+    
+    leafletProxy("map") %>%
+      clearGroup(group="popup_selection") %>%
+      addPopups(data=points, popup=popup, group="popup_selection")
+  })
+  
   output$selected_SAs_plot <- renderPlot({
     filtered_df() %>%
+      as.data.frame() %>%
       ggplot(aes(value_rehab, value_acute, col=selected_col)) + 
       geom_point(alpha=0.3, size=2) +
       theme_bw() +
