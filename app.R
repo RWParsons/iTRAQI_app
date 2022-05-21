@@ -659,9 +659,13 @@ server <- function(input, output, session) {
         limits=iTRAQI_bins
       )
     } else {
+      minimum <- min(filtered_df()$selected_col, na.rm=TRUE)
+      maximum <- max(filtered_df()$selected_col, na.rm=TRUE)
+      col_bins <- c(minimum, bins[(bins > minimum & bins < maximum)], maximum)
+      
       scale_colour_gradientn(
-        colours=palNum(bins),
-        values=scales::rescale(bins)
+        colours=palNum(col_bins),
+        values=scales::rescale(col_bins)
       )
     }
   })
