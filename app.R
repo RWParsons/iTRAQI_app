@@ -636,8 +636,9 @@ server <- function(input, output, session) {
   })
   
   observeEvent(list(input$plot_click, input$plot_brush,input$layer_selection), {
-    clicked_point <- st_centroid(nearPoints(filtered_df(), input$plot_click)[1, ])
-    brushed_points <- brushedPoints(filtered_df(), input$plot_brush)
+    clicked_point <- st_centroid(nearPoints(filter(filtered_df(), selected==TRUE), input$plot_click)[1, ])
+    
+    brushed_points <- brushedPoints(filter(filtered_df(), selected==TRUE), input$plot_brush)
     
     points <- st_centroid(rbind(clicked_point, brushed_points))
     
