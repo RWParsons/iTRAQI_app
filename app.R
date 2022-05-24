@@ -63,6 +63,7 @@ ui <-
                    ),
                    h4("Filters"),
                    dropdownButton(
+                     checkboxInput('seifa_select_all', 'Select All/None', value=TRUE),
                      label="Socioeconomic status", status="default", width=dropdown_width,
                      checkboxGroupInput(
                        inputId="seifa", label="SEIFA", width=dropdown_width,
@@ -73,6 +74,7 @@ ui <-
                    htmlOutput("seifa_included"),
                    tags$br(),
                    dropdownButton(
+                     checkboxInput('remoteness_select_all', 'Select All/None', value=TRUE),
                      label="Remoteness index", status="default", width=dropdown_width,
                      checkboxGroupInput(
                        inputId="remoteness", label="Remoteness", width=dropdown_width,
@@ -83,6 +85,7 @@ ui <-
                    htmlOutput("remoteness_included"),
                    tags$br(),
                    dropdownButton(
+                     checkboxInput('itraqi_select_all', 'Select All/None', value=TRUE),
                      label="iTRAQI index", status="default", width=dropdown_width,
                      checkboxGroupInput(
                        inputId="itraqi_index", label="iTRAQI Index", width=dropdown_width,
@@ -202,6 +205,30 @@ server <- function(input, output, session) {
     to_load_rehab=NULL, map_rehab=NULL, map_rehab_complete=FALSE, 
     to_load_tour=NULL, map_tour=NULL, map_tour_complete=FALSE, tour_tab=1
   )
+  
+  observe({
+    updateCheckboxGroupInput(
+      inputId='seifa', 
+      choices=c(seifa_scale_to_text(1:5), "NA"),
+      selected=if(input$seifa_select_all) c(seifa_scale_to_text(1:5), "NA") else c()
+    )
+  })
+  
+  observe({
+    updateCheckboxGroupInput(
+      inputId='remoteness', 
+      choices=ra_scale_to_text(0:4),
+      selected=if(input$remoteness_select_all) ra_scale_to_text(0:4) else c()
+    )
+  })
+  
+  observe({
+    updateCheckboxGroupInput(
+      inputId='itraqi_index', 
+      choices=levels(iTRAQI_bins),
+      selected=if(input$itraqi_select_all) levels(iTRAQI_bins) else c()
+    )
+  })
 
   output$nextButtonControl <- renderUI({
     if(rvs$tour_tab != n_tour_windows) actionButton("nextButton", "Loading") else NULL
@@ -480,7 +507,9 @@ server <- function(input, output, session) {
   })
   
   output$seifa_included <- renderText({
-    if(length(input$seifa) == 6) {
+    if(length(input$seifa) == 0) {
+      return("<b>All excluded</b>")
+    }else if(length(input$seifa) == 6) {
       return("<b>All included</b>")
     } else {
       paste("<b>Including:</b>", paste0(input$seifa, collapse=", "))
@@ -488,7 +517,9 @@ server <- function(input, output, session) {
   })
   
   output$remoteness_included <- renderText({
-    if(length(input$remoteness) == 5) {
+    if(length(input$remoteness) == 0) {
+      return("<b>All excluded</b>")
+    }else if(length(input$remoteness) == 5) {
       return("<b>All included</b>")
     } else {
       paste("<b>Including:</b>", paste0(input$remoteness, collapse=", "))
@@ -496,7 +527,9 @@ server <- function(input, output, session) {
   })
   
   output$itraqi_index_included <- renderText({
-    if(length(input$itraqi_index) == length(levels(iTRAQI_bins))) {
+    if(length(input$itraqi_index) == 0) {
+      return("<b>All excluded</b>")
+    }else if(length(input$itraqi_index) == length(levels(iTRAQI_bins))) {
       return("<b>All included</b>")
     } else {
       paste("<b>Including:</b>", paste0(input$itraqi_index, collapse=", "))
