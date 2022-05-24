@@ -585,10 +585,13 @@ server <- function(input, output, session) {
   
   plot_colour_scale <- reactive({
     care_type_selected <- str_extract(tolower(input$layer_selection), "[a-z]*$")
+    na_value <- "transparent"
+    
     if(care_type_selected=="index"){
       scale_colour_manual(
         values=paliTRAQI(iTRAQI_bins),
-        limits=iTRAQI_bins
+        limits=iTRAQI_bins,
+        na.value=na_value
       )
     } else {
       minimum <- min(filtered_df()$selected_col, na.rm=TRUE)
@@ -597,7 +600,8 @@ server <- function(input, output, session) {
       
       scale_colour_gradientn(
         colours=palNum(col_bins),
-        values=scales::rescale(col_bins)
+        values=scales::rescale(col_bins),
+        na.value=na_value
       )
     }
   })
