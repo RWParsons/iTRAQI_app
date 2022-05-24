@@ -631,8 +631,15 @@ server <- function(input, output, session) {
       setShapeStyle(layerId = revert_codes, color="black", weight=1)
     
     leafletProxy("map") %>%
-      clearGroup(group="popup_selection") %>%
-      addPopups(data=clicked_point, popup=popup, group="popup_selection")
+      clearGroup(group="popup_selection")
+    
+    if(!is.na(clicked_point$selected)) {
+      if(clicked_point$selected) {
+        leafletProxy("map") %>%
+          addPopups(data=clicked_point, popup=popup, group="popup_selection")
+      }
+    }
+     
   })
   
   output$selected_SAs_plot <- renderPlot({
