@@ -4,8 +4,11 @@ L.Map.addInitHook(function () {
 });
 
 function open_popup(id) {
-   console.log('open popup for ' + id);
-   mapsPlaceholder[0].eachLayer(function(l) {
+   // console.log('open popup for ' + id);
+   // console.log('open popup for ' + mapsPlaceholder.constructor.name);
+   // console.log('open popup for ' + mapsPlaceholder.map(s=>s.id));
+   mapsPlaceholder.find(x => x.id === 'map').eachLayer(function(l) {
+   //mapsPlaceholder['map'].eachLayer(function(l) {
       if (l.options && l.options.layerId == id) {
          l.openPopup();
       }
