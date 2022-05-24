@@ -603,8 +603,7 @@ server <- function(input, output, session) {
           ),
           TRUE, 
           FALSE
-        )) %>%
-      mutate(selected_col=ifelse(selected, selected_col, NA))
+        ))
       
   })
   
@@ -618,13 +617,11 @@ server <- function(input, output, session) {
   
   plot_colour_scale <- reactive({
     care_type_selected <- str_extract(tolower(input$layer_selection), "[a-z]*$")
-    na_value <- "transparent"
     
     if(care_type_selected=="index"){
       scale_colour_manual(
         values=paliTRAQI(iTRAQI_bins),
-        limits=iTRAQI_bins,
-        na.value=na_value
+        limits=iTRAQI_bins
       )
     } else {
       minimum <- min(filtered_df()$selected_col, na.rm=TRUE)
@@ -633,8 +630,7 @@ server <- function(input, output, session) {
       
       scale_colour_gradientn(
         colours=palNum(col_bins),
-        values=scales::rescale(col_bins),
-        na.value=na_value
+        values=scales::rescale(col_bins)
       )
     }
   })
@@ -678,15 +674,16 @@ server <- function(input, output, session) {
   output$selected_SAs_plot <- renderPlot({
     filtered_df() %>%
       as.data.frame() %>%
-      ggplot(aes(value_rehab, value_acute, col=selected_col)) + 
-      geom_point(alpha=0.3, size=2) +
+      ggplot(aes(value_rehab, value_acute, col=selected_col, alpha=selected)) + 
+      geom_point(size=2) +
       theme_bw() +
       labs(
         y="Acute time (minutes)",
         x="Rehab time (minutes)"
       ) +
       plot_colour_scale() +
-      guides(col="none")
+      scale_alpha_manual(values=c(0, 0.5), limits=c(FALSE, TRUE)) +
+      guides(col="none", alpha="none")
   })
   
   observeEvent(list(input$seifa, input$remoteness, input$itraqi_index, input$layer_selection), {
