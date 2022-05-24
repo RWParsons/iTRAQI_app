@@ -9,7 +9,6 @@ library(sf)
 library(sp)
 library(rgdal)
 library(shinyjs)
-# https://susanna-cramb.shinyapps.io/itraqi_app/
 
 source("0_utils.R")
 source("1_functions.R")
@@ -19,110 +18,17 @@ source("4_tour.R")
 source("5_loading_displays.R")
 # styles.css from https://github.com/rstudio/shiny-examples/tree/main/063-superzip-example
 
-js_save_map_instance <- HTML(
-  # https://stackoverflow.com/questions/66240941/r-leaflet-add-a-new-marker-on-the-map-with-the-popup-already-opened
-  paste(
-    "var mapsPlaceholder = [];",
-    "L.Map.addInitHook(function () {",
-    "   mapsPlaceholder.push(this); // Use whatever global scope variable you like.",
-    "});", sep = "\n"
-  )
-)
-
-js_open_popup <- HTML(
-  paste("function open_popup(id) {",
-        "   console.log('open popup for ' + id);",
-        "   mapsPlaceholder[0].eachLayer(function(l) {",
-        "      if (l.options && l.options.layerId == id) {",
-        "         l.openPopup();",
-        "      }",
-        "   });",
-        "}", sep = "\n"
-  )
-)
-
-js_setStyle <- HTML(
-  paste(
-    "window.LeafletWidget.methods.setStyle = function(category, layerId, style){
-      var map = this;
-      if (!layerId){
-        return;
-      } else if (!(typeof(layerId) === 'object' && layerId.length)){ // in case a single layerid is given
-        layerId = [layerId];
-      }
-    
-      //convert columnstore to row store
-      style = HTMLWidgets.dataframeToD3(style);
-      //console.log(style);
-    
-      layerId.forEach(function(d,i){
-        var layer = map.layerManager.getLayer(category, d);
-        if (layer){ // or should this raise an error?
-          layer.setStyle(style[i]);
-        }
-      });
-    };
-    window.LeafletWidget.methods.setLabel = function(category, layerId, label){
-      var map = this;
-      if (!layerId){
-        return;
-      } else if (!(typeof(layerId) === 'object' && layerId.length)){ // in case a single layerid is given
-        layerId = [layerId];
-      }
-    
-      layerId.forEach(function(d,i){
-        var layer = map.layerManager.getLayer(category, d);
-        if (layer){ // or should this raise an error?
-          layer.unbindTooltip();
-          // the object subsetting to get the integer array and casting to string is what I added
-          layer.bindTooltip(label.label[i].toString());
-        }
-      });
-    };
-  ")
-)
 
 ui <- 
   navbarPage(
     "iTRAQI", id="nav",
-    tabPanel(
-      "Tour",
-      useShinyjs(),
-      div(class="outer",
-          tags$head(
-            includeCSS("styles.css")
-          ),
-          leafletOutput("map_tour", width="100%", height="100%"),
-          absolutePanel(
-            id = "tour_controls", class = "panel panel-default", fixed = TRUE,
-            draggable = TRUE, top=80, left = "auto", right = 10, bottom = "auto",
-            width = tours_panel_dims$width, height = tours_panel_dims$height,
-            tags$br(),
-            splitLayout(
-              cellWidths = 230,
-              uiOutput("backButtonControl"),
-              uiOutput("nextButtonControl")
-            ),
-            uiOutput("tourText")
-          ),
-          tags$div(
-            id="cite",
-            citation
-          )
-      )
-    ),
     tabPanel("Main map",
              useShinyjs(),
              div(class="outer",
                  tags$head(
-                   includeCSS("styles.css")
+                   includeCSS("styles.css"),
+                   tags$script(src="script.js")
                  ),
-                 tags$script(
-                   type = "text/javascript",
-                   js_save_map_instance,
-                   js_open_popup,
-                   js_setStyle
-                  ),
                  leafletOutput("map", width="100%", height="100%"),
                  hidden(absolutePanel(
                    id = "plot_panel", class = "panel panel-default", fixed = TRUE,
@@ -206,6 +112,32 @@ ui <-
                    citation
                  )
              )
+    ),
+    tabPanel(
+      "Tour",
+      useShinyjs(),
+      div(class="outer",
+          tags$head(
+            includeCSS("styles.css")
+          ),
+          leafletOutput("map_tour", width="100%", height="100%"),
+          absolutePanel(
+            id = "tour_controls", class = "panel panel-default", fixed = TRUE,
+            draggable = TRUE, top=80, left = "auto", right = 10, bottom = "auto",
+            width = tours_panel_dims$width, height = tours_panel_dims$height,
+            tags$br(),
+            splitLayout(
+              cellWidths = 230,
+              uiOutput("backButtonControl"),
+              uiOutput("nextButtonControl")
+            ),
+            uiOutput("tourText")
+          ),
+          tags$div(
+            id="cite",
+            citation
+          )
+      )
     ),
     tabPanel("Rehab map",
              div(class="outer",
@@ -777,11 +709,11 @@ server <- function(input, output, session) {
     )
     leafletProxy("map") %>%
       addMarkers(
-        lng=lng, lat=lat, 
+        lng=lng, lat=lat,
         layerId="map_click_marker",
-        popup=content,
-        popupOptions = popupOptions(closeButton = FALSE)
+        popup=content
       ) 
+    
     runjs(sprintf("setTimeout(() => open_popup('%s'), 10)", "map_click_marker"))
   })
   
