@@ -48,7 +48,8 @@ if(!"raster_points.rds" %in% list.files(layers_dir)){
   rasters_points <- readRDS(file.path(layers_dir, "raster_points.rds"))
 }
 
-all_base_layers <- c("Towns", "Acute centres", "Rehab centres")
+all_base_layers <- c("Towns", "Acute centres", "Rehab centres", "RSQ centres", "QAS centres")
+default_base_layers <- c("Towns", "Acute centres", "Rehab centres")
 
 tier_icons <- iconList(
   "Platinum"=makeIcon(iconUrl = "platinum.png", iconWidth = 549/18, iconHeight = 562/18),
@@ -59,7 +60,9 @@ tier_icons <- iconList(
 
 centre_icons <- iconList(
   acute=makeIcon(iconUrl = "acute_care.png", iconWidth = 50, iconHeight = 50),
-  rehab=makeIcon(iconUrl = "rehab_care.png", iconWidth = 40, iconHeight = 40)
+  rehab=makeIcon(iconUrl = "rehab_care.png", iconWidth = 40, iconHeight = 40),
+  rsq=makeIcon(iconUrl = "rsq.png", iconWidth=50, iconHeight=50),
+  qas=makeIcon(iconUrl = "red-cross.png", iconWidth=10, iconHeight = 10)
 )
 
 download_data_dir <- "input/download_data/"

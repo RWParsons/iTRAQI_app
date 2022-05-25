@@ -87,7 +87,7 @@ ui <-
                    checkboxGroupInput(
                      "base_layers",label=NULL,
                      choices=all_base_layers,
-                     selected=all_base_layers
+                     selected=default_base_layers
                    ),
                    h4("Filters"),
                    dropdownButton(
@@ -444,6 +444,8 @@ server <- function(input, output, session) {
       addMapPane(name = "markers", zIndex = 206) %>%
       addMapPane(name = "acute_centres", zIndex = 205) %>%
       addMapPane(name = "rehab_centres", zIndex = 204) %>%
+      addMapPane(name = "rsq_centres", zIndex = 205) %>%
+      addMapPane(name = "qas_centres", zIndex = 210) %>%
       addProviderTiles("CartoDB.VoyagerNoLabels") %>%
       addProviderTiles("CartoDB.VoyagerOnlyLabels",
                        options = leafletOptions(pane = "maplabels"),
@@ -472,6 +474,22 @@ server <- function(input, output, session) {
         popup=df_centres$popup[df_centres$care_type=="rehab"],
         group="Rehab centres",
         options=leafletOptions(pane="rehab_centres")
+      ) %>%
+      addMarkers(
+        lng=df_rsq_locations$x,
+        lat=df_rsq_locations$y,
+        popup=df_rsq_locations$rsq_location,
+        icon=centre_icons["rsq"],
+        group="RSQ centres",
+        options=leafletOptions(pane="rsq_centres")
+      ) %>%
+      addMarkers(
+        lng=df_qas_locations$x,
+        lat=df_qas_locations$y,
+        popup=df_qas_locations$qas_location,
+        icon=centre_icons["qas"],
+        group="QAS centres",
+        options=leafletOptions(pane="qas_centres")
       )
   })
   

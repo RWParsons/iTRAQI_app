@@ -84,6 +84,9 @@ df_centres <- df_centres %>%
     )
   )
 
+df_rsq_locations <- read.csv("input/rsq_locations.csv")
+df_qas_locations <- read.csv("input/qas_locations.csv")
+
 polygons <- 
   readRDS("input/layers/stacked_SA1_and_SA2_polygons_year2016_simplified.rds") %>%
   mutate(
