@@ -452,6 +452,7 @@ server <- function(input, output, session) {
                        group = "map labels") %>%
       hideGroup(names(layer_input)) %>%
       hideGroup(groupings$group_id) %>%
+      hideGroup(all_base_layers[!all_base_layers%in%default_base_layers]) %>%
       addCircleMarkers(
         lng=df_locations$x, lat=df_locations$y, 
         radius=2, fillOpacity=0,
