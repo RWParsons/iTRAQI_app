@@ -58,10 +58,12 @@ ui <-
                  leafletOutput("map", width="100%", height="100%"),
                  hidden(absolutePanel(
                    id = "plot_panel", class = "panel panel-default", fixed = TRUE,
-                   draggable = FALSE, top = 'auto', left = 10, right = 'auto', bottom = 10,
-                   width = 500, height = 500,
+                   draggable = FALSE, 
+                   top = 50, left = 50, right = "auto", bottom = "auto",
+                   width = 200, height = 50,
+                   checkboxInput('show_plot_checkbox', HTML('<b>Show plot</b>'), value=TRUE),
                    plotOutput(
-                     "selected_SAs_plot", width = "100%", height = '100%',
+                     "selected_SAs_plot", width = 500, height = 400,
                      click = "plot_click",
                      brush = brushOpts("plot_brush")
                    )
@@ -131,7 +133,8 @@ ui <-
                  hidden(absolutePanel(
                    id = "itraqi_box", class = "panel panel-default", 
                    fixed = TRUE,
-                   draggable = TRUE, top = 158, left = 10, right = "auto", bottom = "auto",
+                   draggable = TRUE, 
+                   top = 'auto', left = 10, right = 'auto', bottom = 10,
                    width = 330, height = 450,
                    h3("iTRAQI Index categorisation:"),
                    HTML(itraqi_categories_table)
@@ -207,6 +210,14 @@ server <- function(input, output, session) {
     to_load_rehab=NULL, map_rehab=NULL, map_rehab_complete=FALSE, 
     to_load_tour=NULL, map_tour=NULL, map_tour_complete=FALSE, tour_tab=1
   )
+  
+  observe({
+    if(input$show_plot_checkbox) {
+      show(id="selected_SAs_plot")
+    } else {
+      hide(id="selected_SAs_plot")
+    }
+  })
   
   observe({
     updateCheckboxGroupInput(
