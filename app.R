@@ -71,7 +71,7 @@ ui <-
                  absolutePanel(
                    id = "controls", class = "panel panel-default", fixed = TRUE,
                    draggable = TRUE, top = 370, left = "auto", right = 10, bottom = "auto",
-                   width = 330, height = 600,
+                   width = 330, height = 760,
                    h4("Layer"),
                    radioButtons(
                      inputId="layer_selection", label=NULL,
@@ -716,7 +716,10 @@ server <- function(input, output, session) {
       ) +
       plot_colour_scale() +
       scale_alpha_manual(values=c(0, 0.5), limits=c(FALSE, TRUE)) +
-      guides(col="none", alpha="none")
+      guides(col="none", alpha="none") +
+      scale_y_continuous(breaks = seq(0, 1000, by = 120)) +
+      scale_x_continuous(breaks = seq(0, 1500, by = 120))
+    
   })
   
   observeEvent(list(input$seifa, input$remoteness, input$itraqi_index, input$layer_selection), {
