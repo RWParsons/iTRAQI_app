@@ -1,6 +1,4 @@
-
-
-# iTRAQI: injury Treatment & Rehabilitation Accessibility Queensland Index
+# iTRAQI: injury Treatment & Rehabilitation Accessibility Queensland Index <a href='https://access.healthequity.link/'><img src='www/iTRAQI-hex.png' align="right" height="150" /></a>
 
 ### Accessing the app
 You can access the app [online](https://access.healthequity.link/) or locally in R using the following code:
