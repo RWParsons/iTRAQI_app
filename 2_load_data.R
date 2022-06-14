@@ -89,7 +89,8 @@ df_rsq_locations <- read.csv("input/rsq_locations.csv") %>%
     "<b>Location: </b>", "{rsq_location}<br>",
     "<b>Service: </b>", "{ifelse(type=='both', 'plane and helicopter', type)}"
   ))
-df_qas_locations <- read.csv("input/qas_locations.csv")
+df_qas_locations <- read.csv("input/qas_locations.csv") %>%
+  mutate(popup = glue::glue("<b>Location: </b>", "{qas_location}<br>"))
 
 polygons <- 
   readRDS("input/layers/stacked_SA1_and_SA2_polygons_year2016_simplified.rds") %>%
