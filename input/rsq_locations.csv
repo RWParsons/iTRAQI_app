@@ -1,14 +1,14 @@
-rsq_location,x,y
-Horn Island Airport,142.29,-10.586
-Cairns Airport,145.755,-16.886
-Townsville Airport,146.765,-19.253
-Mt Isa Airport,139.489,-20.664
-Mackay Airport,149.18,-21.172
-Rockhampton Airport,150.475,-23.382
-Bundaberg Airport,152.319,-24.904
-Sunshine Coast Airport,153.091,-26.603
-Brisbane Airport,153.118,-27.384
-Archerfield Airport,153.008,-27.57
-Toowoomba Airport,151.916,-27.543
-Roma Airport,148.775,-26.545
-Charleville Airport,146.262,-26.413
+rsq_location,type,x,y
+Horn Island Airport,helicopter,142.29,-10.586
+Cairns Airport,both,145.755,-16.886
+Townsville Airport,both,146.765,-19.253
+Mt Isa Airport,both,139.489,-20.664
+Mackay Airport,helicopter,149.18,-21.172
+Rockhampton Airport,both,150.475,-23.382
+Bundaberg Airport,both,152.319,-24.904
+Sunshine Coast Airport,helicopter,153.091,-26.603
+Brisbane Airport,both,153.118,-27.384
+Archerfield Airport,helicopter,153.008,-27.57
+Toowoomba Airport,helicopter,151.916,-27.543
+Roma Airport,helicopter,148.775,-26.545
+Charleville Airport,plane,146.262,-26.413

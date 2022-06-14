@@ -479,7 +479,7 @@ server <- function(input, output, session) {
       addMarkers(
         lng=df_rsq_locations$x,
         lat=df_rsq_locations$y,
-        popup=df_rsq_locations$rsq_location,
+        popup=df_rsq_locations$popup,
         icon=centre_icons["rsq"],
         group="RSQ centres",
         options=leafletOptions(pane="rsq_centres")
