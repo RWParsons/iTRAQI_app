@@ -90,6 +90,7 @@ df_rsq_locations <- read.csv("input/rsq_locations.csv") %>%
     "<b>Service: </b>", "{ifelse(type=='both', 'plane and helicopter', type)}"
   ))
 df_qas_locations <- read.csv("input/qas_locations.csv") %>%
+  rename("qas_location"=1) %>%
   mutate(popup = glue::glue("<b>Location: </b>", "{qas_location}<br>"))
 
 polygons <- 
