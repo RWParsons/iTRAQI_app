@@ -48,7 +48,7 @@ if(!"raster_points.rds" %in% list.files(layers_dir)){
   rasters_points <- readRDS(file.path(layers_dir, "raster_points.rds"))
 }
 
-all_base_layers <- c("Towns", "Acute centres", "Rehab centres", "RSQ centres", "QAS centres")
+all_base_layers <- c("Towns", "Acute centres", "Rehab centres", "Aeromedical bases", "QAS response locations")
 default_base_layers <- c("Towns", "Acute centres", "Rehab centres")
 
 tier_icons <- iconList(

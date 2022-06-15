@@ -481,7 +481,7 @@ server <- function(input, output, session) {
         lat=df_rsq_locations$y,
         popup=df_rsq_locations$popup,
         icon=centre_icons["rsq"],
-        group="RSQ centres",
+        group="Aeromedical bases",
         options=leafletOptions(pane="rsq_centres")
       ) %>%
       addMarkers(
@@ -489,7 +489,7 @@ server <- function(input, output, session) {
         lat=df_qas_locations$y,
         popup=df_qas_locations$popup,
         icon=centre_icons["qas"],
-        group="QAS centres",
+        group="QAS response locations",
         options=leafletOptions(pane="qas_centres")
       )
   })
