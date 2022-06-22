@@ -85,9 +85,11 @@ df_centres <- df_centres %>%
   )
 
 df_rsq_locations <- read.csv("input/rsq_locations.csv") %>%
-  mutate(popup = glue::glue(
+  mutate(
+    type = str_to_sentence(ifelse(type=='both', 'plane and helicopter', type)),
+    popup = glue::glue(
     "<b>Location: </b>", "{rsq_location}<br>",
-    "<b>Service: </b>", "{ifelse(type=='both', 'plane and helicopter', type)}"
+    "<b>Service: </b>", "{type}"
   ))
 df_qas_locations <- read.csv("input/qas_locations.csv") %>%
   rename("qas_location"=1) %>%
