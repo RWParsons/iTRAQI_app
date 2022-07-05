@@ -61,7 +61,7 @@ tier_icons <- iconList(
 centre_icons <- iconList(
   acute=makeIcon(iconUrl = "acute_care.png", iconWidth = 50, iconHeight = 50),
   rehab=makeIcon(iconUrl = "rehab_care.png", iconWidth = 40, iconHeight = 40),
-  rsq=makeIcon(iconUrl = "rsq.png", iconWidth=50, iconHeight=50),
+  rsq=makeIcon(iconUrl = "rsq.png", iconWidth=50, iconHeight=30),
   qas=makeIcon(iconUrl = "red-cross.png", iconWidth=10, iconHeight = 10)
 )
 
