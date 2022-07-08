@@ -42,7 +42,7 @@ iTRAQI is a collaborative project involving Jamieson Trauma Institute (JTI), Que
   
   <h3>Main map</h3>
   
-  <img src="imgs/control_panel.png" alt="drawing" width="80"/> 
+  <img src="imgs/control_panel.png" alt="drawing" width="100"/> 
   Select layers from the list on the movable control panel.
   
   
