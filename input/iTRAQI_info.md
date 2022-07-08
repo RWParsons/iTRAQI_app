@@ -12,7 +12,7 @@ details > summary {
 </style>
 
 
-### iTRAQI: injury Treatment & Rehabilitation Accessibility Queensland Index
+### iTRAQI: injury Treatment & Rehabilitation Accessibility Queensland Index <img src='../www/iTRAQI-hex.png' align="right" height="150" /></a>
 
 This version is only for **moderate-to-severe traumatic brain injuries**.
 
