@@ -6,6 +6,9 @@
 details > summary {
   font-size: 2em;
 }
+.glossaryTables table {
+  width: 60%;
+}
 </style>
 
 
@@ -90,16 +93,50 @@ Specific assumptions were made which may not be met in certain circumstances:
 
 
 ### List of abbreviations
-|  |  |
-| :--- | :--- |
-| PAH | Princess Alexandra Hospital |
-| RBWH | Royal Brisbane and Women's Hospital |
-| SEIFA | Socio-Economic Indexes for Areas |
-| ASGS | Australian Statistical Geography Standard|
-| SA1 | Statistical Areas level 1 |
-| SA2 | Statistical Areas level 2 |
 
+<div class="glossaryTables">
 
++---------+--------------------+
+| PAH     | Princess Alexandra Hospital | 
++---------+--------------------+
+| RBWH    | Royal Brisbane and Women's Hospital|
++---------+--------------------+
+| QAS     | Queensland Ambulance Service |
++---------+--------------------+
+| SEIFA   | Socio-Economic Indexes for Areas |
++---------+--------------------+
+| ASGS    | Australian Statistical Geography Standard  |
++---------+--------------------+
+| SA1     | Statistical Areas level 1 |
++---------+--------------------+
+| SA2     | Statistical Areas level 2 |
++---------+--------------------+
+
+</div>
+
+### List of symbols
+
+<div class="glossaryTables">
+
++------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| <img src="../www/town_symbol.png" width="25"/> | Town locations used for analyses (n=441) |
++---------+--------------------+
+| <img src="../www/acute_care.png" width="25"/>  | Acute care centres (n=4) |
++---------+--------------------+
+| <img src="../www/rehab_care.png" width="25"/>  | Rehabilitation care centres (n=15) |
++---------+--------------------+
+| <img src="../www/platinum.png" width="25"/>    | Platinum Rehabilitation care centres (n=1) |
++---------+--------------------+
+| <img src="../www/gold_medal.png" width="25"/>  | Gold and Future Gold Rehabilitation care centres (n=2 and n=5) |
++---------+--------------------+
+| <img src="../www/silver_medal.png" width="15"/>| Silver Rehabilitation care centres (n=15) |
++---------+--------------------+
+| <img src="../www/rsq.png" width="25"/>         | Aeromedical bases (n=13) |
++---------+--------------------+
+| <img src="../www/red-cross.png" width="25"/>   | Queensland Ambulance Service (QAS) locations (n=299) |
++---------+--------------------+
+
+</div>
 
 
 ### Contact us
