@@ -61,7 +61,7 @@ tour_07 <- paste(
 tour_08 <- paste(
   sep=separator,
   "<h3>Building iTRAQI &#8211; rehabilitation</h3>",
-  "Driving time was calculated from each of the 441 localities using road networks and off-peak driving conditions in ArcGIS Online to each of the [xxx] rehabilitation facilities, and interpolated to cover all of Queensland. An average of the sum of gold (Townsville/Brisbane) and silver (less specialised facilities)."
+  "Driving time was calculated from each of the 441 localities using road networks and off-peak driving conditions in ArcGIS Online to each of the 15 rehabilitation facilities, and interpolated to cover all of Queensland. An average of the sum of gold (Townsville/Brisbane) and silver (less specialised facilities)."
 )
 
 tour_09 <- paste(
