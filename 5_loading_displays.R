@@ -9,7 +9,7 @@ loading_panel_displays <- c(
   paste(
     sep=seperator,
     "<h2>There were 1,024,242 Triple Zero calls in the 2020-21 FY</h2>",
-    glue::glue('<img src="tour-3-ambulance.webp" alt="ambulance-image" style="width:{loader_img_width}px;">')
+    glue::glue('<img src="tour-3-ambulance.jpeg" alt="ambulance-image" style="width:{loader_img_width}px;">')
   ),
   paste(
     sep=seperator,

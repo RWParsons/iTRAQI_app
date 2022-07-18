@@ -21,8 +21,16 @@ tour_03 <- paste(
   sep=separator,
   "<h3>Queensland</h3>",
   "Since emergency and hospitals are State-based, our focus is on Queensland. Covering 1.7 million square kilometres, including very remote Torres Strait islands, moving patients efficiently for time-sensitive emergency care is a challenge.",
-  glue::glue('<br><img src="tour-3-plane.jfif" alt="plane-image" style="width:{img_width}px;">'),
-  glue::glue('<br><img src="tour-3-ambulance.webp" alt="ambulance-image" style="width:{img_width}px;">')
+  
+  glue::glue(
+    '<div class="container">',
+    '<img src="tour-3-plane.jfif" alt="plane-image" align="left" style="width:{(img_width-15)*(4/9)}px;">',
+    '<img src="tour-3-ambulance.jpeg" alt="ambulance-image" style="width:{(img_width-15)*(5/9)}px;">',
+    '</div>'
+  ),
+  
+  '<img src="rsq.png" width="50"/>         : Aeromedical bases (n=13)',
+  '<img src="red-cross.png" width="50"/>   : Queensland Ambulance (n=299)' 
 )
 
 tour_04 <- paste(
