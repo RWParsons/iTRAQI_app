@@ -277,6 +277,8 @@ server <- function(input, output, session) {
       addMapPane(name = "markers", zIndex = 206) %>%
       addMapPane(name = "acute_centres", zIndex = 205) %>%
       addMapPane(name = "rehab_centres", zIndex = 204) %>%
+      addMapPane(name = "rsq_centres", zIndex = 205) %>%
+      addMapPane(name = "qas_centres", zIndex = 210) %>%
       addProviderTiles("CartoDB.VoyagerNoLabels") %>%
       addProviderTiles("CartoDB.VoyagerOnlyLabels",
                        options = leafletOptions(pane = "maplabels"),
@@ -320,6 +322,22 @@ server <- function(input, output, session) {
         popup=df_centres$popup[df_centres$care_type=="rehab"],
         group="Rehab centres",
         options=leafletOptions(pane="rehab_centres")
+      )%>%
+      addMarkers(
+        lng=df_rsq_locations$x,
+        lat=df_rsq_locations$y,
+        popup=df_rsq_locations$popup,
+        icon=centre_icons["rsq"],
+        group="Aeromedical bases",
+        options=leafletOptions(pane="rsq_centres")
+      ) %>%
+      addMarkers(
+        lng=df_qas_locations$x,
+        lat=df_qas_locations$y,
+        popup=df_qas_locations$popup,
+        icon=centre_icons["qas"],
+        group="QAS response locations",
+        options=leafletOptions(pane="qas_centres")
       )
     
     group_names_to_load <- names(layer_input)
@@ -398,6 +416,17 @@ server <- function(input, output, session) {
       leafletProxy("map_tour") %>%
         show_hide_layers_and_legends() %>%
         flyTo(lng=142.93, lat=-11.15, zoom=8)
+      # after delay, move to full QLD view to see all QAS and RSQ locations
+      delay(6000, {
+        if(rvs$tour_tab==3){ # ensure that user is still on tab 4 before executing fly to TSV
+          leafletProxy("map_tour") %>% 
+            flyToBounds(
+              lng1=qld_bounds$lng1, lat1=qld_bounds$lat1,
+              lng2=qld_bounds$lng2, lat2=qld_bounds$lat2
+            )
+        }
+      })
+      
     } else if(rvs$tour_tab == 4){
       leafletProxy("map_tour") %>%
         show_hide_layers_and_legends() 
