@@ -13,7 +13,7 @@ palNum8 <- colorNumeric(c(palBin(bins[8]), palBin(bins[9])), domain=360:900, na.
 palNum9 <- colorNumeric(c(palBin(bins[9]), "#000000"), domain=900:1200, na.color="transparent")
 
 palNum <- function(x){
-  case_when(
+  suppressWarnings(case_when(
     x < 30  ~ palNum1(x),
     x < 60  ~ palNum2(x),
     x < 120 ~ palNum3(x),
@@ -25,7 +25,7 @@ palNum <- function(x){
     x <1200 ~ palNum9(x),
     x >=1200~ "#000000",
     TRUE ~ "transparent"
-  )
+  ))
 }
 
 palNum_hours <- function(x){
