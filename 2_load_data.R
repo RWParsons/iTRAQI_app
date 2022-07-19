@@ -1,4 +1,4 @@
-df_locations <- read.csv("input/QLD_locations_with_RSQ_times_20220615.csv") %>%
+df_locations <- read.csv("input/QLD_locations_with_RSQ_times_20220718.csv") %>%
   mutate(
     iTRAQI_index=get_iTRAQI_index(acute_mins=acute_time, rehab_mins=rehab_time),
     popup=paste0(
