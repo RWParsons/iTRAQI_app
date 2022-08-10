@@ -301,7 +301,7 @@ server <- function(input, output, session) {
     }
 
     leafletProxy("map_tour") %>%
-      hideGroup(unique_ids) %>%
+      hideGroup(c(unique_ids, "tours_polygons")) %>%
       addCircleMarkers(
         lng = df_locations$x, lat = df_locations$y,
         radius = 2, fillOpacity = 0,
