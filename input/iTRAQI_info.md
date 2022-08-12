@@ -56,6 +56,17 @@ iTRAQI is a collaborative project involving Jamieson Trauma Institute (JTI), Que
   * Gold: Usually, people will undergo initial rehabilitation at/near their initial acute treatment. Those transferred to Townsville will remain there, while those in Brisbane or Gold Coast will likely undergo it at PAH.
   * Future gold: Additional hubs are planned for the Sunshine Coast, Gold Coast and Royal Brisbane and Women’s Hospital, which would enable initial rehabilitation to occur at these sites.
   * Silver: In-patient rehabilitation facilities where patient may be transferred following completion of their initial rehabilitation, to be closer to home.
+  
+  <h3>Downloads</h3>
+  
+  Here you can download excel files that contain aggregated travel time to both acute and rehabilitation care separately, along with the iTRAQI index, for each statistical area level 1 and 2 (SA1 and SA2). They also include the Socio-Economic Indexes for Areas (SEIFA)  and remoteness (Accessibility/Remoteness Index of Australia quintiles) indices for each ar ea, and some details on the Methods used.
+  
+  These are available for the 2011, 2016 and 2021 editions of the Australian Statistical Geography Standard (ASGS). See https://maps.abs.gov.au/ to compare geographic boundaries under different editions. Note that SEIFA and remoteness indices are not yet available for 2021. 
+  
+  The interactive maps displayed in this site use the 2016 ASGS SA1 and SA2 boundaries.
+
+  If the download button downloads an html file initially, check that the tab you were previously on has loaded properly and then re-try.
+  
 </details>
 
 
