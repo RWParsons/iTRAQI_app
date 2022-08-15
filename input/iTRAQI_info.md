@@ -95,6 +95,7 @@ Road transport assumptions included:
   
 <h3>Limitations</h3>
 Specific assumptions were made which may not be met in certain circumstances:
+
   1.	Suitable aircraft are considered available for deployment and appropriately staffed at the nearest RSQ location.
   2.	Ambulances are considered to drive at the posted speed limit. 
   3.	Standard times for emergency response coordination and deployment were applied, but these may vary.
