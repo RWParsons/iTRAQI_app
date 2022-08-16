@@ -13,14 +13,14 @@ tour_01 <- paste(
 tour_02 <- paste(
   sep = separator,
   "<h3>Accessibility Indices</h3>",
-  "The most common measure of remoteness used in Australia is ARIA+ (Accessibility and Remoteness Index of Australia) and variants. While most of Queensland’s land area is remote or very remote, these do not specifically consider access to health care.",
-  "For many injuries timely access to treatment is a matter of life and death. For more serious injuries, access to rehabilitation is vital to regain function and improve quality of life. "
+  "The most common measure of remoteness used in Australia is ARIA+ (Accessibility and Remoteness Index of Australia) and variants. ARIA+ groups are shown on this map. While most of Queensland’s land area is remote or very remote, these do not specifically consider access to health care.",
+  "For many injury types, timely access to treatment is a matter of life and death. For more severe injuries, such as TBI, access to rehabilitation is vital to regain function and improve quality of life."
 )
 
 tour_03 <- paste(
   sep = separator,
   "<h3>Queensland</h3>",
-  "Since emergency and hospitals are State-based, our focus is on Queensland. Covering 1.7 million square kilometres, including very remote Torres Strait islands, moving patients efficiently for time-sensitive emergency care is a challenge.",
+  "Since emergency services and hospitals are organised at the State level, our focus is on Queensland. Covering 1.7 million square kilometres, including very remote islands in the Torres Strait, moving seriously injured patients to the right hospital for time-sensitive emergency care is a challenge. In Queensland, we use helicopters, planes and road ambulances to transport patients quickly, with bases scattered throughout the State (see map).",
   glue::glue(
     '<div class="container">',
     '<img src="tour-3-plane.jfif" alt="plane-image" align="left" style="width:{(img_width-15)*(4/9)}px;">',
@@ -34,38 +34,44 @@ tour_03 <- paste(
 tour_04 <- paste(
   sep = separator,
   "<h3>TBI Treatment</h3>",
-  "Only 4 adult hospitals have the facilities to treat moderate-to-severe TBI in Queensland. Only one is outside the South-East corner."
+  "Only 4 hospitals have the specialised staff, equipment, and infrastructure to treat adults with moderate-to-severe TBI in Queensland. Only one of these is outside the South-East corner of the State. Accessing appropriate emergency care for TBI can therefore involve long distances.",
+  glue::glue('<br><img src="qld-road.png" alt="road-image" style="width:{img_width}px;">')
 )
 
 tour_05 <- paste(
   sep = separator,
   "<h3>TBI rehabilitation</h3>",
-  "While PAH provides the highest level rehabilitation, initial rehabilitation will usually be given at Townsville or PAH. Following progress, the patient may be transferred to an in-patient facility closer to home that is less specialised. The Rehab map shows the driving time to different rehabilitation levels.",
-  "(Platinum=PAH; Gold=Townsville/PAH, Silver=less specialised)"
+  "While the Princess Alexandra Hospital (PAH) provides the highest level of brain injury rehabilitation in Queensland, initial rehabilitation will usually commence at/near the hospital providing the specialised acute care. Patients may then be transferred to a less specialised in-patient facility closer to home to continue their rehabilitation. The Rehab map shows the driving time to different levels of rehabilitation care.",
+  "Platinum rehab level=PAH; Gold rehab level=Townsville or South-East Queensland (usually PAH), Silver rehab level=less specialised facilities offering general rehabilitation – shown on this map"
 )
 
 tour_06 <- paste(
   sep = separator,
-  "<h3>Building iTRAQI &#8211; acute care</h3>",
-  "First, Queensland Ambulance Service and Retrieval Services Queensland provided details for the travel time from over 400 locations to the most appropriate TBI acute treatment centre. This was based on the most appropriate transfers using air and/or road, under ideal but realistic conditions."
+  "<h3>Building iTRAQI &#8211; travel time to acute care</h3>",
+  "Queensland Ambulance Service and Retrieval Services Queensland provided travel time details from  441 locations <img src='town_symbol.png' width='25'/> to the most appropriate TBI acute care destination <img src='acute_care.png' width='25'/>. Travel times were based on the most appropriate transport route using air and/or road, under ideal but realistic conditions."
 )
 
 tour_07 <- paste(
   sep = separator,
-  "<h3>Building iTRAQI &#8211; acute care</h3>",
-  "These travel times were interpolated using ordinary kriging to cover all of Queensland."
+  "<h3>Building iTRAQI &#8211; visualising access to acute care</h3>",
+  "These travel times were interpolated using ordinary kriging to provide coverage for all of Queensland.",
+  
+  "<br>CLICK on a location <img src='town_symbol.png' width='25'/> to reveal acute care travel time details.",
+  "CLICK on a TBI acute care destination <img src='acute_care.png' width='25'/> for hospital details. "
 )
 
 tour_08 <- paste(
   sep = separator,
   "<h3>Building iTRAQI &#8211; rehabilitation</h3>",
-  "Driving time was calculated from each of the 441 localities using road networks and off-peak driving conditions in ArcGIS Online to each of the 15 rehabilitation facilities, and interpolated to cover all of Queensland. An average of the sum of gold (Townsville/Brisbane) and silver (less specialised facilities)."
+  "Driving time from each locality <img src='town_symbol.png' width='25'/> to the closest Gold (Townsville/South-East QLD) <img src='gold_medal.png' width='25'/> and Silver (less specialised) <img src='rehab_care.png' width='25'/> rehabilitation facility was calculated using road networks and off-peak driving conditions in ArcGIS Online. The average of the travel time to the closest Gold and closest Silver rehabilitation centres (can be the same centre if the Gold centre is closest) was used to represent the rehabilitation time for each locality. These travel times were then interpolated to provide coverage for all of Queensland.",
+  
+  "<br>CLICK on a rehabilitation destination <img src='rehab_care.png' width='25'/> for facility details."
 )
 
 tour_09 <- paste(
   sep = separator,
   "<h3>iTRAQI</h3>",
-  "Acute and rehabilitation travel time was categorised to form iTRAQI by small areas (statistical areas level 1 and 2):",
+  "Travel time to acute and rehabilitation care was categorised and combined to form iTRAQI. iTRAQI can be displayed by small areas, using Statistical Areas (SA) level 1 (shown here) or Level 2.",
   itraqi_categories_table
 )
 
@@ -75,9 +81,9 @@ downloads_icon <- "<i class=' glyphicon glyphicon-download-alt' role='presentati
 tour_10 <- paste(
   sep = separator,
   "<h3>Using iTRAQI website</h3>",
-  glue::glue("Explore and discover the impact of location in Queensland for injured patients.
+  glue::glue("Explore and discover how your location impacts access to time-critical injury care.
   <ul>
-    <li>Filter by SES and remoteness when looking at areas 'Main map' tab.</li>
+    <li>Filter by socio-economic status and remoteness when looking at areas 'Main map' tab.</li>
     <li>Find out how to cite the website and contact options '{info_icon} Information' tab.</li>
     <li>Get the data to use iTRAQI (or components) with other datasets from the '{downloads_icon} Downloads' tab.</li>
   </ul>")
