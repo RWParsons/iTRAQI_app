@@ -874,6 +874,14 @@ server <- function(input, output, session) {
         group = "towns_None",
         options = leafletOptions(pane = "markers")
       ) %>%
+      addMarkers(
+        lng = df_centres$x[df_centres$care_type == "rehab"],
+        lat = df_centres$y[df_centres$care_type == "rehab"],
+        icon = centre_icons["rehab"],
+        popup = df_centres$popup[df_centres$care_type == "rehab"],
+        group = "centres_None",
+        options = leafletOptions(pane = "markers")
+      ) %>%
       addLegendNumeric(
         pal = palNum_hours,
         position = "topright",
@@ -889,7 +897,7 @@ server <- function(input, output, session) {
   observeEvent(list(input$rehab_layer_selection, input$rehab_markers_checkbox), {
     rehab_base_groups <- c("None", names(rehab_tiers))
     rehab_towns_groups <- paste0("towns_", rehab_base_groups)
-    rehab_centre_groups <- paste0("centres_", names(rehab_tiers))
+    rehab_centre_groups <- c(paste0("centres_", names(rehab_tiers)), "centres_None")
 
     hide_base_groups <- rehab_base_groups[rehab_base_groups != input$rehab_layer_selection]
     show_base_group <- input$rehab_layer_selection
@@ -910,7 +918,7 @@ server <- function(input, output, session) {
       hide_centre_groups <- rehab_centre_groups
     } else {
       if (show_base_group == "None") {
-        show_centre_group <- c()
+        show_centre_group <- c("centres_None")
       } else {
         show_centre_group <- rehab_centre_groups[which(names(rehab_tiers) == show_base_group)]
       }
@@ -919,7 +927,7 @@ server <- function(input, output, session) {
 
     show_ids <- c(show_base_group, show_centre_group, show_towns_group)
     hide_ids <- c(hide_base_groups, hide_centre_groups, hide_towns_groups)
-
+    
     leafletProxy("map_rehab") %>%
       showGroup(show_ids) %>%
       hideGroup(hide_ids)
