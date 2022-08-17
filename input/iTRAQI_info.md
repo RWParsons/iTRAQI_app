@@ -85,13 +85,27 @@ Road transport assumptions included:
   
   1. Patient assumed to have met the Queensland Ambulance Service, pre-hospital trauma by-pass guideline. 
   2. One hour road transport boundaries calculated using off-peak and non-emergency driving conditions. 
-  3. Transport destination assumptions: 
+  3. Response to an acute incident location has the following assumptions:
   
       a. Directly transport to a major trauma service if road transport time is within 60 minutes. 
+          1. National Triple Zero (000) call routing to the ambulance service in Queensland;
+          2. Time for an Emergency Medical Dispatcher to answer the call;
+          3. Triple Zero (000) call-taking procedure and/or RSQ coordination;
+          4. Dispatch of ambulance or aeromedical platform (i.e. notification of responding platform/service);
+          5. Time for health professionals to respond (i.e. receive an alert, walk to the ambulance/platform, set up navigation, etc.); and
+          6. Up to 10 minutes of road travel time.
+      
+      b. Where ArcGIS Pro calculated an ambulance road transport time of greater than 10 minutes, the additional travel (beyond 10 minutes) time was included (i.e. if the total travel time to an incident was 15 minutes, 5 minutes travel time was added to point 3.a).
+      
+  4. Transport destination assumptions:
+      
+      a. Directly transport to a major trauma service if road transport time is within 60 minutes.
       b. If greater than 60 minutes drive time to a major trauma service, transport to the highest-level regional trauma service if within 60 minutes. 
       c. If greater than 60 minutes road transport from a major or regional trauma service, transport to the closest hospital. In the event this occurs, immediately notify Retrieval Services Queensland. 
-  4. Limited consideration given to pre-hospital and aeromedical expertise where the incident occurred at the one-hour road drive time boundary of a major or regional trauma service. 
-  5. Road transport time was included only if the initial destination was a regional or major trauma service.
+  
+  5. Limited consideration given to pre-hospital and aeromedical expertise where the incident occurred at the one-hour road drive time boundary of a major or regional trauma service.
+  
+  6. Road transport time was included only if the initial destination was a regional or major trauma service.
   
 <h3>Limitations</h3>
 Specific assumptions were made which may not be met in certain circumstances:
