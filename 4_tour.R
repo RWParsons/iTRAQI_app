@@ -41,8 +41,9 @@ tour_04 <- paste(
 tour_05 <- paste(
   sep = separator,
   "<h3>TBI rehabilitation</h3>",
-  "While the Princess Alexandra Hospital (PAH) provides the highest level of brain injury rehabilitation in Queensland, initial rehabilitation will usually commence at/near the hospital providing the specialised acute care. Patients may then be transferred to a less specialised in-patient facility closer to home to continue their rehabilitation. The Rehab map shows the driving time to different levels of rehabilitation care.",
-  "Platinum rehab level=PAH; Gold rehab level=Townsville or South-East Queensland (usually PAH), Silver rehab level=less specialised facilities offering general rehabilitation – shown on this map"
+  "While the Princess Alexandra Hospital (PAH) provides the highest level of brain injury rehabilitation in Queensland, initial rehabilitation will usually commence at/near the hospital providing the specialised acute care. Patients may then be transferred to a less specialised in-patient facility closer to home to continue their rehabilitation. The Rehab map shows appropriate in-patient rehabilitation centres in Queensland.",
+  "<img src='rehab_care.png' width='25'/> These facilities can also be grouped into levels:",
+  "Platinum =PAH only; Gold =Townsville or South-East Queensland (usually PAH), Silver =Townsville, South-East           Queensland and less specialised facilities offering general rehabilitation."
 )
 
 tour_06 <- paste(
@@ -62,15 +63,15 @@ tour_07 <- paste(
 
 tour_08 <- paste(
   sep = separator,
-  "<h3>Building iTRAQI &#8211; rehabilitation</h3>",
-  "Driving time from each locality <img src='town_symbol.png' width='25'/> to the closest Gold (Townsville/South-East QLD) <img src='gold_medal.png' width='25'/> and Silver (less specialised) <img src='rehab_care.png' width='25'/> rehabilitation facility was calculated using road networks and off-peak driving conditions in ArcGIS Online. The average of the travel time to the closest Gold and closest Silver rehabilitation centres (can be the same centre if the Gold centre is closest) was used to represent the rehabilitation time for each locality. These travel times were then interpolated to provide coverage for all of Queensland.",
+  "<h3>Building iTRAQI &#8211; visualising access to rehabilitation</h3>",
+  "Driving time from each locality <img src='town_symbol.png' width='25'/> to the closest Gold (Townsville/South-East QLD) <img src='gold_medal.png' width='25'/> and Silver (less specialised) <img src='silver_medal.png' width='15'/> rehabilitation facility was calculated using road networks and off-peak driving conditions in ArcGIS Online. The average of the travel time to the closest Gold and closest Silver rehabilitation centres (can be the same centre if the Gold centre is closest) was used to represent the rehabilitation travel time for each locality. These travel times were then interpolated to provide coverage for all of Queensland.",
   
-  "<br>CLICK on a rehabilitation destination <img src='rehab_care.png' width='25'/> for facility details."
+  "<br>CLICK on a rehabilitation destination for facility details."
 )
 
 tour_09 <- paste(
   sep = separator,
-  "<h3>iTRAQI</h3>",
+  "<h3>Building iTRAQI – aggregation into categories</h3>",
   "Travel time to acute and rehabilitation care was categorised and combined to form iTRAQI. iTRAQI can be displayed by small areas, using Statistical Areas (SA) level 1 (shown here) or Level 2.",
   itraqi_categories_table
 )

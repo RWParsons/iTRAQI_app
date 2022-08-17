@@ -1,7 +1,7 @@
 layers_dir <- "input/layers"
 
 tours_panel_dims <- list(
-  width = 330, height = 600
+  width = 330, height = 640
 )
 
 map_bounds <- list(
