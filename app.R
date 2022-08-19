@@ -299,6 +299,14 @@ server <- function(input, output, session) {
     if (is.null(isolate(rvs$map_tour)) | isolate(rvs$map_tour_complete)) {
       return()
     }
+    
+    df_rehab_centres <- df_centres[df_centres$care_type == "rehab", ]
+    df_gold_rehab <- df_rehab_centres[df_rehab_centres$centre_name %in% rehab_tiers$Gold$centres, ]
+    df_gold_rehab$popup <- str_replace(df_gold_rehab$popup, "Acute & Rehabilitation care", "Gold rehabilitation care")
+    
+    df_silver_rehab <- df_rehab_centres[df_rehab_centres$centre_name %in% rehab_tiers$Silver$centres, ]
+    df_silver_rehab <- df_silver_rehab[!df_silver_rehab$centre_name %in% df_gold_rehab$centre_name, ]
+    df_silver_rehab$popup <- str_replace(df_silver_rehab$popup, "Rehabilitation care", "Silver rehabilitation care")
 
     leafletProxy("map_tour") %>%
       hideGroup(c(unique_ids, "tours_polygons")) %>%
@@ -334,6 +342,22 @@ server <- function(input, output, session) {
         group = "Rehab centres",
         options = leafletOptions(pane = "rehab_centres")
       ) %>%
+      addMarkers( # gold centres
+        lng = df_gold_rehab$x,
+        lat = df_gold_rehab$y,
+        icon = tier_icons['Gold'],
+        popup = df_gold_rehab$popup,
+        group = "Rehab centres (medals)",
+        options = leafletOptions(pane = "rehab_centres")
+      ) %>%
+      addMarkers( # silver centres
+        lng = df_silver_rehab$x,
+        lat = df_silver_rehab$y,
+        icon = tier_icons['Silver'],
+        popup = df_silver_rehab$popup,
+        group = "Rehab centres (medals)",
+        options = leafletOptions(pane = "rehab_centres")
+      )  %>%
       addMarkers(
         lng = df_rsq_locations$x,
         lat = df_rsq_locations$y,

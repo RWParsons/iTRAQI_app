@@ -113,7 +113,7 @@ tab_ids <- list(
   "tab5" = c("Rehab centres"),
   "tab6" = c("Acute centres", "Towns"),
   "tab7" = c("Acute centres", "Towns", "Acute time"),
-  "tab8" = c("Rehab centres", "Towns", "Rehab time"),
+  "tab8" = c("Rehab centres (medals)", "Towns", "Rehab time"),
   "tab9" = c("Towns", "index")
 )
 
