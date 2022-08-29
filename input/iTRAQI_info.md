@@ -87,7 +87,7 @@ Road transport assumptions included:
   2. One hour road transport boundaries calculated using off-peak and non-emergency driving conditions. 
   3. Response to an acute incident location has the following assumptions:
   
-      a. Directly transport to a major trauma service if road transport time is within 60 minutes. 
+      a. All locations include a 15-minute coordination time (irrespective of response organisation or platform). This accounts for:  
           1. National Triple Zero (000) call routing to the ambulance service in Queensland;
           2. Time for an Emergency Medical Dispatcher to answer the call;
           3. Triple Zero (000) call-taking procedure and/or RSQ coordination;
