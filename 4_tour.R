@@ -28,7 +28,7 @@ tour_03 <- paste(
     "</div>"
   ),
   '<img src="rsq.png" width="50"/>         : Aeromedical bases (n=13)',
-  '<img src="red-cross.png" width="50"/>   : Queensland Ambulance (n=299)'
+  '<img src="red-cross.png" width="50"/>   : Queensland Ambulance (n=302)'
 )
 
 tour_04 <- paste(

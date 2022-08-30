@@ -159,7 +159,7 @@ Specific assumptions were made which may not be met in certain circumstances:
 +---------+--------------------+
 | <img src="../www/rsq.png" width="25"/>         | Aeromedical bases (n=13) |
 +---------+--------------------+
-| <img src="../www/red-cross.png" width="25"/>   | Queensland Ambulance Service (QAS) locations (n=299) |
+| <img src="../www/red-cross.png" width="25"/>   | Queensland Ambulance Service (QAS) locations (n=302) |
 +---------+--------------------+
 
 </div>
