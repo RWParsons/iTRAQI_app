@@ -114,6 +114,8 @@ Specific assumptions were made which may not be met in certain circumstances:
   2.	Ambulances are considered to drive at the posted speed limit. 
   3.	Standard times for emergency response coordination and deployment were applied, but these may vary.
   4.	Isochrones could have given better driving times than interpolating from specific points, but ArcGIS only allowed these to be calculated up to 5 hours driving time, which was too short for our needs.
+  
+  <b>Full details on methods are available in the [technical report](https://eprints.qut.edu.au/235026/).</b>
 </details>
 
 
