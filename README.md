@@ -1,5 +1,9 @@
 # iTRAQI: injury Treatment & Rehabilitation Accessibility Queensland Index <a href='https://access.healthequity.link/'><img src='www/iTRAQI-hex.png' align="right" height="150" /></a>
 
+<!-- badges: start -->
+[![](https://img.shields.io/badge/Shiny-shinyapps.io-blue?style=flat&labelColor=white&logo=RStudio&logoColor=blue)](https://aushsi.shinyapps.io/itraqi_app/)
+<!-- badges: end -->
+
 ### Accessing the app
 You can access the app [online](https://access.healthequity.link/) or locally in R using the following code:
 
