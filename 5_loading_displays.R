@@ -9,12 +9,7 @@ loading_panel_displays <- c(
   paste(
     sep = seperator,
     "<h2>There were 1,024,242 Triple Zero calls in the 2020-21 FY</h2>",
-    glue::glue('<img src="tour-3-ambulance.jpeg" alt="ambulance-image" style="width:{loader_img_width}px;">')
-  ),
-  paste(
-    sep = seperator,
-    '<h2>"kriging - it\'s a dance move right?!?" (Someone, 2022)</h2>',
-    glue::glue('<img src="kriging.gif" alt="kriging-gif" style="width:{loader_img_width}px;">')
+    glue::glue('<img src="tour-3-ambulance.png" alt="ambulance-image" style="width:{loader_img_width}px;">')
   ),
   paste(
     sep = seperator,
@@ -29,7 +24,7 @@ loading_panel_displays <- c(
   paste(
     sep = seperator,
     "<h2>Queensland Ambulance Service attended to 233 incidents per 1,000 population in the 2021-2020 FY</h2>",
-    glue::glue('<img src="ambulance.jfif" alt="ambulance" style="width:{loader_img_width}px;">')
+    glue::glue('<img src="tour-4-ambulance.png" alt="ambulance" style="width:{loader_img_width}px;">')
   ),
   paste(
     sep = seperator,

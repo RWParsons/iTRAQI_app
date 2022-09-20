@@ -24,7 +24,7 @@ tour_03 <- paste(
   glue::glue(
     '<div class="container">',
     '<img src="tour-3-plane.jfif" alt="plane-image" align="left" style="width:{(img_width-15)*(4/9)}px;">',
-    '<img src="tour-3-ambulance.jpeg" alt="ambulance-image" style="width:{(img_width-15)*(5/9)}px;">',
+    '<img src="tour-3-ambulance.png" alt="ambulance-image" style="width:{(img_width-15)*(5/9)}px;">',
     "</div>"
   ),
   '<img src="rsq.png" width="50"/>         : Aeromedical bases (n=13)',
@@ -35,7 +35,7 @@ tour_04 <- paste(
   sep = separator,
   "<h3>TBI Treatment</h3>",
   "Only 4 hospitals have the specialised staff, equipment, and infrastructure to treat adults with moderate-to-severe TBI in Queensland. Only one of these is outside the South-East corner of the State. Accessing appropriate emergency care for TBI can therefore involve long distances.",
-  glue::glue('<br><img src="qld-road.png" alt="road-image" style="width:{img_width}px;">')
+  glue::glue('<br><img src="tour-4-ambulance.png" alt="road-image" style="width:{img_width}px;">')
 )
 
 tour_05 <- paste(
