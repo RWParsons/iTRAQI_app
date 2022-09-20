@@ -41,6 +41,7 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+renv/
 
 # pkgdown site
 docs/
