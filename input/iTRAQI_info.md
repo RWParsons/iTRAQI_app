@@ -49,13 +49,6 @@ iTRAQI is a collaborative project involving Jamieson Trauma Institute (JTI), Que
   <img src="imgs/search_icon.png" alt="drawing" width="50"/>
   Click on this icon to search for locations through the search tool.
   
-  <h3>Rehab map</h3>
-  Different levels of rehabilitation are shown with driving times. These are:
-  
-    * Platinum: The most serious cases will undergo rehabilitation at Princess Alexandra Hospital (PAH), Brisbane.
-  * Gold: Usually, people will undergo initial rehabilitation at/near their initial acute treatment. Those transferred to Townsville will remain there, while those in Brisbane or Gold Coast will likely undergo it at PAH.
-  * Future gold: Additional hubs are planned for the Sunshine Coast, Gold Coast and Royal Brisbane and Women’s Hospital, which would enable initial rehabilitation to occur at these sites.
-  * Silver: In-patient rehabilitation facilities where patient may be transferred following completion of their initial rehabilitation, to be closer to home.
   
   <h3>Downloads</h3>
   
@@ -144,10 +137,7 @@ Specific assumptions were made which may not be met in certain circumstances:
 |-|:-------------|
 | <img src="../www/town_symbol.png" width="25"/>  | Town locations used for analyses (n=441)                       |
 | <img src="../www/acute_care.png" width="25"/>   | Acute care centres (n=4)                                       |
-| <img src="../www/rehab_care.png" width="25"/>   | Rehabilitation care centres (n=15)                             |
-| <img src="../www/platinum.png" width="25"/>     | Platinum Rehabilitation care centres (n=1)                     |
-| <img src="../www/gold_medal.png" width="25"/>   | Gold and Future Gold Rehabilitation care centres (n=2 and n=5) |
-| <img src="../www/silver_medal.png" width="15"/> | Silver Rehabilitation care centres (n=15)                      |
+| <img src="../www/rehab_care.png" width="25"/>   | Rehabilitation care centres (n=6)                              |
 | <img src="../www/rsq.png" width="25"/>          | Aeromedical bases (n=13)                                       |
 | <img src="../www/red-cross.png" width="25"/>    | Queensland Ambulance Service (QAS) locations (n=302)           |
 
