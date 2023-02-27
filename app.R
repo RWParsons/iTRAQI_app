@@ -51,7 +51,7 @@ ui <-
       )
     ),
     tabPanel(
-      "Main map",
+      "Map",
       useShinyjs(),
       div(
         class = "outer",
