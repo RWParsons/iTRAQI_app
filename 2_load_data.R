@@ -1,4 +1,4 @@
-df_locations <- read.csv("input/QLD_locations_with_RSQ_times_20220718.csv") %>%
+df_locations <- read.csv("input/QLD_locations_with_RSQ_times_20230227.csv") %>%
   mutate(
     iTRAQI_index = get_iTRAQI_index(acute_mins = acute_time, rehab_mins = rehab_time),
     popup = paste0(
@@ -49,24 +49,24 @@ df_rehab_map_locations <- read.csv("input/all_rehab_time.csv") %>%
     )
   )
 
-rehab_tiers <- list(
-  "Platinum" = list(
-    file = "platinum_rehab",
-    centres = unique(df_rehab_map_locations$platinum_rehab_centre)
-  ),
-  "Gold" = list(
-    file = "gold_rehab",
-    centres = unique(df_rehab_map_locations$gold_rehab_centre)
-  ),
-  "Future Gold" = list(
-    file = "future_gold_rehab",
-    centres = unique(df_rehab_map_locations$future_gold_rehab_centre)
-  ),
-  "Silver" = list(
-    file = "silver_rehab",
-    centres = unique(df_rehab_map_locations$silver_rehab_centre)
-  )
-)
+# rehab_tiers <- list(
+#   "Platinum" = list(
+#     file = "platinum_rehab",
+#     centres = unique(df_rehab_map_locations$platinum_rehab_centre)
+#   ),
+#   "Gold" = list(
+#     file = "gold_rehab",
+#     centres = unique(df_rehab_map_locations$gold_rehab_centre)
+#   ),
+#   "Future Gold" = list(
+#     file = "future_gold_rehab",
+#     centres = unique(df_rehab_map_locations$future_gold_rehab_centre)
+#   ),
+#   "Silver" = list(
+#     file = "silver_rehab",
+#     centres = unique(df_rehab_map_locations$silver_rehab_centre)
+#   )
+# )
 
 df_centres <- read.csv("input/centres.csv")
 names(df_centres) <- c("centre_name", "care_type", "address", "x", "y")
