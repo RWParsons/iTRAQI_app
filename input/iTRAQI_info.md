@@ -18,7 +18,7 @@ This version is only for **moderate-to-severe traumatic brain injuries**.
 
 
 ### Suggested citation:
-Jamieson Trauma Institute, Retrieval Services Queensland and Queensland University of Technology, 2022. iTRAQI: injury Treatment & Rehabilitation Accessibility Queensland Index,    version 1.2. Available from: https://access.healthequity.link/ Accessed [date]
+Jamieson Trauma Institute, Retrieval Services Queensland and Queensland University of Technology, 2022. iTRAQI: injury Treatment & Rehabilitation Accessibility Queensland Index,    version 1.3. Available from: https://access.healthequity.link/ Accessed [date]
 
 ## About
 
