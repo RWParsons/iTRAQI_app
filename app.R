@@ -51,7 +51,7 @@ ui <-
       )
     ),
     tabPanel(
-      "Main map",
+      "Map",
       useShinyjs(),
       div(
         class = "outer",
@@ -145,39 +145,6 @@ ui <-
           h3("iTRAQI Index categorisation:"),
           HTML(itraqi_categories_table)
         )),
-        tags$div(
-          id = "cite",
-          citation
-        )
-      )
-    ),
-    tabPanel(
-      "Rehab map",
-      div(
-        class = "outer",
-        tags$head(
-          includeCSS("styles.css")
-        ),
-        leafletOutput("map_rehab", width = "100%", height = "100%"),
-        absolutePanel(
-          id = "rehab_controls", class = "panel panel-default", fixed = TRUE,
-          draggable = TRUE, top = 370, left = "auto", right = 10, bottom = "auto",
-          width = 150, height = 280,
-          h4("Layers"),
-          tags$hr(),
-          radioButtons(
-            inputId = "rehab_layer_selection", label = NULL,
-            choices = c("None", names(rehab_tiers)),
-            selected = "None"
-          ),
-          tags$hr(),
-          checkboxGroupInput(
-            "rehab_markers_checkbox",
-            label = NULL,
-            choices = c("Towns", "Centres"),
-            selected = c("Towns", "Centres")
-          )
-        ),
         tags$div(
           id = "cite",
           citation
@@ -300,14 +267,6 @@ server <- function(input, output, session) {
       return()
     }
     
-    df_rehab_centres <- df_centres[df_centres$care_type == "rehab", ]
-    df_gold_rehab <- df_rehab_centres[df_rehab_centres$centre_name %in% rehab_tiers$Gold$centres, ]
-    df_gold_rehab$popup <- str_replace(df_gold_rehab$popup, "Acute & Rehabilitation care", "Gold rehabilitation care")
-    
-    df_silver_rehab <- df_rehab_centres[df_rehab_centres$centre_name %in% rehab_tiers$Silver$centres, ]
-    df_silver_rehab <- df_silver_rehab[!df_silver_rehab$centre_name %in% df_gold_rehab$centre_name, ]
-    df_silver_rehab$popup <- str_replace(df_silver_rehab$popup, "Rehabilitation care", "Silver rehabilitation care")
-
     leafletProxy("map_tour") %>%
       hideGroup(c(unique_ids, "tours_polygons")) %>%
       addCircleMarkers(
@@ -342,22 +301,6 @@ server <- function(input, output, session) {
         group = "Rehab centres",
         options = leafletOptions(pane = "rehab_centres")
       ) %>%
-      addMarkers( # gold centres
-        lng = df_gold_rehab$x,
-        lat = df_gold_rehab$y,
-        icon = tier_icons['Gold'],
-        popup = df_gold_rehab$popup,
-        group = "Rehab centres (medals)",
-        options = leafletOptions(pane = "rehab_centres")
-      ) %>%
-      addMarkers( # silver centres
-        lng = df_silver_rehab$x,
-        lat = df_silver_rehab$y,
-        icon = tier_icons['Silver'],
-        popup = df_silver_rehab$popup,
-        group = "Rehab centres (medals)",
-        options = leafletOptions(pane = "rehab_centres")
-      )  %>%
       addMarkers(
         lng = df_rsq_locations$x,
         lat = df_rsq_locations$y,
@@ -875,139 +818,13 @@ server <- function(input, output, session) {
     }
   })
 
-  output$map_rehab <- renderLeaflet({
-    rvs$map_rehab <-
-      leaflet(options = leafletOptions(minZoom = 5)) %>%
-      setMaxBounds(lng1 = 115, lat1 = -45.00, lng2 = 170, lat2 = -5) %>%
-      addSearchOSM(options = searchOptions(moveToLocation = FALSE, zoom = NULL)) %>%
-      addMapPane(name = "layers", zIndex = 200) %>%
-      addMapPane(name = "maplabels", zIndex = 400) %>%
-      addMapPane(name = "markers", zIndex = 205) %>%
-      addProviderTiles("CartoDB.VoyagerNoLabels") %>%
-      addProviderTiles("CartoDB.VoyagerOnlyLabels",
-        options = leafletOptions(pane = "maplabels"),
-        group = "map labels"
-      ) %>%
-      hideGroup(names(rehab_tiers)) %>%
-      hideGroup(paste0("centres_", names(rehab_tiers))) %>%
-      hideGroup(paste0("towns_", names(rehab_tiers))) %>%
-      addCircleMarkers(
-        lng = df_rehab_map_locations$x, lat = df_rehab_map_locations$y,
-        radius = 2, fillOpacity = 0,
-        popup = df_rehab_map_locations$popup_none,
-        group = "towns_None",
-        options = leafletOptions(pane = "markers")
-      ) %>%
-      addMarkers(
-        lng = df_centres$x[df_centres$care_type == "rehab"],
-        lat = df_centres$y[df_centres$care_type == "rehab"],
-        icon = centre_icons["rehab"],
-        popup = df_centres$popup[df_centres$care_type == "rehab"],
-        group = "centres_None",
-        options = leafletOptions(pane = "markers")
-      ) %>%
-      addLegendNumeric(
-        pal = palNum_hours,
-        position = "topright",
-        height = 250,
-        width = 24,
-        bins = 10,
-        value = c(-0.01, 0:20, 20.1),
-        htmltools::tagList(tags$div("Time to care (hours)"), tags$br())
-      )
-    rvs$map_rehab
-  })
-
-  observeEvent(list(input$rehab_layer_selection, input$rehab_markers_checkbox), {
-    rehab_base_groups <- c("None", names(rehab_tiers))
-    rehab_towns_groups <- paste0("towns_", rehab_base_groups)
-    rehab_centre_groups <- c(paste0("centres_", names(rehab_tiers)), "centres_None")
-
-    hide_base_groups <- rehab_base_groups[rehab_base_groups != input$rehab_layer_selection]
-    show_base_group <- input$rehab_layer_selection
-
-    hide_centre_groups <- paste0("centres_", hide_base_groups)
-    show_centre_group <- paste0("centres_", show_base_group)
-
-    if (!"Towns" %in% input$rehab_markers_checkbox) {
-      show_towns_group <- c()
-      hide_towns_groups <- rehab_towns_groups
-    } else {
-      show_towns_group <- rehab_towns_groups[which(rehab_base_groups == show_base_group)]
-      hide_towns_groups <- rehab_towns_groups[rehab_towns_groups != show_towns_group]
-    }
-
-    if (!"Centres" %in% input$rehab_markers_checkbox) {
-      show_centre_group <- c()
-      hide_centre_groups <- rehab_centre_groups
-    } else {
-      if (show_base_group == "None") {
-        show_centre_group <- c("centres_None")
-      } else {
-        show_centre_group <- rehab_centre_groups[which(names(rehab_tiers) == show_base_group)]
-      }
-      hide_centre_groups <- rehab_centre_groups[!rehab_centre_groups %in% show_centre_group]
-    }
-
-    show_ids <- c(show_base_group, show_centre_group, show_towns_group)
-    hide_ids <- c(hide_base_groups, hide_centre_groups, hide_towns_groups)
-    
-    leafletProxy("map_rehab") %>%
-      showGroup(show_ids) %>%
-      hideGroup(hide_ids)
-  })
-
-  observeEvent(rvs$to_load_rehab, {
-    req(rvs$map_rehab)
-    if (is.null(isolate(rvs$map_rehab)) | isolate(rvs$map_rehab_complete)) {
-      return()
-    }
-    for (group_name in names(rehab_tiers)) {
-      new_layer <- readRDS(file.path(layers_dir, glue::glue("{rehab_tiers[[group_name]]$file}.rds")))
-      centres_group <- df_centres[df_centres$centre_name %in% rehab_tiers[[group_name]]$centres, ]
-
-      popup_col <- paste0("popup_", tolower(group_name))
-      popup_col <- str_replace_all(popup_col, " ", "_")
-      town_popups <- df_rehab_map_locations %>% pull(!!{
-        popup_col
-      })
-
-      leafletProxy("map_rehab") %>%
-        addRasterImage(
-          data = new_layer,
-          x = raster::raster(new_layer, layer = 1),
-          group = group_name,
-          colors = palNum
-        ) %>%
-        addMarkers(
-          lng = centres_group$x, lat = centres_group$y,
-          icon = tier_icons[group_name],
-          popup = centres_group$popup,
-          group = paste0("centres_", group_name),
-          options = leafletOptions(pane = "markers")
-        ) %>%
-        addCircleMarkers(
-          lng = df_rehab_map_locations$x, lat = df_rehab_map_locations$y,
-          radius = 2, fillOpacity = 0,
-          popup = town_popups,
-          group = paste0("towns_", group_name),
-          options = leafletOptions(pane = "markers")
-        )
-    }
-    if (!isolate(rvs$map_rehab_complete)) rvs$map_rehab_complete <- TRUE
-  })
 
   f <- function() {
     if (is.null(isolate(rvs$to_load))) rvs$to_load <- 1
-    if (is.null(isolate(rvs$to_load_rehab))) rvs$to_load_rehab <- 1
     if (is.null(isolate(rvs$to_load_tour))) rvs$to_load_tour <- 1
 
     if (!is.null(isolate(rvs$to_load)) & !isolate(rvs$map_complete) & !is.null(isolate(rvs$map))) {
       rvs$to_load <- isolate(rvs$to_load) + 1
-    }
-
-    if (!is.null(isolate(rvs$to_load_rehab)) & !isolate(rvs$map_rehab_complete) & !is.null(isolate(rvs$map_rehab))) {
-      rvs$to_load_rehab <- isolate(rvs$to_load_rehab) + 1
     }
 
     if (!is.null(isolate(rvs$to_load_tour)) & !isolate(rvs$map_tour_complete) & !is.null(isolate(rvs$map_tour))) {
