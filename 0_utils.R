@@ -51,13 +51,6 @@ if (!"raster_points.rds" %in% list.files(layers_dir)) {
 all_base_layers <- c("Towns", "Acute centres", "Rehab centres", "Aeromedical bases", "QAS response locations")
 default_base_layers <- c("Towns", "Acute centres", "Rehab centres")
 
-# tier_icons <- iconList(
-#   "Platinum" = makeIcon(iconUrl = "platinum.png", iconWidth = 549 / 18, iconHeight = 562 / 18),
-#   "Gold" = makeIcon(iconUrl = "gold_medal.png", iconWidth = 529 / 18, iconHeight = 625 / 18),
-#   "Future Gold" = makeIcon(iconUrl = "gold_medal.png", iconWidth = 529 / 18, iconHeight = 625 / 18),
-#   "Silver" = makeIcon(iconUrl = "silver_medal.png", iconWidth = 303 / 18, iconHeight = 518 / 18)
-# )
-
 centre_icons <- iconList(
   acute = makeIcon(iconUrl = "acute_care.png", iconWidth = 50, iconHeight = 50),
   rehab = makeIcon(iconUrl = "rehab_care.png", iconWidth = 40, iconHeight = 40),
