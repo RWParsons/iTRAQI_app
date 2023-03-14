@@ -4,7 +4,7 @@ img_width <- tours_panel_dims$width * 0.9
 tour_01 <- paste(
   sep = separator,
   "<h3>Welcome to iTRAQI: injury Treatment & Rehabilitation Accessibility Queensland Index</h3>",
-  "This pilot study uses moderate-to-severe traumatic brain injury (TBI) to map and rank access to acute treatment and rehabilitation centres.",
+  "This pilot study uses moderate-to-severe traumatic brain injury (TBI) to map and rank access to acute treatment and rehabilitation units.",
   "Take this self-paced tour to explore and understand iTRAQI.",
   glue::glue('<br><img src="tour-1-tbi-image.jpg" alt="tbi-image" style="width:{img_width}px;">')
 )
@@ -41,7 +41,7 @@ tour_04 <- paste(
 tour_05 <- paste(
   sep = separator,
   "<h3>TBI rehabilitation</h3>",
-  "While the Brain Injury Rehabilitation Unit is housed at the Princess Alexandra Hospital (PAH), initial rehabilitation will usually commence at/near the hospital providing the specialised acute care. Patients may then be transferred to another appropriate in-patient facility closer to home to continue their rehabilitation. The rehab centre markers show the in-patient rehabilitation centres in Queensland."
+  "While the Brain Injury Rehabilitation Unit is housed at the Princess Alexandra Hospital (PAH), initial rehabilitation will usually commence at/near the hospital providing the specialised acute care. Patients may then be transferred to another appropriate in-patient facility closer to home to continue their rehabilitation. The green hospital markers <img src='rehab_care.png' width='25'/> show public hospital in-patient rehabilitation units where moderate-severe TBI patients usually undergo rehabilitation."
 )
 
 tour_06 <- paste(
@@ -62,8 +62,8 @@ tour_07 <- paste(
 tour_08 <- paste(
   sep = separator,
   "<h3>Building iTRAQI &#8211; visualising access to rehabilitation</h3>",
-  "Patients commence their rehabilitation care at the centre where they received acute care (initial rehabilitation centre) and then may be transferred to a centre closer to where they live (subsequent rehabilitation centre).",
-  "Rehabilitation time incorporates the driving time from each locality <img src='town_symbol.png' width='25'/> to the acute care centre where they received their initial care (Townsville/South-East QLD) <img src='acute_care.png' width='25'/> and the closest in-patient rehabilitation <img src='rehab_care.png' width='25'/> facility was calculated using road networks and off-peak driving conditions in ArcGIS Online. The average of the travel time to the initial and subsequent rehabilitation centres (can be the same centre if the initial centre is closest) was used to represent the rehabilitation travel time for each locality. These travel times were then interpolated to provide coverage for all of Queensland.",
+  "Patients commence their rehabilitation care at the centre where they received acute care (initial rehabilitation unit) and then may be transferred to a centre closer to where they live (subsequent rehabilitation unit).",
+  "Rehabilitation time incorporates the driving time from each locality <img src='town_symbol.png' width='25'/> to the acute care centre where they received their initial care (Townsville/South-East QLD) <img src='acute_care.png' width='25'/> and the closest in-patient rehabilitation <img src='rehab_care.png' width='25'/> facility was calculated using road networks and off-peak driving conditions in ArcGIS Online. The average of the travel time to the initial and subsequent rehabilitation units (can be the same centre if the initial centre is closest) was used to represent the rehabilitation travel time for each locality. These travel times were then interpolated to provide coverage for all of Queensland.",
   
   "<br>CLICK on a rehabilitation destination for facility details."
 )

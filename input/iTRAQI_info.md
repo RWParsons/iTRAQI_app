@@ -66,7 +66,7 @@ iTRAQI is a collaborative project involving Jamieson Trauma Institute (JTI), Que
 
 <details>
   <summary>Methods</summary>
-For 441 locations, travel time was calculated to acute care, and driving time to rehabilitation centres. These were interpolated using ordinary kriging to cover all of Queensland as a continuous measure. The commonly used geographic boundaries of statistical areas 1 and statistical areas 2 under the Australian Statistical Geography standard had values calculated (median and range) for ease of using with other data. The map shows ASGS 2016 boundaries, but downloads are available for 2011 and 2021 boundaries also.
+For 441 locations, travel time was calculated to acute care, and driving time to rehabilitation units. These were interpolated using ordinary kriging to cover all of Queensland as a continuous measure. The commonly used geographic boundaries of statistical areas 1 and statistical areas 2 under the Australian Statistical Geography standard had values calculated (median and range) for ease of using with other data. The map shows ASGS 2016 boundaries, but downloads are available for 2011 and 2021 boundaries also.
 
 <h3>Transport to rehabilitation</h3>
 Based on driving times, calculated using ArcGIS Online for speed limits, road networks and traffic conditions.
