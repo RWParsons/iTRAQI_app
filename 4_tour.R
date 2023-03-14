@@ -34,7 +34,7 @@ tour_03 <- paste(
 tour_04 <- paste(
   sep = separator,
   "<h3>TBI Treatment</h3>",
-  "Only 4 hospitals have the specialised staff, equipment, and infrastructure to treat adults with moderate-to-severe TBI in Queensland. Only one of these is outside the South-East corner of the State. Accessing appropriate emergency care for TBI can therefore involve long distances.",
+  "Four hospitals have the specialised staff, equipment, and infrastructure to treat adults with moderate-to-severe TBI in Queensland. Only one of these is outside the South-East corner of the State. Accessing appropriate emergency care for TBI can therefore involve long distances.",
   glue::glue('<br><img src="tour-4-ambulance.png" alt="road-image" style="width:{img_width}px;">')
 )
 
@@ -47,7 +47,7 @@ tour_05 <- paste(
 tour_06 <- paste(
   sep = separator,
   "<h3>Building iTRAQI &#8211; travel time to acute care</h3>",
-  "Queensland Ambulance Service and Retrieval Services Queensland provided travel time details from  441 locations <img src='town_symbol.png' width='25'/> to the most appropriate TBI acute care destination <img src='acute_care.png' width='25'/>. Travel times were based on the most appropriate transport route using air and/or road, under ideal but realistic conditions."
+  "The Queensland Ambulance Service and Retrieval Services Queensland provided idealised patient retrieval pathways and flight time details from 441 locations <img src='town_symbol.png' width='25'/> to the most appropriate TBI acute care destination <img src='acute_care.png' width='25'/>. Travel times were based on the most appropriate transport route using air and/or road, under ideal but realistic conditions."
 )
 
 tour_07 <- paste(
