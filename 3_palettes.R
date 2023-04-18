@@ -40,7 +40,6 @@ index_palette <- read.csv("input/index_palette.csv")
 
 paliTRAQI <- colorFactor(
   # https://stackoverflow.com/questions/44269655/ggplot-rcolorbrewer-extend-and-apply-to-factor-data
-  # colorRampPalette(iTRAQI_colour_ramp)(length(iTRAQI_bins)),
   index_palette$hex2,
   levels = levels(iTRAQI_bins),
   ordered = FALSE

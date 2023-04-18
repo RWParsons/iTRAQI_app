@@ -18,56 +18,6 @@ df_locations <- read.csv("input/QLD_locations_with_RSQ_times.csv") %>%
     )
   )
 
-# df_rehab_map_locations <- read.csv("input/all_rehab_time.csv") %>%
-#   mutate(across(ends_with("time"), round)) %>%
-#   mutate(
-#     popup_none = paste0(
-#       "<b>Location: </b>", town_name, "<br>",
-#       "<b>Initial rehab care destination: </b>", gold_rehab_centre, "<br>",
-#       "<b>Step-down rehab care destination: </b>", silver_rehab_centre, "<br>",
-#       "<b>Average time to rehab care (minutes): </b>", round((silver_time + gold_time) / 2), "<br>"
-#     ),
-#     popup_silver = paste0(
-#       "<b>Location: </b>", town_name, "<br>",
-#       "<b>Silver rehab care destination: </b>", silver_rehab_centre, "<br>",
-#       "<b>Time to silver rehab care (minutes): </b>", silver_time, "<br>"
-#     ),
-#     popup_gold = paste0(
-#       "<b>Location: </b>", town_name, "<br>",
-#       "<b>Gold rehab care destination: </b>", gold_rehab_centre, "<br>",
-#       "<b>Time to gold rehab care (minutes): </b>", gold_time, "<br>"
-#     ),
-#     popup_future_gold = paste0(
-#       "<b>Location: </b>", town_name, "<br>",
-#       "<b>Future gold rehab care destination: </b>", future_gold_rehab_centre, "<br>",
-#       "<b>Time to future gold rehab care (minutes): </b>", future_gold_time, "<br>"
-#     ),
-#     popup_platinum = paste0(
-#       "<b>Location: </b>", town_name, "<br>",
-#       "<b>Platinum rehab care destination: </b>", platinum_rehab_centre, "<br>",
-#       "<b>Time to platinum rehab care (minutes): </b>", platinum_time, "<br>"
-#     )
-#   )
-# 
-# rehab_tiers <- list(
-#   "Platinum" = list(
-#     file = "platinum_rehab",
-#     centres = unique(df_rehab_map_locations$platinum_rehab_centre)
-#   ),
-#   "Gold" = list(
-#     file = "gold_rehab",
-#     centres = unique(df_rehab_map_locations$gold_rehab_centre)
-#   ),
-#   "Future Gold" = list(
-#     file = "future_gold_rehab",
-#     centres = unique(df_rehab_map_locations$future_gold_rehab_centre)
-#   ),
-#   "Silver" = list(
-#     file = "silver_rehab",
-#     centres = unique(df_rehab_map_locations$silver_rehab_centre)
-#   )
-# )
-
 df_centres <- read.csv("input/centres.csv")
 names(df_centres) <- c("centre_name", "care_type", "address", "x", "y")
 acute_centre_names <- df_centres %>%
