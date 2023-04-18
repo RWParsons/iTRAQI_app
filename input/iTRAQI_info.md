@@ -137,7 +137,7 @@ Specific assumptions were made which may not be met in certain circumstances:
 |-|:-------------|
 | <img src="../www/town_symbol.png" width="25"/>  | Town locations used for analyses (n=441)                       |
 | <img src="../www/acute_care.png" width="25"/>   | Acute care centres (n=4)                                       |
-| <img src="../www/rehab_care.png" width="25"/>   | Rehabilitation care centres (n=6)                              |
+| <img src="../www/rehab_care.png" width="25"/>   | Rehabilitation care centres (n=5)                              |
 | <img src="../www/rsq.png" width="25"/>          | Aeromedical bases (n=13)                                       |
 | <img src="../www/red-cross.png" width="25"/>    | Queensland Ambulance Service (QAS) locations (n=302)           |
 
