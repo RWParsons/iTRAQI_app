@@ -72,7 +72,7 @@ download_data_files <- list(
 
 dropdown_width <- "100%"
 
-citation <- "iTRAQI: injury Treatment & Rehabilitation Accessibility Queensland Index version 1.3"
+citation <- "iTRAQI: injury Treatment & Rehabilitation Accessibility Queensland Index version 1.4"
 
 itraqi_categories_table <- paste(
   sep = "<br>",
