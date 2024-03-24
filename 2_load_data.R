@@ -49,7 +49,7 @@ df_qas_locations <- read.csv("input/qas_locations.csv") %>%
   mutate(popup = glue::glue("<b>Location: </b>", "{qas_location}<br>"))
 
 polygons <-
-  readRDS("input/layers/stacked_SA1_and_SA2_polygons_year2016_simplified.rds") %>%
+  readRDS("input/layers/stacked_SA1_and_SA2_polygons.rds") %>%
   mutate(
     index = get_iTRAQI_index(acute_mins = value_acute, rehab_mins = value_rehab),
     rehab_time_str = str_extract(popup_rehab, "<b>Time to.*$"),

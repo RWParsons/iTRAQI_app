@@ -266,7 +266,7 @@ server <- function(input, output, session) {
     if (is.null(isolate(rvs$map_tour)) | isolate(rvs$map_tour_complete)) {
       return()
     }
-    
+
     leafletProxy("map_tour") %>%
       hideGroup(c(unique_ids, "tours_polygons")) %>%
       addCircleMarkers(

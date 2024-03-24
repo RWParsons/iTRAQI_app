@@ -54,7 +54,6 @@ tour_07 <- paste(
   sep = separator,
   "<h3>Building iTRAQI &#8211; visualising access to acute care</h3>",
   "These travel times were interpolated using ordinary kriging to provide coverage for all of Queensland.",
-  
   "<br>CLICK on a location <img src='town_symbol.png' width='25'/> to reveal acute care travel time details.",
   "CLICK on a TBI acute care destination <img src='acute_care.png' width='25'/> for hospital details. "
 )
@@ -64,7 +63,6 @@ tour_08 <- paste(
   "<h3>Building iTRAQI &#8211; visualising access to rehabilitation</h3>",
   "Patients commence their rehabilitation care at the centre where they received acute care (initial rehabilitation unit) and then may be transferred to a centre closer to where they live (subsequent rehabilitation unit).",
   "Rehabilitation time includes two drive time calculations from each locality <img src='town_symbol.png' width='25'/>: (1) to the acute care centre where they received their initial care (Townsville/South-East QLD) <img src='acute_care.png' width='25'/> and (2) to the closest in-patient rehabilitation unit <img src='rehab_care.png' width='25'/>. These were calculated using road networks and off-peak driving conditions using ArcGIS Online. The average of the travel time to the initial and subsequent rehabilitation units (can be the same centre if the initial unit is closest) was used to represent the rehabilitation travel time for each locality. These travel times were then interpolated to provide coverage for all of Queensland.",
-  
   "<br>CLICK on a rehabilitation destination for facility details."
 )
 

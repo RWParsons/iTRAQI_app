@@ -27,26 +27,7 @@ layer_input <- c(
   "SA2 rehab time" = "rehab_polygons_SA2_year2016_simplified"
 )
 
-if (!"raster_points.rds" %in% list.files(layers_dir)) {
-  rasters_points <- list()
-
-  group_names_to_load <- names(layer_input)
-  raster_layers <- grep("raster", layer_input)
-  raster_layers <- group_names_to_load[raster_layers]
-
-  rasters_points <- list()
-  for (group_name in raster_layers) {
-    new_layer <- readRDS(file.path(layers_dir, glue::glue("{layer_input[group_name]}.rds")))
-    rasters_points <- c(rasters_points, list(raster::rasterToPoints(new_layer)))
-  }
-
-  names(rasters_points) <- layer_input[raster_layers]
-  rasters_points <- rasters_points
-
-  saveRDS(rasters_points, file = file.path(layers_dir, "raster_points.rds"))
-} else {
-  rasters_points <- readRDS(file.path(layers_dir, "raster_points.rds"))
-}
+rasters_points <- readRDS(file.path(layers_dir, "raster_points.rds"))
 
 all_base_layers <- c("Towns", "Acute centres", "Rehab centres", "Aeromedical bases", "QAS response locations")
 default_base_layers <- c("Towns", "Acute centres", "Rehab centres")
