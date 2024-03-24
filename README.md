@@ -20,7 +20,7 @@ iTRAQI (injury Treatment and Rehabilitation Accessibility Queensland Index) is a
 
 Full details on methods are available in the [technical report](https://eprints.qut.edu.au/235026/).
 
-The code used to generate the layers displayed in the app is available on the [RWParsons/iTRAQI](https://github.com/RWParsons/iTRAQI) repository.
+The code used to generate the layers displayed in the app is available on the [RWParsons/iTRAQI](https://github.com/RWParsons/iTRAQI-analyses) repository.
 
 ### Suggested citation:
 Jamieson Trauma Institute, Retrieval Services Queensland and Queensland University of Technology, 2022. iTRAQI: injury Treatment & Rehabilitation Accessibility Queensland Index,    version 1.3. Available from: https://access.healthequity.link/ Accessed [date]
