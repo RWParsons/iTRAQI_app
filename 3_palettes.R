@@ -1,46 +1,82 @@
-bins <- c(0, 30, 60, 120, 180, 240, 300, 360, 900, 1200)
-
+bins <- palette_list$bins_mins
 palBin <- colorBin("YlOrRd", domain = min(bins):max(bins), bins = bins, na.color = "transparent")
-
-palNum1 <- colorNumeric(c(palBin(bins[1]), palBin(bins[2])), domain = 0:30, na.color = "transparent")
-palNum2 <- colorNumeric(c(palBin(bins[2]), palBin(bins[3])), domain = 30:60, na.color = "transparent")
-palNum3 <- colorNumeric(c(palBin(bins[3]), palBin(bins[4])), domain = 60:120, na.color = "transparent")
-palNum4 <- colorNumeric(c(palBin(bins[4]), palBin(bins[5])), domain = 120:180, na.color = "transparent")
-palNum5 <- colorNumeric(c(palBin(bins[5]), palBin(bins[6])), domain = 180:240, na.color = "transparent")
-palNum6 <- colorNumeric(c(palBin(bins[6]), palBin(bins[7])), domain = 240:300, na.color = "transparent")
-palNum7 <- colorNumeric(c(palBin(bins[7]), palBin(bins[8])), domain = 300:360, na.color = "transparent")
-palNum8 <- colorNumeric(c(palBin(bins[8]), palBin(bins[9])), domain = 360:900, na.color = "transparent")
-palNum9 <- colorNumeric(c(palBin(bins[9]), "#000000"), domain = 900:1200, na.color = "transparent")
-
-palNum <- function(x) {
-  suppressWarnings(case_when(
-    x < 30 ~ palNum1(x),
-    x < 60 ~ palNum2(x),
-    x < 120 ~ palNum3(x),
-    x < 180 ~ palNum4(x),
-    x < 240 ~ palNum5(x),
-    x < 300 ~ palNum6(x),
-    x < 360 ~ palNum7(x),
-    x < 900 ~ palNum8(x),
-    x < 1200 ~ palNum9(x),
-    x >= 1200 ~ "#000000",
-    TRUE ~ "transparent"
-  ))
-}
-
-palNum_hours <- function(x) {
-  palNum(x * 60)
-}
-
 palFac <- colorFactor("Greens", levels = ra_scale_to_text(0:4), ordered = TRUE, reverse = TRUE)
+palNum <- palette_list$palNum
+palNum_hours <- palette_list$palNum_hours
+paliTRAQI <- palette_list$paliTRAQI
 
-# select colours from http://derekogle.com/NCGraphing/resources/colors
-iTRAQI_colour_ramp <- c("lightblue", "mediumpurple1", "pink", "red", "maroon")
-index_palette <- read.csv("input/index_palette.csv")
+make_categories_table <- function(acute_breaks, rehab_breaks) {
+  acute_table <- make_cat_and_label_table(
+    labels = breaks_to_labels(palette_list$iTRAQI_acute_breaks),
+    header_text = "Acute care travel time",
+    cat_type = "number"
+  )
+  
+  rehab_table <- make_cat_and_label_table(
+    labels = breaks_to_labels(palette_list$iTRAQI_rehab_breaks),
+    header_text = "Averaged Rehabilitation driving time (initial + subsequent)",
+    cat_type = "letter"
+  )
+  
+  paste0('<br>', acute_table, rehab_table)
+}
 
-paliTRAQI <- colorFactor(
-  # https://stackoverflow.com/questions/44269655/ggplot-rcolorbrewer-extend-and-apply-to-factor-data
-  index_palette$hex2,
-  levels = levels(iTRAQI_bins),
-  ordered = FALSE
+make_cat_and_label_table <- function(labels, header_text, cat_type = c("number", "letter")) {
+  cat_type <- match.arg(cat_type)
+  rows <- tibble(labels = labels) |> 
+    mutate(idx = row_number()) |> 
+    (\(d) {
+      if(cat_type == "letter") {
+        d$idx <- LETTERS[d$idx]
+      }
+      d
+    })() |> 
+    mutate(
+      across(everything(), \(x) paste0("<td>",x,"</td>")),
+      tr = paste0("<tr>",idx, labels,"</tr>")
+    ) |>
+    pull(tr)
+  
+  header <- "
+      <tr>
+          <th style='width:30%'>Cat</th>
+          <th style='width:50%'>Travel-time (hours)</th>
+      </tr>
+    "
+  header_label <- paste0(
+    "<h4>",
+    header_text,
+    "</h4>"
+  )
+  
+  glue::glue(
+    "{header_label}",
+    "<table style='width:100%'>",
+    header,
+    paste0(rows, collapse = ""),
+    "</table>"
+  )
+}
+
+breaks_to_labels <- function(x) {
+  cut(1, breaks = x) |>
+    levels() |>
+    str_split(",") |>
+    map(~ str_extract(.x, "[0-9]+")) |>
+    map(\(.x) {
+      if (is.na(.x[1])) {
+        c <- paste0("<", .x[2])
+      } else if (is.na(.x[2])) {
+        c <- paste0(">", .x[1])
+      } else {
+        c <- paste0(.x[1], " – ", .x[2])
+      }
+      c
+    }) |>
+    unlist()
+}
+
+itraqi_categories_table <- make_categories_table(
+  acute_breaks = palette_list$iTRAQI_acute_breaks,
+  rehab_breaks = palette_list$iTRAQI_rehab_breaks
 )

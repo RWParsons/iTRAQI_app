@@ -1,3 +1,5 @@
+palette_list <- readRDS("input/palette_list.rds")
+
 df_locations <- read.csv("input/QLD_locations_with_RSQ_times.csv") %>%
   mutate(
     iTRAQI_index = get_iTRAQI_index(acute_mins = acute_time, rehab_mins = rehab_time),
@@ -58,20 +60,7 @@ polygons <-
   ) %>%
   filter(!is.na(value_acute))
 
-get_iTRAQI_bins <- function() {
-  unique_rehab_levels <- cut(0, breaks = iTRAQI_rehab_breaks) %>% levels()
-  unique_rehab_levels <- LETTERS[1:length(unique_rehab_levels)]
-
-  unique_acute_levels <- cut(0, breaks = iTRAQI_acute_breaks) %>% levels()
-  unique_acute_levels <- 1:length(unique_acute_levels)
-
-  grid <- expand.grid(acute = unique_acute_levels, rehab = unique_rehab_levels)
-  grid$iTRAQI_index <- paste0(grid$acute, grid$rehab)
-  grid <- grid[grid$iTRAQI_index %in% unique(polygons$index), ]
-  as.factor(grid$iTRAQI_index)
-}
-
-iTRAQI_bins <- get_iTRAQI_bins()
+iTRAQI_bins <- palette_list$bins_index
 
 groupings <- expand.grid(
   seifa = c(1:5, NA),
