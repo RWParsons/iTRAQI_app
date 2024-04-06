@@ -323,11 +323,14 @@ server <- function(input, output, session) {
     raster_layers <- group_names_to_load[raster_layers]
 
     for (group_name in raster_layers) {
-      new_layer <- readRDS(file.path(layers_dir, glue::glue("{layer_input[group_name]}.rds")))
+      new_layer <- rasters_points[[layer_input[group_name]]] |>
+        select(x, y, var1.pred) |>
+        tidyterra::as_spatraster(crs = "epsg:4326")
+
       leafletProxy("map_tour") %>%
         addRasterImage(
           data = new_layer,
-          x = raster::raster(new_layer, layer = 1),
+          x = new_layer,
           group = group_name,
           colors = palNum
         )
@@ -511,11 +514,14 @@ server <- function(input, output, session) {
     raster_layers <- group_names_to_load[raster_layers]
 
     for (group_name in raster_layers) {
-      new_layer <- readRDS(file.path(layers_dir, glue::glue("{layer_input[group_name]}.rds")))
+      new_layer <- rasters_points[[layer_input[group_name]]] |>
+        select(x, y, var1.pred) |>
+        tidyterra::as_spatraster(crs = "epsg:4326")
+
       leafletProxy("map") %>%
         addRasterImage(
           data = new_layer,
-          x = raster::raster(new_layer, layer = 1),
+          x = new_layer,
           group = group_name,
           colors = palNum
         )
