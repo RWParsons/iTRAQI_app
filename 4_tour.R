@@ -153,8 +153,8 @@ tab_legends <- list(
       x,
       opacity = 1,
       position = legend_position,
-      pal = palBin,
-      values = 0:900,
+      pal = palBin_hours,
+      values = bins_mins / 60,
       layerId = "timeLegend",
       title = htmltools::tagList(tags$div("Time to care (minutes)"), tags$br())
     )

@@ -324,7 +324,7 @@ server <- function(input, output, session) {
 
     for (group_name in raster_layers) {
       new_layer <- rasters_points[[layer_input[group_name]]] |>
-        select(x, y, var1.pred) |>
+        select(x, y, pred) |>
         tidyterra::as_spatraster(crs = "epsg:4326")
 
       leafletProxy("map_tour") %>%
@@ -515,7 +515,7 @@ server <- function(input, output, session) {
 
     for (group_name in raster_layers) {
       new_layer <- rasters_points[[layer_input[group_name]]] |>
-        select(x, y, var1.pred) |>
+        select(x, y, pred) |>
         tidyterra::as_spatraster(crs = "epsg:4326")
 
       leafletProxy("map") %>%
@@ -526,7 +526,6 @@ server <- function(input, output, session) {
           colors = palNum
         )
     }
-
 
     leafletProxy("map") %>%
       addPolygons(
@@ -613,8 +612,8 @@ server <- function(input, output, session) {
         addLegendBin(
           opacity = 1,
           position = "topright",
-          pal = palBin,
-          values = 0:900,
+          pal = palBin_hours,
+          values = bins_mins / 60,
           title = htmltools::tagList(tags$div("Time to care (minutes)"), tags$br())
         )
     } else {

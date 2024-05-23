@@ -1,9 +1,11 @@
-bins <- palette_list$bins_mins
-palBin <- colorBin("YlOrRd", domain = min(bins):max(bins), bins = bins, na.color = "transparent")
-palFac <- colorFactor("Greens", levels = ra_scale_to_text(0:4), ordered = TRUE, reverse = TRUE)
+bins_mins <- palette_list$bins_mins
+palBin <- palette_list$palBin
+palBin_hours <- palette_list$palBin_hours
 palNum <- palette_list$palNum
 palNum_hours <- palette_list$palNum_hours
 paliTRAQI <- palette_list$paliTRAQI
+
+palFac <- colorFactor("Greens", levels = ra_scale_to_text(0:4), ordered = TRUE, reverse = TRUE)
 
 make_categories_table <- function(acute_breaks, rehab_breaks) {
   acute_table <- make_cat_and_label_table(
